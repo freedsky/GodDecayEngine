@@ -1,0 +1,3 @@
+[submodule "GodDecay/vendor/spdlog"]
+	path = GodDecay/vendor/spdlog
+	url = https://github.com/gabime/spdlog.git

@@ -1,5 +1,10 @@
 #pragma once
-
+/// <summary>
+/// 应用程序类
+/// </summary>
+/// <returns>
+/// 它可以让应用程序在启动和关闭时创建初始化和释放各种数据
+/// </returns>
 #include "Core.h"
 
 namespace GodDecay 

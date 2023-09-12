@@ -45,20 +45,21 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)\bin\$(Configuration)\$(Platform)-$(Configuration)\$(ProjectName)\</OutDir>
-    <IntDir>$(SolutionDir)\bin-int\$(Configuration)\$(Platform)-$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)-$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)bin-int\$(Configuration)\$(Platform)-$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)\bin\$(Configuration)\$(Platform)-$(Configuration)\$(ProjectName)\</OutDir>
-    <IntDir>$(SolutionDir)\bin-int\$(Configuration)\$(Platform)-$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)-$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)bin-int\$(Configuration)\$(Platform)-$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GD_PLATFORM_WINDOWS;GD_BUILD_DLL;GODDECAY_API;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GD_PLATFORM_WINDOWS;GD_BUILD_DLL;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)GodDecay\vendor\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -71,8 +72,9 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GD_PLATFORM_WINDOWS;GD_BUILD_DLL;GODDECAY_API;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GD_PLATFORM_WINDOWS;GD_BUILD_DLL;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)GodDecay\vendor\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -82,12 +84,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\EngineCore\Logger.h" />
     <ClInclude Include="src\EngineCore\Application.h" />
     <ClInclude Include="src\EngineCore\Core.h" />
     <ClInclude Include="src\EngineCore\EnterPoint.h" />
     <ClInclude Include="src\GodDecayTop.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\EngineCore\Logger.cpp" />
     <ClCompile Include="src\EngineCore\Application.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
