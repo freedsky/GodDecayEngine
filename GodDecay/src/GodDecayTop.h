@@ -1,7 +1,7 @@
 #pragma once
 
-#include "EngineCore/Application.h"
-#include "EngineCore/Logger.h"
+#include "GodDecay/Application.h"
+#include "GodDecay/Logger.h"
 
-#include "EngineCore/EnterPoint.h"
+#include "GodDecay/EnterPoint.h"
 

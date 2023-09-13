@@ -15,6 +15,8 @@
 	#error GodDecay only supports Windows
 #endif // GD_PLATFORM_WINDOWS
 
+#define BIT(x) (1 << x)
+
 /// <summary>
 /// 模板化智能指针
 /// </summary>

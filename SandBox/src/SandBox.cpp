@@ -1,3 +1,5 @@
+#include "gdpch.h"
+
 #include <GodDecayTop.h>
 
 class SandBox : public GodDecay::Application

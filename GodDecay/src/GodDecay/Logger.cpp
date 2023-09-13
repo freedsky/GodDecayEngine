@@ -1,12 +1,9 @@
+#include "gdpch.h"
+
 #include "Logger.h"
 
 #include <spdlog/sinks/stdout_color_sinks.h>
 
-/// <summary>
-/// 包装spdlog库，使用宏定义简化开发调用过程
-/// 
-/// 后续会定义文件出入功能
-/// </summary>
 namespace GodDecay 
 {
 	Ref<spdlog::logger> Logger::m_EngineLogger = nullptr;

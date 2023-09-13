@@ -1,9 +1,14 @@
 #pragma once
 
 #include <spdlog/spdlog.h>
+#include <spdlog/fmt/ostr.h>
 
 #include "Core.h"
-
+/// <summary>
+/// 包装spdlog库，使用宏定义简化开发调用过程
+/// 
+/// 后续会定义文件出入功能
+/// </summary>
 namespace GodDecay 
 {
 	class GODDECAY_API Logger

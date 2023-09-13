@@ -1,31 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="EngineCore">
-      <UniqueIdentifier>{04E20003-F099-4250-59A1-1BAC4578DD40}</UniqueIdentifier>
+    <Filter Include="GodDecay">
+      <UniqueIdentifier>{A521C150-91EE-1B5C-BA07-0A04A63351EA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GodDecay\Events">
+      <UniqueIdentifier>{E9E1F55B-556D-6320-5E7E-E614CA88BF20}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\EngineCore\Application.h">
-      <Filter>EngineCore</Filter>
+    <ClInclude Include="src\GodDecay\Application.h">
+      <Filter>GodDecay</Filter>
     </ClInclude>
-    <ClInclude Include="src\EngineCore\Core.h">
-      <Filter>EngineCore</Filter>
+    <ClInclude Include="src\GodDecay\Core.h">
+      <Filter>GodDecay</Filter>
     </ClInclude>
-    <ClInclude Include="src\EngineCore\EnterPoint.h">
-      <Filter>EngineCore</Filter>
+    <ClInclude Include="src\GodDecay\EnterPoint.h">
+      <Filter>GodDecay</Filter>
     </ClInclude>
-    <ClInclude Include="src\EngineCore\Logger.h">
-      <Filter>EngineCore</Filter>
+    <ClInclude Include="src\GodDecay\Events\Application.h">
+      <Filter>GodDecay\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Events\Event.h">
+      <Filter>GodDecay\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Events\KeyEvent.h">
+      <Filter>GodDecay\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Events\MouseEvent.h">
+      <Filter>GodDecay\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Logger.h">
+      <Filter>GodDecay</Filter>
     </ClInclude>
     <ClInclude Include="src\GodDecayTop.h" />
+    <ClInclude Include="src\gdpch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\EngineCore\Application.cpp">
-      <Filter>EngineCore</Filter>
+    <ClCompile Include="src\GodDecay\Application.cpp">
+      <Filter>GodDecay</Filter>
     </ClCompile>
-    <ClCompile Include="src\EngineCore\Logger.cpp">
-      <Filter>EngineCore</Filter>
+    <ClCompile Include="src\GodDecay\Logger.cpp">
+      <Filter>GodDecay</Filter>
     </ClCompile>
+    <ClCompile Include="src\gdpch.cpp" />
   </ItemGroup>
 </Project>

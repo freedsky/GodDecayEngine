@@ -20,6 +20,9 @@ project "GodDecay"
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
+	pchheader "gdpch.h"
+	pchsource "GodDecay/src/gdpch.cpp"
+
     files
 	{
 		"%{prj.name}/src/**.h",
@@ -28,7 +31,8 @@ project "GodDecay"
 
     includedirs
 	{
-		"%{prj.name}/vendor/spdlog/include"
+		"GodDecay/vendor/spdlog/include",
+		"GodDecay/src"
 	}
 
     filter "system:windows"
