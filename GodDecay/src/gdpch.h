@@ -16,4 +16,6 @@
 #include <Windows.h>
 #endif
 
+#include "GodDecay/Logger.h"
+
 

@@ -1,5 +1,6 @@
 workspace "GodDecayEngine"
     architecture "x64"
+	startproject "SandBox"
 
     configurations
     {
@@ -10,7 +11,12 @@ workspace "GodDecayEngine"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
-startproject "SandBox"
+IncludeDir = {}
+IncludeDir["src"] = "GodDecay/src"
+IncludeDir["GLFW"] = "GodDecay/vendor/GLFW/include"
+IncludeDir["spdlog"] = "GodDecay/vendor/spdlog/include"
+
+include "GodDecay/vendor/GLFW"
 
 project "GodDecay"
     location "GodDecay"
@@ -31,8 +37,15 @@ project "GodDecay"
 
     includedirs
 	{
-		"GodDecay/vendor/spdlog/include",
-		"GodDecay/src"
+		"%{IncludeDir.src}",
+		"%{IncludeDir.spdlog}",
+		"%{IncludeDir.GLFW}"
+	}
+
+	links
+	{
+		"GLFW",
+		"opengl32.lib"
 	}
 
     filter "system:windows"
@@ -43,6 +56,7 @@ project "GodDecay"
         defines
 		{
 			"GD_PLATFORM_WINDOWS",
+			"GD_ENABLE_ASSERTS",
 			"GD_BUILD_DLL"
 		}
 
@@ -79,8 +93,9 @@ project "SandBox"
 
 	includedirs
 	{
-		"GodDecay/vendor/spdlog/include",
-		"GodDecay/src"
+		"%{IncludeDir.src}",
+		"%{IncludeDir.spdlog}",
+		"%{IncludeDir.GLFW}"
 	}
 
     links

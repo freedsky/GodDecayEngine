@@ -6,28 +6,22 @@
 
 #include "Logger.h"
 
+#include <GLFW/glfw3.h>
+
 namespace GodDecay 
 {
 	Application::Application()
 	{
-
+		window = Window::Create();
 	}
 
 	void Application::Run()
 	{
-		//===========test==========
-
-		KeyPressedEvent e(0, 1);
-		if (e.GetEventType() == KeyPressedEvent::GetStaticType()) 
+		while (m_Running)
 		{
-			GD_ENGINE_INFO(e);
-		}
-
-		//=========================
-
-		while (true)
-		{
-
+			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
+			window->OnUpDate();
 		}
 	}
 }

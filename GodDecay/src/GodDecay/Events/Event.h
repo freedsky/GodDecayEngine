@@ -13,7 +13,7 @@ namespace GodDecay
 	{
 		None = 0,
 		WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
-		ApplicationTick, ApplicationUpdate, ApplicationRender,
+		ApplicationTic , ApplicationUpdate, ApplicationRender,
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled,
 		KeyPressed, KeyReleased
 	};

@@ -32,9 +32,9 @@ namespace GodDecay
 #define GD_ENGINE_DEBUG(...)	::GodDecay::Logger::GetEngineLogger()->debug(__VA_ARGS__);
 #define GD_ENGINE_CRITICAL(...) ::GodDecay::Logger::GetEngineLogger()->critical(__VA_ARGS__);
 
-#define GD_Client_TRACE(...)	::GodDecay::Logger::GetClientLogger()->trace(__VA_ARGS__);
-#define GD_Client_INFO(...)		::GodDecay::Logger::GetClientLogger()->info(__VA_ARGS__);
-#define GD_Client_WARN(...)		::GodDecay::Logger::GetClientLogger()->warn(__VA_ARGS__);
-#define GD_Client_ERROR(...)	::GodDecay::Logger::GetClientLogger()->error(__VA_ARGS__);
-#define GD_Client_DEBUG(...)	::GodDecay::Logger::GetClientLogger()->debug(__VA_ARGS__);
-#define GD_Client_CRITICAL(...) ::GodDecay::Logger::GetClientLogger()->critical(__VA_ARGS__);
+#define GD_CLIENT_TRACE(...)	::GodDecay::Logger::GetClientLogger()->trace(__VA_ARGS__);
+#define GD_CLIENT_INFO(...)		::GodDecay::Logger::GetClientLogger()->info(__VA_ARGS__);
+#define GD_CLIENT_WARN(...)		::GodDecay::Logger::GetClientLogger()->warn(__VA_ARGS__);
+#define GD_CLIENT_ERROR(...)	::GodDecay::Logger::GetClientLogger()->error(__VA_ARGS__);
+#define GD_CLIENT_DEBUG(...)	::GodDecay::Logger::GetClientLogger()->debug(__VA_ARGS__);
+#define GD_CLIENT_CRITICAL(...) ::GodDecay::Logger::GetClientLogger()->critical(__VA_ARGS__);

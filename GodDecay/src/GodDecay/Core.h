@@ -17,6 +17,15 @@
 
 #define BIT(x) (1 << x)
 
+//断言
+#ifdef GD_ENABLE_ASSERTS
+	#define GD_CLIENT_ASSERT(x, ...) { if(!(x)) { GD_CLIENT_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+	#define GD_ENGINE_ASSERT(x, ...) { if(!(x)) { GD_ENGINE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+#else
+	#define GD_ASSERT(x, ...)
+	#define GD_CORE_ASSERT(x, ...)
+#endif
+
 /// <summary>
 /// 模板化智能指针
 /// </summary>

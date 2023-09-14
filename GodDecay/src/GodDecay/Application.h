@@ -7,6 +7,7 @@
 /// </returns>
 #include "Core.h"
 #include "GodDecay/Events/Event.h"
+#include "Platform/Windows/WindowsWindow.h"
 
 namespace GodDecay 
 {
@@ -18,6 +19,8 @@ namespace GodDecay
 
 		void Run();
 	private:
+		Ref<Window> window = nullptr;
+		bool m_Running = true;
 	};
 
 	//包含此头文件以及继承Application类的子类需要在其类外文件中实现定义

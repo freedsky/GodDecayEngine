@@ -13,9 +13,6 @@ int main()
 {
 	GodDecay::Logger::Init();
 	GD_ENGINE_INFO("日志启动成功!!");
-
-	GD_Client_ERROR("客户端日志启动");
-
 	GodDecay::Application* app = GodDecay::CreateApplication();
 
 	app->Run();
