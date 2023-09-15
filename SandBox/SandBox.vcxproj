@@ -134,12 +134,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\GameTest\GameLayer.cpp" />
     <ClCompile Include="src\SandBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GodDecay\GodDecay.vcxproj">
       <Project>{A521C150-91EE-1B5C-BA07-0A04A63351EA}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\GameTest\GameLayer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

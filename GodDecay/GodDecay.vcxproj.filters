@@ -24,7 +24,7 @@
     <ClInclude Include="src\GodDecay\EnterPoint.h">
       <Filter>GodDecay</Filter>
     </ClInclude>
-    <ClInclude Include="src\GodDecay\Events\Application.h">
+    <ClInclude Include="src\GodDecay\Events\ApplicationEvent.h">
       <Filter>GodDecay\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\GodDecay\Events\Event.h">
@@ -47,6 +47,8 @@
       <Filter>Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\gdpch.h" />
+    <ClInclude Include="src\GodDecay\Layer.h" />
+    <ClInclude Include="src\GodDecay\LayerStack.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GodDecay\Application.cpp">
@@ -59,5 +61,7 @@
       <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\gdpch.cpp" />
+    <ClCompile Include="src\GodDecay\Layer.cpp" />
+    <ClCompile Include="src\GodDecay\LayerStack.cpp" />
   </ItemGroup>
 </Project>

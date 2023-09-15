@@ -3,7 +3,9 @@
 
 #include "Core.h"
 #include "Events/Event.h"
-
+/// <summary>
+/// 抽象窗口类，因为不同平台的窗口实现不一
+/// </summary>
 namespace GodDecay 
 {
 	struct WindowProperty

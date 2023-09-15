@@ -5,6 +5,10 @@
 
 #include <GLFW/glfw3.h>
 
+/// <summary>
+/// Windows窗口类的实现
+/// 问：是否要把GLFW的部分抽象出来？
+/// </summary>
 namespace GodDecay 
 {
 	class GODDECAY_API WindowsWindow : public Window 

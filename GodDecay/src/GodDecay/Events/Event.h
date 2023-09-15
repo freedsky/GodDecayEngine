@@ -13,7 +13,7 @@ namespace GodDecay
 	{
 		None = 0,
 		WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
-		ApplicationTic , ApplicationUpdate, ApplicationRender,
+		ApplicationTick , ApplicationUpdate, ApplicationRender,
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled,
 		KeyPressed, KeyReleased
 	};
@@ -45,6 +45,8 @@ namespace GodDecay
 		virtual const char* GetName() const = 0;
 		virtual int GetCategoryFlags() const = 0;
 		virtual std::string ToString() const { return GetName(); }
+
+		inline bool GetHandle() { return m_Handled; }
 
 		inline bool IsInCategory(EventCategory category)
 		{
