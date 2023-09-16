@@ -10,6 +10,7 @@ public:
 	SandBox()
 	{
 		PushLayer(new GameLayer("Game?"));
+		PushLayer(new GodDecay::ImGuiLayer());
 	}
 
 	~SandBox()

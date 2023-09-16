@@ -15,8 +15,12 @@ IncludeDir = {}
 IncludeDir["src"] = "GodDecay/src"
 IncludeDir["GLFW"] = "GodDecay/vendor/GLFW/include"
 IncludeDir["spdlog"] = "GodDecay/vendor/spdlog/include"
+IncludeDir["glad"] = "GodDecay/vendor/glad/include"
+IncludeDir["ImGui"] = "GodDecay/vendor/ImGui"
 
 include "GodDecay/vendor/GLFW"
+include "GodDecay/vendor/glad"
+include "GodDecay/vendor/ImGui"
 
 project "GodDecay"
     location "GodDecay"
@@ -39,12 +43,16 @@ project "GodDecay"
 	{
 		"%{IncludeDir.src}",
 		"%{IncludeDir.spdlog}",
-		"%{IncludeDir.GLFW}"
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.glad}",
+		"%{IncludeDir.ImGui}"
 	}
 
 	links
 	{
 		"GLFW",
+		"glad",
+		"ImGui",
 		"opengl32.lib"
 	}
 
@@ -57,7 +65,9 @@ project "GodDecay"
 		{
 			"GD_PLATFORM_WINDOWS",
 			"GD_ENABLE_ASSERTS",
-			"GD_BUILD_DLL"
+			"GD_BUILD_DLL",
+			"GLFW_INCLUDE_NONE"
+
 		}
 
         postbuildcommands
@@ -95,7 +105,8 @@ project "SandBox"
 	{
 		"%{IncludeDir.src}",
 		"%{IncludeDir.spdlog}",
-		"%{IncludeDir.GLFW}"
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.glad}"
 	}
 
     links

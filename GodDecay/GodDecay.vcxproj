@@ -79,8 +79,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>gdpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>GD_PLATFORM_WINDOWS;GD_ENABLE_ASSERTS;GD_BUILD_DLL;GD_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GD_PLATFORM_WINDOWS;GD_ENABLE_ASSERTS;GD_BUILD_DLL;GLFW_INCLUDE_NONE;GD_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\glad\include;vendor\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -102,8 +102,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>gdpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>GD_PLATFORM_WINDOWS;GD_ENABLE_ASSERTS;GD_BUILD_DLL;GD_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GD_PLATFORM_WINDOWS;GD_ENABLE_ASSERTS;GD_BUILD_DLL;GLFW_INCLUDE_NONE;GD_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\glad\include;vendor\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -129,8 +129,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>gdpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>GD_PLATFORM_WINDOWS;GD_ENABLE_ASSERTS;GD_BUILD_DLL;GD_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GD_PLATFORM_WINDOWS;GD_ENABLE_ASSERTS;GD_BUILD_DLL;GLFW_INCLUDE_NONE;GD_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\glad\include;vendor\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -152,8 +152,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\GodDecay\LayerStack.h" />
-    <ClInclude Include="src\GodDecay\Layer.h" />
+    <ClInclude Include="src\GodDecay\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\GodDecay\Application.h" />
     <ClInclude Include="src\GodDecay\Core.h" />
     <ClInclude Include="src\GodDecay\EnterPoint.h" />
@@ -161,17 +160,25 @@
     <ClInclude Include="src\GodDecay\Events\Event.h" />
     <ClInclude Include="src\GodDecay\Events\KeyEvent.h" />
     <ClInclude Include="src\GodDecay\Events\MouseEvent.h" />
+    <ClInclude Include="src\GodDecay\Layer.h" />
+    <ClInclude Include="src\GodDecay\LayerStack.h" />
     <ClInclude Include="src\GodDecay\Logger.h" />
     <ClInclude Include="src\GodDecay\Window.h" />
     <ClInclude Include="src\GodDecayTop.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLImGui\imgui_impl_glfw.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLImGui\imgui_impl_opengl3.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLImGui\imgui_impl_opengl3_loader.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\gdpch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\GodDecay\LayerStack.cpp" />
-    <ClCompile Include="src\GodDecay\Layer.cpp" />
+    <ClCompile Include="src\GodDecay\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\GodDecay\Application.cpp" />
+    <ClCompile Include="src\GodDecay\Layer.cpp" />
+    <ClCompile Include="src\GodDecay\LayerStack.cpp" />
     <ClCompile Include="src\GodDecay\Logger.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLImGui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLImGui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\gdpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
@@ -180,6 +187,12 @@
   <ItemGroup>
     <ProjectReference Include="vendor\GLFW\GLFW.vcxproj">
       <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
+    </ProjectReference>
+    <ProjectReference Include="vendor\glad\glad.vcxproj">
+      <Project>{DD62977C-C999-980D-7286-7E105E9C140F}</Project>
+    </ProjectReference>
+    <ProjectReference Include="vendor\ImGui\ImGui.vcxproj">
+      <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

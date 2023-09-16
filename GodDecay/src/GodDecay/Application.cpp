@@ -2,30 +2,36 @@
 #include "Application.h"
 #include "Logger.h"
 
-#include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
 namespace GodDecay 
 {
 
 #define BIND_EVENTS(x) std::bind(&Application::x, this, std::placeholders::_1)
 
+	Application* Application::m_Instance = nullptr;
+
 	Application::Application()
 	{
-		window = Window::Create();
+		GD_ENGINE_ASSERT(!m_Instance, "this Application already exitity");
+		m_Instance = this;
 
+		m_Window = Window::Create();
 		//把Windowswindow的函数指针指向Application的事件进行绑定
-		window->SetEventCallback(BIND_EVENTS(OnEvents));
+		m_Window->SetEventCallback(BIND_EVENTS(OnEvents));
 	}
 
 	//===============================================
 	void Application::PushLayer(Layer* layer) 
 	{
 		m_LayerStack.PushLayer(layer);
+		layer->OnAttach();
 	}
 
 	void Application::PushOverlay(Layer* layer) 
 	{
 		m_LayerStack.PushOverlay(layer);
+		layer->OnAttach();
 	}
 	//===============================================
 
@@ -40,7 +46,7 @@ namespace GodDecay
 				layer->OnUpDate();
 
 			//渲染窗口
-			window->OnUpDate();
+			m_Window->OnUpDate();
 		}
 	}
 
@@ -49,7 +55,7 @@ namespace GodDecay
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENTS(OnWindowClose));
 
-		GD_ENGINE_INFO("{0}", e);
+		//GD_ENGINE_INFO("{0}", e);
 
 		for(std::vector<Layer*>::iterator it = m_LayerStack.end();it != m_LayerStack.begin();)
 		{

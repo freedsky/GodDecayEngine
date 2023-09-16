@@ -5,6 +5,8 @@
 #include "GodDecay/Events/MouseEvent.h"
 #include "GodDecay/Events/KeyEvent.h"
 
+#include <glad/glad.h>
+
 namespace GodDecay 
 {
 	static bool s_GLFWInitialized = false;
@@ -72,6 +74,9 @@ namespace GodDecay
 		glfwSetWindowUserPointer(m_Window, &m_WindowDate);
 		SetVSync(true);
 
+		//load glad
+		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+		GD_ENGINE_ASSERT(status, "this glad load failed!");
 		//callback
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) 
 		{

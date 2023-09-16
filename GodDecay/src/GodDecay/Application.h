@@ -26,8 +26,12 @@ namespace GodDecay
 
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* layer);
+
+		inline Ref<Window> GetWindow() { return m_Window; }
+		inline static Application& Get() { return *m_Instance; }
 	private:
-		Ref<Window> window = nullptr;
+		Ref<Window> m_Window = nullptr;
+		static Application* m_Instance;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 

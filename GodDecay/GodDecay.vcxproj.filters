@@ -10,6 +10,12 @@
     <Filter Include="Platform">
       <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Platform\OpenGL">
+      <UniqueIdentifier>{1E7D2C1D-8A08-9AE1-9319-1DD6FF23F6E1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\OpenGL\OpenGLImGui">
+      <UniqueIdentifier>{6DA35366-D9B0-814C-6297-7D37CEA34D03}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Platform\Windows">
       <UniqueIdentifier>{64FBD71A-50F4-F66C-7926-DCF1657ED678}</UniqueIdentifier>
     </Filter>
@@ -36,6 +42,12 @@
     <ClInclude Include="src\GodDecay\Events\MouseEvent.h">
       <Filter>GodDecay\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\GodDecay\Layer.h">
+      <Filter>GodDecay</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\LayerStack.h">
+      <Filter>GodDecay</Filter>
+    </ClInclude>
     <ClInclude Include="src\GodDecay\Logger.h">
       <Filter>GodDecay</Filter>
     </ClInclude>
@@ -43,25 +55,44 @@
       <Filter>GodDecay</Filter>
     </ClInclude>
     <ClInclude Include="src\GodDecayTop.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLImGui\imgui_impl_glfw.h">
+      <Filter>Platform\OpenGL\OpenGLImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLImGui\imgui_impl_opengl3.h">
+      <Filter>Platform\OpenGL\OpenGLImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLImGui\imgui_impl_opengl3_loader.h">
+      <Filter>Platform\OpenGL\OpenGLImGui</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
       <Filter>Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\gdpch.h" />
-    <ClInclude Include="src\GodDecay\Layer.h" />
-    <ClInclude Include="src\GodDecay\LayerStack.h" />
+    <ClInclude Include="src\GodDecay\ImGui\ImGuiLayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GodDecay\Application.cpp">
       <Filter>GodDecay</Filter>
     </ClCompile>
+    <ClCompile Include="src\GodDecay\Layer.cpp">
+      <Filter>GodDecay</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GodDecay\LayerStack.cpp">
+      <Filter>GodDecay</Filter>
+    </ClCompile>
     <ClCompile Include="src\GodDecay\Logger.cpp">
       <Filter>GodDecay</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLImGui\imgui_impl_glfw.cpp">
+      <Filter>Platform\OpenGL\OpenGLImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLImGui\imgui_impl_opengl3.cpp">
+      <Filter>Platform\OpenGL\OpenGLImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
       <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\gdpch.cpp" />
-    <ClCompile Include="src\GodDecay\Layer.cpp" />
-    <ClCompile Include="src\GodDecay\LayerStack.cpp" />
+    <ClCompile Include="src\GodDecay\ImGui\ImGuiLayer.cpp" />
   </ItemGroup>
 </Project>
