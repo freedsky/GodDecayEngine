@@ -24,5 +24,5 @@ void GameLayer::OnUpDate()
 
 void GameLayer::OnEvents(const GodDecay::Event& e)
 {
-	GD_CLIENT_DEBUG("{0}", e.GetName());
+	//GD_CLIENT_DEBUG("{0}", e.GetName());
 }

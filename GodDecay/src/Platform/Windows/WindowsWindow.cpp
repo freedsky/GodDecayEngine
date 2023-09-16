@@ -95,7 +95,7 @@ namespace GodDecay
 			{
 				case GLFW_PRESS:
 				{
-					KeyPressedEvent event(key, 0);
+					KeyPressedEvent event(key);
 					data.EventCallback(event);
 					break;
 				}
@@ -107,7 +107,7 @@ namespace GodDecay
 				}
 				case GLFW_REPEAT:
 				{
-					KeyPressedEvent event(key, 1);
+					KeyRepetiedEvent event(key);
 					data.EventCallback(event);
 					break;
 				}

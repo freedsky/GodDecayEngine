@@ -49,6 +49,8 @@ namespace GodDecay
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENTS(OnWindowClose));
 
+		GD_ENGINE_INFO("{0}", e);
+
 		for(std::vector<Layer*>::iterator it = m_LayerStack.end();it != m_LayerStack.begin();)
 		{
 			(*--it)->OnEvents(e);

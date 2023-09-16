@@ -24,26 +24,22 @@ namespace GodDecay
 	};
 
 	/// <summary>
-	/// 按键按下[或者持续按下]事件
+	/// 按键按下事件
 	/// </summary>
 	class GODDECAY_API KeyPressedEvent : public KeyEvent
 	{
 	public:
-		KeyPressedEvent(int keycode, int repeatCount)
-			: KeyEvent(keycode), m_RepeatCount(repeatCount) {}
-
-		inline int GetRepeatCount() const { return m_RepeatCount; }
+		KeyPressedEvent(int keycode)
+			: KeyEvent(keycode){}
 
 		std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << "KeyPressedEvent: " << m_KeyCode << " (" << m_RepeatCount << " repeats)";
+			ss << "KeyPressedEvent: " << m_KeyCode << " Down Code";
 			return ss.str();
 		}
 
 		EVENT_CLASS_TYPE(KeyPressed)
-	private:
-		int m_RepeatCount;
 	};
 
 	/// <summary>
@@ -63,5 +59,24 @@ namespace GodDecay
 		}
 
 		EVENT_CLASS_TYPE(KeyReleased)
+	};
+
+	/// <summary>
+	/// 按键重复事件
+	/// </summary>
+	class GODDECAY_API KeyRepetiedEvent : public KeyEvent 
+	{
+	public:
+		KeyRepetiedEvent(int keycode)
+			: KeyEvent(keycode) {}
+
+		std::string ToString() const override
+		{
+			std::stringstream ss;
+			ss << "KeyRepetiedEvent: " << m_KeyCode << " Repetied Code";
+			return ss.str();
+		}
+
+		EVENT_CLASS_TYPE(KeyRepetied)
 	};
 }
