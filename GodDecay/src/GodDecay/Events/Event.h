@@ -15,7 +15,7 @@ namespace GodDecay
 		WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
 		ApplicationTick , ApplicationUpdate, ApplicationRender,
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled,
-		KeyPressed, KeyReleased, KeyRepetied
+		KeyPressed, KeyReleased, KeyRepetied, KeyTyped
 	};
 
 	enum EventCategory

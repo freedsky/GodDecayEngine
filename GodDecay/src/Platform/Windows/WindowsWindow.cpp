@@ -118,6 +118,13 @@ namespace GodDecay
 				}
 			}
 		});
+		glfwSetCharCallback(m_Window, [](GLFWwindow* window, uint32_t keycode) 
+		{
+			WindowDate& data = *(WindowDate*)glfwGetWindowUserPointer(window);
+
+			KeyTypedEvent event(keycode);
+			data.EventCallback(event);
+		});
 		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
 		{
 			WindowDate& data = *(WindowDate*)glfwGetWindowUserPointer(window);

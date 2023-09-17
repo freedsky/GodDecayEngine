@@ -7,6 +7,9 @@
     <Filter Include="GodDecay\Events">
       <UniqueIdentifier>{E9E1F55B-556D-6320-5E7E-E614CA88BF20}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GodDecay\ImGui">
+      <UniqueIdentifier>{8F7EA76F-7B4C-9B75-64E0-0B9C504D77DA}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Platform">
       <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
     </Filter>
@@ -42,6 +45,9 @@
     <ClInclude Include="src\GodDecay\Events\MouseEvent.h">
       <Filter>GodDecay\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\GodDecay\ImGui\ImGuiLayer.h">
+      <Filter>GodDecay\ImGui</Filter>
+    </ClInclude>
     <ClInclude Include="src\GodDecay\Layer.h">
       <Filter>GodDecay</Filter>
     </ClInclude>
@@ -68,11 +74,13 @@
       <Filter>Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\gdpch.h" />
-    <ClInclude Include="src\GodDecay\ImGui\ImGuiLayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GodDecay\Application.cpp">
       <Filter>GodDecay</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GodDecay\ImGui\ImGuiLayer.cpp">
+      <Filter>GodDecay\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\GodDecay\Layer.cpp">
       <Filter>GodDecay</Filter>
@@ -93,6 +101,5 @@
       <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\gdpch.cpp" />
-    <ClCompile Include="src\GodDecay\ImGui\ImGuiLayer.cpp" />
   </ItemGroup>
 </Project>

@@ -18,14 +18,16 @@ IncludeDir["spdlog"] = "GodDecay/vendor/spdlog/include"
 IncludeDir["glad"] = "GodDecay/vendor/glad/include"
 IncludeDir["ImGui"] = "GodDecay/vendor/ImGui"
 
-include "GodDecay/vendor/GLFW"
-include "GodDecay/vendor/glad"
-include "GodDecay/vendor/ImGui"
+group "Dependencies"
+	include "GodDecay/vendor/GLFW"
+	include "GodDecay/vendor/glad"
+	include "GodDecay/vendor/ImGui"
 
 project "GodDecay"
     location "GodDecay"
     kind "SharedLib"
     language "C++"
+	staticruntime "off"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -58,7 +60,6 @@ project "GodDecay"
 
     filter "system:windows"
 		cppdialect "C++17"
-		staticruntime "On"
 		systemversion "latest"
 
         defines
@@ -76,21 +77,25 @@ project "GodDecay"
 		}
 
 		filter "configurations:Debug"
-		defines "GD_DEBUG"
-		symbols "On"
+			defines "GD_DEBUG"
+			runtime "Debug"
+			symbols "On"
 
 		filter "configurations:Release"
-		defines "GD_RELEASE"
-		optimize "On"
+			defines "GD_RELEASE"
+			runtime "Release"
+			optimize "On"
 
 		filter "configurations:Dist"
-		defines "GD_DIST"
-		optimize "On"
+			defines "GD_DIST"
+			runtime "Release"
+			optimize "On"
 
 project "SandBox"
     location "Sandbox"
     kind "ConsoleApp"
     language "C++"
+	staticruntime "off"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -116,7 +121,6 @@ project "SandBox"
 
     filter "system:windows"
 		cppdialect "C++17"
-		staticruntime "On"
 		systemversion "latest"
 
 		defines
@@ -126,12 +130,15 @@ project "SandBox"
 
         filter "configurations:Debug"
             defines "GD_DEBUG"
+			runtime "Debug"
             symbols "On"
 
         filter "configurations:Release"
             defines "GD_RELEASE"
+			runtime "Release"
             optimize "On"
 
         filter "configurations:Dist"
             defines "GD_DIST"
+			runtime "Release"
             optimize "On"

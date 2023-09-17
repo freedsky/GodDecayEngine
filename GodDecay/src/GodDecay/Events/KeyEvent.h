@@ -79,4 +79,23 @@ namespace GodDecay
 
 		EVENT_CLASS_TYPE(KeyRepetied)
 	};
+
+	/// <summary>
+	/// 按键字符串接收事件
+	/// </summary>
+	class GODDECAY_API KeyTypedEvent : public KeyEvent
+	{
+	public:
+		KeyTypedEvent(int keycode)
+			: KeyEvent(keycode) {}
+
+		std::string ToString() const override
+		{
+			std::stringstream ss;
+			ss << "KeyTypedEevnt: " << m_KeyCode << " Code";
+			return ss.str();
+		}
+
+		EVENT_CLASS_TYPE(KeyTyped)
+	};
 }

@@ -83,7 +83,7 @@
       <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\glad\include;vendor\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
@@ -109,7 +109,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
@@ -136,7 +136,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
@@ -152,7 +152,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\GodDecay\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\GodDecay\Application.h" />
     <ClInclude Include="src\GodDecay\Core.h" />
     <ClInclude Include="src\GodDecay\EnterPoint.h" />
@@ -160,6 +159,7 @@
     <ClInclude Include="src\GodDecay\Events\Event.h" />
     <ClInclude Include="src\GodDecay\Events\KeyEvent.h" />
     <ClInclude Include="src\GodDecay\Events\MouseEvent.h" />
+    <ClInclude Include="src\GodDecay\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\GodDecay\Layer.h" />
     <ClInclude Include="src\GodDecay\LayerStack.h" />
     <ClInclude Include="src\GodDecay\Logger.h" />
@@ -172,8 +172,8 @@
     <ClInclude Include="src\gdpch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\GodDecay\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\GodDecay\Application.cpp" />
+    <ClCompile Include="src\GodDecay\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\GodDecay\Layer.cpp" />
     <ClCompile Include="src\GodDecay\LayerStack.cpp" />
     <ClCompile Include="src\GodDecay\Logger.cpp" />
