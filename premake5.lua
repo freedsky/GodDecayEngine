@@ -17,6 +17,7 @@ IncludeDir["GLFW"] = "GodDecay/vendor/GLFW/include"
 IncludeDir["spdlog"] = "GodDecay/vendor/spdlog/include"
 IncludeDir["glad"] = "GodDecay/vendor/glad/include"
 IncludeDir["ImGui"] = "GodDecay/vendor/ImGui"
+IncludeDir["glm"] = "GodDecay/vendor/glm"
 
 group "Dependencies"
 	include "GodDecay/vendor/GLFW"
@@ -38,7 +39,9 @@ project "GodDecay"
     files
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/glm/glm/**.hpp",
+		"%{prj.name}/vendor/glm/glm/**.inl"
 	}
 
     includedirs
@@ -47,7 +50,8 @@ project "GodDecay"
 		"%{IncludeDir.spdlog}",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.glad}",
-		"%{IncludeDir.ImGui}"
+		"%{IncludeDir.ImGui}",
+		"{IncludeDir.glm}"
 	}
 
 	links
@@ -111,7 +115,8 @@ project "SandBox"
 		"%{IncludeDir.src}",
 		"%{IncludeDir.spdlog}",
 		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.glad}"
+		"%{IncludeDir.glad}",
+		"%{IncludeDir.glm}"
 	}
 
     links

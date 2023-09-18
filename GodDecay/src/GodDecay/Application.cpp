@@ -19,6 +19,9 @@ namespace GodDecay
 		m_Window = Window::Create();
 		//把Windowswindow的函数指针指向Application的事件进行绑定
 		m_Window->SetEventCallback(BIND_EVENTS(OnEvents));
+
+		for (Layer* layer : m_LayerStack)
+			layer->OnAttach();
 	}
 
 	//===============================================

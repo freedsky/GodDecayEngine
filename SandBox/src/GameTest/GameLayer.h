@@ -1,6 +1,7 @@
 #pragma once
 #include <GodDecay/Layer.h>
 #include <GodDecay/Logger.h>
+#include <GodDecay/Input.h>
 
 /// <summary>
 /// ≤‚ ‘¿‡

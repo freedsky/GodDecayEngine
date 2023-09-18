@@ -22,6 +22,8 @@ namespace GodDecay
 		inline uint32_t GetWidth() const { return m_WindowDate.width; }
 		inline uint32_t GetHeight() const { return m_WindowDate.height; }
 
+		inline void* NativeWindow() const override { return m_Window; }
+
 		inline void SetEventCallback(const EventCallbackFn& callback) { m_WindowDate.EventCallback = callback; };
 
 		void SetVSync(bool enabled) override;

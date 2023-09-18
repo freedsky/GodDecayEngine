@@ -29,6 +29,7 @@ namespace GodDecay
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;
 
+		virtual void* NativeWindow() const = 0;
 		//event
 		using EventCallbackFn = std::function<void(Event&)>;
 
