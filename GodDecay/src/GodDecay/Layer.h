@@ -11,7 +11,7 @@
 /// </summary>
 namespace GodDecay 
 {
-	class GODDECAY_API Layer
+	class Layer
 	{
 	public:
 		Layer(const std::string& name);
@@ -21,6 +21,7 @@ namespace GodDecay
 		virtual void OnDetach() {}
 		virtual void OnUpDate() {}
 		virtual void OnEvents(const Event& e) {}
+		virtual void OnImGuiRender() {}
 
 		//just bebug
 		inline const std::string& GetLayerName() const { return m_LayerName; }

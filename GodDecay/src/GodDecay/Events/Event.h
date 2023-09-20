@@ -6,6 +6,7 @@
 
 namespace GodDecay
 {
+
 	/// <summary>
 	/// 事件的类型枚举
 	/// </summary>
@@ -13,7 +14,7 @@ namespace GodDecay
 	{
 		None = 0,
 		WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
-		ApplicationTick , ApplicationUpdate, ApplicationRender,
+		ApplicationTick, ApplicationUpdate, ApplicationRender,
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled,
 		KeyPressed, KeyReleased, KeyRepetied, KeyTyped
 	};
@@ -37,7 +38,7 @@ namespace GodDecay
 	/// <summary>
 	/// 事件基类
 	/// </summary>
-	class GODDECAY_API Event 
+	class Event
 	{
 		friend class EventDispatcher;
 	public:
@@ -59,13 +60,13 @@ namespace GodDecay
 	/// <summary>
 	/// 事件分发类
 	/// </summary>
-	class GODDECAY_API EventDispatcher 
+	class EventDispatcher
 	{
 	public:
 		template<typename T>
 		using EventFn = std::function<bool(T&)>;
 
-		EventDispatcher(Event& event) : m_Event(event){}
+		EventDispatcher(Event& event) : m_Event(event) {}
 
 		template<typename T>
 		bool Dispatch(EventFn<T> func)

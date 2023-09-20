@@ -7,7 +7,7 @@
 /// </summary>
 namespace GodDecay 
 {
-	class GODDECAY_API Input 
+	class Input 
 	{
 	public:
 		inline static bool IsKeyPressed(uint32_t keycode) { return m_Instance->IsKeyPressedImpl(keycode); }

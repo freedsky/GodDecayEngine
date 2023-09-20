@@ -5,7 +5,6 @@
 /// <returns>
 /// 方便后期维护
 /// </returns>
-#ifdef GD_PLATFORM_WINDOWS
 
 extern GodDecay::Application* GodDecay::CreateApplication();
 
@@ -22,5 +21,4 @@ int main()
 	return 0;
 }
 
-#endif // GD_PLATFORM_WINDOWS
 

@@ -26,9 +26,10 @@ group "Dependencies"
 
 project "GodDecay"
     location "GodDecay"
-    kind "SharedLib"
+    kind "StaticLib"
+	cppdialect "C++17"
     language "C++"
-	staticruntime "off"
+	staticruntime "on"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -51,7 +52,7 @@ project "GodDecay"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.glad}",
 		"%{IncludeDir.ImGui}",
-		"{IncludeDir.glm}"
+		"%{IncludeDir.glm}"
 	}
 
 	links
@@ -63,43 +64,39 @@ project "GodDecay"
 	}
 
     filter "system:windows"
-		cppdialect "C++17"
 		systemversion "latest"
 
         defines
 		{
 			"GD_PLATFORM_WINDOWS",
-			"GD_ENABLE_ASSERTS",
 			"GD_BUILD_DLL",
-			"GLFW_INCLUDE_NONE"
+			"GD_ENABLE_ASSERTS",
+			"GLFW_INCLUDE_NONE",
+			"_CRT_SECURE_NO_WARNINGS"
 
-		}
-
-        postbuildcommands
-		{
-			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/SandBox")
 		}
 
 		filter "configurations:Debug"
 			defines "GD_DEBUG"
 			runtime "Debug"
-			symbols "On"
+			symbols "on"
 
 		filter "configurations:Release"
 			defines "GD_RELEASE"
 			runtime "Release"
-			optimize "On"
+			optimize "on"
 
 		filter "configurations:Dist"
 			defines "GD_DIST"
 			runtime "Release"
-			optimize "On"
+			optimize "on"
 
 project "SandBox"
     location "Sandbox"
     kind "ConsoleApp"
+	cppdialect "C++17"
     language "C++"
-	staticruntime "off"
+	staticruntime "on"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -114,9 +111,7 @@ project "SandBox"
 	{
 		"%{IncludeDir.src}",
 		"%{IncludeDir.spdlog}",
-		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.glad}",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.ImGui}"
 	}
 
     links
@@ -125,25 +120,24 @@ project "SandBox"
 	}
 
     filter "system:windows"
-		cppdialect "C++17"
 		systemversion "latest"
 
 		defines
 		{
-			"GD_PLATFORM_WINDOWS"
+			
 		}
 
         filter "configurations:Debug"
             defines "GD_DEBUG"
 			runtime "Debug"
-            symbols "On"
+            symbols "on"
 
         filter "configurations:Release"
             defines "GD_RELEASE"
 			runtime "Release"
-            optimize "On"
+            optimize "on"
 
         filter "configurations:Dist"
             defines "GD_DIST"
 			runtime "Release"
-            optimize "On"
+            optimize "on"

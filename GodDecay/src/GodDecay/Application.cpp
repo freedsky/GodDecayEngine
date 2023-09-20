@@ -20,8 +20,13 @@ namespace GodDecay
 		//把Windowswindow的函数指针指向Application的事件进行绑定
 		m_Window->SetEventCallback(BIND_EVENTS(OnEvents));
 
+		
 		for (Layer* layer : m_LayerStack)
 			layer->OnAttach();
+		
+
+		m_ImGuiLayer = new ImGuiLayer();
+		PushOverlay(m_ImGuiLayer);
 	}
 
 	//===============================================
@@ -48,6 +53,10 @@ namespace GodDecay
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpDate();
 
+			m_ImGuiLayer->Begin();
+			for (Layer* layer : m_LayerStack)
+				layer->OnImGuiRender();
+			m_ImGuiLayer->End();
 			//渲染窗口
 			m_Window->OnUpDate();
 		}

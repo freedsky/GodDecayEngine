@@ -11,7 +11,7 @@
 /// </summary>
 namespace GodDecay 
 {
-	class GODDECAY_API Logger
+	class Logger
 	{
 	public:
 		static void Init();

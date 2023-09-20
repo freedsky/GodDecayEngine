@@ -9,7 +9,7 @@ namespace GodDecay
 
 	bool WindowsInput::IsKeyPressedImpl(uint32_t keycode) const
 	{
-		GLFWwindow* window = static_cast<GLFWwindow*>(Application::Get().GetWindow()->NativeWindow());
+		GLFWwindow* window = static_cast<GLFWwindow*>(Application::Get().GetWindow()->GetNativeWindow());
 
 		int status = glfwGetKey(window, keycode);
 		return status == GLFW_PRESS || status == GLFW_REPEAT;
@@ -17,7 +17,7 @@ namespace GodDecay
 
 	bool WindowsInput::IsMosueButtonPressedImpl(uint32_t button) const
 	{
-		GLFWwindow* window = static_cast<GLFWwindow*>(Application::Get().GetWindow()->NativeWindow());
+		GLFWwindow* window = static_cast<GLFWwindow*>(Application::Get().GetWindow()->GetNativeWindow());
 
 		int status = glfwGetMouseButton(window, button);
 		return status == GLFW_PRESS;
@@ -25,7 +25,7 @@ namespace GodDecay
 
 	std::pair<float, float> WindowsInput::GetMosuePositionImpl() const
 	{
-		GLFWwindow* window = static_cast<GLFWwindow*>(Application::Get().GetWindow()->NativeWindow());
+		GLFWwindow* window = static_cast<GLFWwindow*>(Application::Get().GetWindow()->GetNativeWindow());
 		int width, height;
 		glfwGetWindowSize(window, &width, &height);
 

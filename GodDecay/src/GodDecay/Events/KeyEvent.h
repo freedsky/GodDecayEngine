@@ -8,7 +8,7 @@ namespace GodDecay
 	/// <summary>
 	/// 按键事件基类
 	/// </summary>
-	class GODDECAY_API KeyEvent : public Event
+	class KeyEvent : public Event
 	{
 	public:
 		inline int GetKetCode() const { return m_KeyCode; }
@@ -26,7 +26,7 @@ namespace GodDecay
 	/// <summary>
 	/// 按键按下事件
 	/// </summary>
-	class GODDECAY_API KeyPressedEvent : public KeyEvent
+	class KeyPressedEvent : public KeyEvent
 	{
 	public:
 		KeyPressedEvent(int keycode)
@@ -45,7 +45,7 @@ namespace GodDecay
 	/// <summary>
 	/// 按键释放事件
 	/// </summary>
-	class GODDECAY_API KeyReleasedEvent : public KeyEvent
+	class KeyReleasedEvent : public KeyEvent
 	{
 	public:
 		KeyReleasedEvent(int keycode)
@@ -64,7 +64,7 @@ namespace GodDecay
 	/// <summary>
 	/// 按键重复事件
 	/// </summary>
-	class GODDECAY_API KeyRepetiedEvent : public KeyEvent 
+	class KeyRepetiedEvent : public KeyEvent 
 	{
 	public:
 		KeyRepetiedEvent(int keycode)
@@ -83,7 +83,7 @@ namespace GodDecay
 	/// <summary>
 	/// 按键字符串接收事件
 	/// </summary>
-	class GODDECAY_API KeyTypedEvent : public KeyEvent
+	class KeyTypedEvent : public KeyEvent
 	{
 	public:
 		KeyTypedEvent(int keycode)

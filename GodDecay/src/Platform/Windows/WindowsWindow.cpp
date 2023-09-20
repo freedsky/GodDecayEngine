@@ -149,14 +149,14 @@ namespace GodDecay
 		{
 			WindowDate& data = *(WindowDate*)glfwGetWindowUserPointer(window);
 
-			MouseScrolledEvent event(xOffset, yOffset);
+			MouseScrolledEvent event((float)xOffset, (float)yOffset);
 			data.EventCallback(event);
 		});
 		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos) 
 		{
 			WindowDate& data = *(WindowDate*)glfwGetWindowUserPointer(window);
 
-			MouseMovedEvent event(xPos, yPos);
+			MouseMovedEvent event((float)xPos, (float)yPos);
 			data.EventCallback(event);
 		});
 	}

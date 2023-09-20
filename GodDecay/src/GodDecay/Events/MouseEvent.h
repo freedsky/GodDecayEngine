@@ -8,7 +8,7 @@ namespace GodDecay
 	/// <summary>
 	/// 鼠标移动事件
 	/// </summary>
-	class GODDECAY_API MouseMovedEvent : public Event
+	class MouseMovedEvent : public Event
 	{
 	public:
 		MouseMovedEvent(float x, float y)
@@ -33,7 +33,7 @@ namespace GodDecay
 	/// <summary>
 	/// 鼠标缩放事件
 	/// </summary>
-	class GODDECAY_API MouseScrolledEvent : public Event
+	class MouseScrolledEvent : public Event
 	{
 	public:
 		MouseScrolledEvent(float xOffset, float yOffset)
@@ -58,7 +58,7 @@ namespace GodDecay
 	/// <summary>
 	/// 鼠标按键基类
 	/// </summary>
-	class GODDECAY_API MouseButtonEvent : public Event
+	class MouseButtonEvent : public Event
 	{
 	public:
 		inline int GetMouseButton() const { return m_Button; }
@@ -74,7 +74,7 @@ namespace GodDecay
 	/// <summary>
 	/// 鼠标按下
 	/// </summary>
-	class GODDECAY_API MouseButtonPressedEvent : public MouseButtonEvent
+	class MouseButtonPressedEvent : public MouseButtonEvent
 	{
 	public:
 		MouseButtonPressedEvent(int button)
@@ -93,7 +93,7 @@ namespace GodDecay
 	/// <summary>
 	/// 鼠标释放
 	/// </summary>
-	class GODDECAY_API MouseButtonReleasedEvent : public MouseButtonEvent
+	class MouseButtonReleasedEvent : public MouseButtonEvent
 	{
 	public:
 		MouseButtonReleasedEvent(int button)

@@ -11,7 +11,7 @@
 /// </summary>
 namespace GodDecay 
 {
-	class GODDECAY_API WindowsWindow : public Window 
+	class WindowsWindow : public Window 
 	{
 	public:
 		WindowsWindow(const WindowProperty& property);
@@ -22,7 +22,7 @@ namespace GodDecay
 		inline uint32_t GetWidth() const { return m_WindowDate.width; }
 		inline uint32_t GetHeight() const { return m_WindowDate.height; }
 
-		inline void* NativeWindow() const override { return m_Window; }
+		inline void* GetNativeWindow() const override { return m_Window; }
 
 		inline void SetEventCallback(const EventCallbackFn& callback) { m_WindowDate.EventCallback = callback; };
 

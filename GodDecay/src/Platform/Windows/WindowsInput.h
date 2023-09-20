@@ -8,7 +8,7 @@
 /// </summary>
 namespace GodDecay 
 {
-	class GODDECAY_API WindowsInput : public Input
+	class WindowsInput : public Input
 	{
 	protected:
 		virtual bool IsKeyPressedImpl(uint32_t keycode) const override;

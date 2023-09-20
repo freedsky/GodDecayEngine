@@ -3,6 +3,8 @@
 #include <GodDecay/Logger.h>
 #include <GodDecay/Input.h>
 
+#include <imgui.h>
+
 /// <summary>
 /// ≤‚ ‘¿‡
 /// </summary>
@@ -16,6 +18,7 @@ public:
 	void OnDetach() override;
 	void OnUpDate() override;
 	void OnEvents(const GodDecay::Event& e) override;
+	void OnImGuiRender() override;
 private:
 
 };

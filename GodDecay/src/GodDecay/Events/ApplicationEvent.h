@@ -8,7 +8,7 @@ namespace GodDecay
 	/// <summary>
 	/// 窗口缩放事件
 	/// </summary>
-	class GODDECAY_API WindowResizeEvent : public Event
+	class WindowResizeEvent : public Event
 	{
 	public:
 		WindowResizeEvent(unsigned int width, unsigned int height)
@@ -33,7 +33,7 @@ namespace GodDecay
 	/// <summary>
 	/// 窗口关闭事件
 	/// </summary>
-	class GODDECAY_API WindowCloseEvent : public Event
+	class WindowCloseEvent : public Event
 	{
 	public:
 		WindowCloseEvent() {}
@@ -45,7 +45,7 @@ namespace GodDecay
 	/// <summary>
 	/// 应用程序每次的tick事件
 	/// </summary>
-	class GODDECAY_API ApplicationTickEvent : public Event
+	class ApplicationTickEvent : public Event
 	{
 	public:
 		ApplicationTickEvent() {}
@@ -57,7 +57,7 @@ namespace GodDecay
 	/// <summary>
 	/// 应用程序更新阶段
 	/// </summary>
-	class GODDECAY_API ApplicationUpdateEvent : public Event
+	class ApplicationUpdateEvent : public Event
 	{
 	public:
 		ApplicationUpdateEvent() {}
@@ -69,7 +69,7 @@ namespace GodDecay
 	/// <summary>
 	/// 应用程序渲染更新事件
 	/// </summary>
-	class GODDECAY_API ApplicationRenderEvent : public Event
+	class ApplicationRenderEvent : public Event
 	{
 	public:
 		ApplicationRenderEvent() {}
