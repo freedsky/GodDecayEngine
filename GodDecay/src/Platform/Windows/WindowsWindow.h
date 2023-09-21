@@ -2,6 +2,7 @@
 
 #include "GodDecay/Core.h"
 #include "GodDecay/Window.h"
+#include "GodDecay/Renderer/RendererContext.h"
 
 #include <GLFW/glfw3.h>
 
@@ -34,6 +35,7 @@ namespace GodDecay
 		void Shutdown();
 	private:
 		GLFWwindow* m_Window = nullptr;
+		Ref<RendererContext> m_Context;
 
 		struct WindowDate
 		{

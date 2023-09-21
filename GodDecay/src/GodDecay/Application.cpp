@@ -6,7 +6,7 @@
 
 namespace GodDecay 
 {
-
+	
 #define BIND_EVENTS(x) std::bind(&Application::x, this, std::placeholders::_1)
 
 	Application* Application::m_Instance = nullptr;

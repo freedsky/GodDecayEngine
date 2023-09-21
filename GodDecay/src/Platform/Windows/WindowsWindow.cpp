@@ -5,6 +5,8 @@
 #include "GodDecay/Events/MouseEvent.h"
 #include "GodDecay/Events/KeyEvent.h"
 
+#include "Platform/OpenGL/OpenGLContext.h"
+
 #include <glad/glad.h>
 
 namespace GodDecay 
@@ -34,7 +36,7 @@ namespace GodDecay
 	void WindowsWindow::OnUpDate()
 	{
 		glfwPollEvents();
-		glfwSwapBuffers(m_Window);
+		m_Context->SwapBuffers();
 	}
 
 	void WindowsWindow::SetVSync(bool enabled)
@@ -70,13 +72,11 @@ namespace GodDecay
 		m_Window = glfwCreateWindow(property.Width, property.Height, property.Title.c_str(), nullptr, nullptr);
 		GD_ENGINE_ASSERT(m_Window, "this window create failed! ");
 		
-		glfwMakeContextCurrent(m_Window);
+		m_Context = CreateRef<OpenGLContext>(m_Window);
+		m_Context->ContextInit();
+		
 		glfwSetWindowUserPointer(m_Window, &m_WindowDate);
 		SetVSync(true);
-
-		//load glad
-		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		GD_ENGINE_ASSERT(status, "this glad load failed!");
 		//callback
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) 
 		{

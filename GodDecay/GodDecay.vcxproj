@@ -143,6 +143,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\GodDecay\Application.h" />
     <ClInclude Include="src\GodDecay\Core.h" />
     <ClInclude Include="src\GodDecay\EnterPoint.h" />
@@ -157,6 +158,7 @@
     <ClInclude Include="src\GodDecay\Layer.h" />
     <ClInclude Include="src\GodDecay\LayerStack.h" />
     <ClInclude Include="src\GodDecay\Logger.h" />
+    <ClInclude Include="src\GodDecay\Renderer\RendererContext.h" />
     <ClInclude Include="src\GodDecay\Window.h" />
     <ClInclude Include="src\GodDecayTop.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
@@ -580,6 +582,7 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\GodDecay\Application.cpp" />
     <ClCompile Include="src\GodDecay\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\GodDecay\ImGui\ImGuiLayer.cpp" />
