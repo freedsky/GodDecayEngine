@@ -1,21 +1,31 @@
 #pragma once
+#include "RenderCommand.h"
+#include "RendererCamera.h"
+
+//#include "Shader.h"这里写一个前向声明防止报错，因为Shader还没有成体系所以暂时不写
+class Shader;
+
 /// <summary>
-/// 在该类中选择RendererAPI是对高层API的init抽象
+/// 该类主要是使用引擎的图像API来进行渲染
 /// </summary>
 namespace GodDecay 
 {
-	enum class RendererAPI 
-	{
-		None = 0,
-		OpenGL = 1
-	};
-
 	class Renderer
 	{
 	public:
-		inline static RendererAPI GetAPI() { return m_RenderAPI; }
+		static void BeginScene(const Ref<RendererCamera>& camera);
+		static void EndScene();
+
+		static void Submit(Ref<Shader> shader, const Ref<VertexArrayBuffer>& vertexArray);
+
+		inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
+
 	private:
-		static RendererAPI m_RenderAPI;
+		struct SceneData
+		{
+			glm::mat4 ViewProjectionMatrix;
+		};
+		static Ref<SceneData> m_SceneData;
 	};
 }
 
