@@ -1349,6 +1349,11 @@
     </ClInclude>
     <ClInclude Include="src\GodDecay\Renderer\RendererContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
+    <ClInclude Include="src\GodDecay\Renderer\Buffer.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
+    <ClInclude Include="src\GodDecay\Renderer\Renderer.h" />
+    <ClInclude Include="src\GodDecay\Renderer\VertexArrayBuffer.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArrayBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GodDecay\Application.cpp">
@@ -1379,5 +1384,10 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
+    <ClCompile Include="src\GodDecay\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
+    <ClCompile Include="src\GodDecay\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\GodDecay\Renderer\VertexArrayBuffer.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArrayBuffer.cpp" />
   </ItemGroup>
 </Project>

@@ -143,6 +143,10 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArrayBuffer.h" />
+    <ClInclude Include="src\GodDecay\Renderer\Renderer.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
+    <ClInclude Include="src\GodDecay\Renderer\Buffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\GodDecay\Application.h" />
     <ClInclude Include="src\GodDecay\Core.h" />
@@ -580,8 +584,13 @@
     <ClInclude Include="vendor\glm\glm\vec3.hpp" />
     <ClInclude Include="vendor\glm\glm\vec4.hpp" />
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp" />
+    <ClInclude Include="src\GodDecay\Renderer\VertexArrayBuffer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArrayBuffer.cpp" />
+    <ClCompile Include="src\GodDecay\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
+    <ClCompile Include="src\GodDecay\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\GodDecay\Application.cpp" />
     <ClCompile Include="src\GodDecay\ImGui\ImGuiBuild.cpp" />
@@ -594,6 +603,7 @@
     <ClCompile Include="src\gdpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\GodDecay\Renderer\VertexArrayBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="vendor\GLFW\GLFW.vcxproj">
