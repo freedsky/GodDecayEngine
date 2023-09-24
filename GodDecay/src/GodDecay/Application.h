@@ -7,11 +7,12 @@
 /// </returns>
 #include "Core.h"
 #include "Window.h"
-#include "LayerStack.h"
+#include "Platform/PlatformTools/OpenGLTimeTool.h"
 
 #include "GodDecay/Events/Event.h"
 #include "GodDecay/Events/ApplicationEvent.h"
 
+#include "LayerStack.h"
 #include "GodDecay/ImGui/ImGuiLayer.h"
 
 namespace GodDecay 
@@ -38,6 +39,8 @@ namespace GodDecay
 
 		LayerStack m_LayerStack;
 		ImGuiLayer* m_ImGuiLayer;
+
+		Ref<Time> m_Time;
 
 		bool OnWindowClose(WindowCloseEvent& e);
 	};

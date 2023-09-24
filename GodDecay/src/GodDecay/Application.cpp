@@ -20,7 +20,9 @@ namespace GodDecay
 		//把Windowswindow的函数指针指向Application的事件进行绑定
 		m_Window->SetEventCallback(BIND_EVENTS(OnEvents));
 
-		
+		m_Time = CreateRef<OpenGLTimeTool>(TimeType::DeltaTime);
+
+
 		for (Layer* layer : m_LayerStack)
 			layer->OnAttach();
 		
@@ -47,11 +49,13 @@ namespace GodDecay
 	{
 		while (m_Running)
 		{
+			float timeStep = m_Time->GetTime();
+
 			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			for (Layer* layer : m_LayerStack)
-				layer->OnUpDate();
+				layer->OnUpDate(timeStep);
 
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_LayerStack)

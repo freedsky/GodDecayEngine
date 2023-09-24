@@ -2,6 +2,7 @@
 
 #include "Core.h"
 #include "Events/Event.h"
+#include "Platform/PlatformTools/OpenGLTimeTool.h"
 
 /// <summary>
 /// Layer是让各种更新依照类型和顺序进行顺序更新
@@ -19,7 +20,7 @@ namespace GodDecay
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnUpDate() {}
+		virtual void OnUpDate(float deltaTime) {}
 		virtual void OnEvents(const Event& e) {}
 		virtual void OnImGuiRender() {}
 

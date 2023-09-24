@@ -111,7 +111,8 @@ project "SandBox"
 	{
 		"%{IncludeDir.src}",
 		"%{IncludeDir.spdlog}",
-		"%{IncludeDir.ImGui}"
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.glm}"
 	}
 
     links
@@ -124,7 +125,7 @@ project "SandBox"
 
 		defines
 		{
-			
+			"GD_ENABLE_ASSERTS"
 		}
 
         filter "configurations:Debug"

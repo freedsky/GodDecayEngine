@@ -13,8 +13,20 @@
     <Filter Include="src\GodDecay\ImGui">
       <UniqueIdentifier>{C69E8BCD-B282-4C23-1BE3-467607E636A5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\GodDecay\Renderer">
+      <UniqueIdentifier>{C257FF7C-2EC4-BA77-F7B7-52D563E3DCDF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\GodDecay\Tools">
+      <UniqueIdentifier>{1C6E54CE-0852-1524-71B2-0F775DB5FFA5}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Platform">
       <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform\OpenGL">
+      <UniqueIdentifier>{35A49437-A105-7245-2A73-B8F796D3A804}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform\PlatformTools">
+      <UniqueIdentifier>{A64F65C1-925F-1192-FB18-76B0E747002B}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Platform\Windows">
       <UniqueIdentifier>{5B054582-4794-CE4B-F0B2-E246DC20DFF1}</UniqueIdentifier>
@@ -84,11 +96,56 @@
     <ClInclude Include="src\GodDecay\Logger.h">
       <Filter>src\GodDecay</Filter>
     </ClInclude>
+    <ClInclude Include="src\GodDecay\Renderer\Buffer.h">
+      <Filter>src\GodDecay\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Renderer\RenderCommand.h">
+      <Filter>src\GodDecay\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Renderer\Renderer.h">
+      <Filter>src\GodDecay\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Renderer\RendererAPI.h">
+      <Filter>src\GodDecay\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Renderer\RendererCamera.h">
+      <Filter>src\GodDecay\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Renderer\RendererContext.h">
+      <Filter>src\GodDecay\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Renderer\Shader.h">
+      <Filter>src\GodDecay\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Renderer\VertexArrayBuffer.h">
+      <Filter>src\GodDecay\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Tools\TimeTool.h">
+      <Filter>src\GodDecay\Tools</Filter>
+    </ClInclude>
     <ClInclude Include="src\GodDecay\Window.h">
       <Filter>src\GodDecay</Filter>
     </ClInclude>
     <ClInclude Include="src\GodDecayTop.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArrayBuffer.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\PlatformTools\OpenGLTimeTool.h">
+      <Filter>src\Platform\PlatformTools</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Windows\WindowsInput.h">
       <Filter>src\Platform\Windows</Filter>
@@ -1347,17 +1404,6 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\GodDecay\Renderer\RendererContext.h" />
-    <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
-    <ClInclude Include="src\GodDecay\Renderer\Buffer.h" />
-    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
-    <ClInclude Include="src\GodDecay\Renderer\Renderer.h" />
-    <ClInclude Include="src\GodDecay\Renderer\VertexArrayBuffer.h" />
-    <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArrayBuffer.h" />
-    <ClInclude Include="src\GodDecay\Renderer\RendererAPI.h" />
-    <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h" />
-    <ClInclude Include="src\GodDecay\Renderer\RenderCommand.h" />
-    <ClInclude Include="src\GodDecay\Renderer\RendererCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GodDecay\Application.cpp">
@@ -1378,6 +1424,45 @@
     <ClCompile Include="src\GodDecay\Logger.cpp">
       <Filter>src\GodDecay</Filter>
     </ClCompile>
+    <ClCompile Include="src\GodDecay\Renderer\Buffer.cpp">
+      <Filter>src\GodDecay\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GodDecay\Renderer\RenderCommand.cpp">
+      <Filter>src\GodDecay\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GodDecay\Renderer\Renderer.cpp">
+      <Filter>src\GodDecay\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GodDecay\Renderer\RendererAPI.cpp">
+      <Filter>src\GodDecay\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GodDecay\Renderer\RendererCamera.cpp">
+      <Filter>src\GodDecay\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GodDecay\Renderer\Shader.cpp">
+      <Filter>src\GodDecay\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GodDecay\Renderer\VertexArrayBuffer.cpp">
+      <Filter>src\GodDecay\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArrayBuffer.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\PlatformTools\OpenGLTimeTool.cpp">
+      <Filter>src\Platform\PlatformTools</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp">
       <Filter>src\Platform\Windows</Filter>
     </ClCompile>
@@ -1387,15 +1472,5 @@
     <ClCompile Include="src\gdpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
-    <ClCompile Include="src\GodDecay\Renderer\Buffer.cpp" />
-    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
-    <ClCompile Include="src\GodDecay\Renderer\Renderer.cpp" />
-    <ClCompile Include="src\GodDecay\Renderer\VertexArrayBuffer.cpp" />
-    <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArrayBuffer.cpp" />
-    <ClCompile Include="src\GodDecay\Renderer\RendererAPI.cpp" />
-    <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp" />
-    <ClCompile Include="src\GodDecay\Renderer\RenderCommand.cpp" />
-    <ClCompile Include="src\GodDecay\Renderer\RendererCamera.cpp" />
   </ItemGroup>
 </Project>
