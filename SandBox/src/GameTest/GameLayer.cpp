@@ -13,59 +13,29 @@ GameLayer::~GameLayer()
 
 void GameLayer::OnAttach()
 {
-	float vertices[4 * 7] = {
-			-0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f,
-			 0.5f, -0.5f, 0.0f, 0.2f, 0.3f, 0.8f, 1.0f,
-			 0.5f,  0.5f, 0.0f, 0.8f, 0.8f, 0.2f, 1.0f,
-			 -0.5f,  0.5f, 0.0f, 0.1f, 0.1f, 0.5f, 1.0f
+	float vertices[4 * 9] = {
+			-0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f, 0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f, 0.2f, 0.3f, 0.8f, 1.0f, 1.0, 0.0f,
+			 0.5f,  0.5f, 0.0f, 0.8f, 0.8f, 0.2f, 1.0f, 1.0f, 1.0f,
+			 -0.5f,  0.5f, 0.0f, 0.1f, 0.1f, 0.5f, 1.0f, 0.0f, 1.0f
 	};
 	uint32_t indices[6] = { 0, 1, 2 ,2,3,0 };
 
-	std::string vertexSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) in vec3 a_Position;
-			layout(location = 1) in vec4 a_Color;
-			out vec3 v_Position;
-			out vec4 v_Color;
+	m_Shader = GodDecay::Shader::Create("assets/shader/Texture.glsl");
 
-			uniform mat4 u_ViewProjection;
-			uniform mat4 u_TransForm;
-
-			void main()
-			{
-				v_Position = a_Position;
-				v_Color = a_Color;
-				gl_Position = u_ViewProjection * u_TransForm * vec4(a_Position, 1.0);	
-			}
-		)";
-
-	std::string fragmentSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) out vec4 color;
-			in vec3 v_Position;
-			in vec4 v_Color;
-			void main()
-			{
-				color = v_Color;
-			}
-		)";
-
-	m_Shader = GodDecay::Shader::Create(vertexSrc, fragmentSrc);
+	m_Texture = GodDecay::Texture2D::Create("assets/texture/ChernoLogo.png");
 
 	vertexarray = GodDecay::VertexArrayBuffer::Create();
 
-
 	GodDecay::Ref<GodDecay::VertexBuffer> vertex;
-
 
 	vertex = GodDecay::VertexBuffer::Create(vertices, sizeof(vertices));
 
 	GodDecay::BufferLayout layout =
 	{
 		{GodDecay::ShaderDataType::Float3,"a_Position"},
-		{GodDecay::ShaderDataType::Float4,"a_Color"}
+		{GodDecay::ShaderDataType::Float4,"a_Color"},
+		{GodDecay::ShaderDataType::Float2,"a_uv"}
 	};
 	vertex->Setlayout(layout);
 
@@ -74,6 +44,9 @@ void GameLayer::OnAttach()
 	GodDecay::Ref<GodDecay::IndexBuffer> index;
 	index = GodDecay::IndexBuffer::Create(indices, sizeof(indices));
 	vertexarray->SetIndexBuffer(index);
+
+	m_Shader->Bind();
+	std::dynamic_pointer_cast<GodDecay::OpenGLShader>(m_Shader)->UploadUniformInt("u_Texture", 0);
 }
 
 void GameLayer::OnDetach()
@@ -107,6 +80,7 @@ void GameLayer::OnUpDate(float deltaTime)
 		{
 			glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
 			glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+			m_Texture->Bind(0);
 			GodDecay::Renderer::Submit(m_Shader, vertexarray, transform);
 		}
 	}

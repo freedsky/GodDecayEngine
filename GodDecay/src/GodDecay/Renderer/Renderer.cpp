@@ -7,6 +7,11 @@ namespace GodDecay
 {
 	Ref<Renderer::SceneData> Renderer::m_SceneData = CreateRef<Renderer::SceneData>();
 
+	void Renderer::Init()
+	{
+		RenderCommand::Init();
+	}
+
 	void Renderer::BeginScene(const Ref<RendererCamera>& camera)
 	{
 		m_SceneData->ViewProjectionMatrix = camera->GetViewProjectionMatrix();

@@ -11,6 +11,11 @@ namespace GodDecay
 	class RenderCommand
 	{
 	public:
+		inline static void Init() 
+		{
+			m_RendererAPI->Init();
+		}
+
 		inline static void SetClearColor(const glm::vec4& color)
 		{
 			m_RendererAPI->SetClearColor(color);

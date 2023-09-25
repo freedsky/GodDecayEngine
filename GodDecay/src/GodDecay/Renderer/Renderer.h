@@ -14,6 +14,8 @@ namespace GodDecay
 	class Renderer
 	{
 	public:
+		static void Init();
+
 		static void BeginScene(const Ref<RendererCamera>& camera);
 		static void EndScene();
 

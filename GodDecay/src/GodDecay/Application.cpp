@@ -2,6 +2,8 @@
 #include "Application.h"
 #include "Logger.h"
 
+#include "Renderer/Renderer.h"
+
 #include <glad/glad.h>
 
 namespace GodDecay 
@@ -22,6 +24,7 @@ namespace GodDecay
 
 		m_Time = CreateRef<OpenGLTimeTool>(TimeType::DeltaTime);
 
+		Renderer::Init();
 
 		for (Layer* layer : m_LayerStack)
 			layer->OnAttach();

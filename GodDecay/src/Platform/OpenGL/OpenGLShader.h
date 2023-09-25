@@ -4,16 +4,25 @@
 
 #include <glm/glm.hpp>
 
+/// <summary>
+/// 在OpenGl中实现Shader对象
+/// 增加了对shader文件的外部读写编译[把vert和frag放在同一文件中去编译]
+/// </summary>
 namespace GodDecay 
 {
 	class OpenGLShader : public Shader
 	{
 	public:
 		OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc);
+		OpenGLShader(const std::string& filepath);
 		virtual ~OpenGLShader();
 
 		virtual void Bind() const override;
 		virtual void UnBind() const override;
+
+		std::string ReadFile(const std::string& filepath);
+		std::unordered_map<uint32_t, std::string> PreProcess(const std::string& source);
+		void Compile(const std::unordered_map<uint32_t, std::string>& shaderSources);
 
 		void UploadUniformInt(const std::string& name, int value);
 		void UploadUniformBool(const std::string& name, const bool& value);

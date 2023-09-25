@@ -18,6 +18,7 @@ IncludeDir["spdlog"] = "GodDecay/vendor/spdlog/include"
 IncludeDir["glad"] = "GodDecay/vendor/glad/include"
 IncludeDir["ImGui"] = "GodDecay/vendor/ImGui"
 IncludeDir["glm"] = "GodDecay/vendor/glm"
+IncludeDir["stb_image"] = "GodDecay/vendor/stb_image"
 
 group "Dependencies"
 	include "GodDecay/vendor/GLFW"
@@ -42,7 +43,14 @@ project "GodDecay"
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
 		"%{prj.name}/vendor/glm/glm/**.hpp",
-		"%{prj.name}/vendor/glm/glm/**.inl"
+		"%{prj.name}/vendor/glm/glm/**.inl",
+		"%{prj.name}/vendor/stb_image/**.h",
+		"%{prj.name}/vendor/stb_image/**.cpp"
+	}
+
+	defines
+	{
+		"_CRT_SECURE_NO_WARNINGS"
 	}
 
     includedirs
@@ -52,7 +60,8 @@ project "GodDecay"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.glad}",
 		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.stb_image}"
 	}
 
 	links
@@ -71,9 +80,7 @@ project "GodDecay"
 			"GD_PLATFORM_WINDOWS",
 			"GD_BUILD_DLL",
 			"GD_ENABLE_ASSERTS",
-			"GLFW_INCLUDE_NONE",
-			"_CRT_SECURE_NO_WARNINGS"
-
+			"GLFW_INCLUDE_NONE"
 		}
 
 		filter "configurations:Debug"

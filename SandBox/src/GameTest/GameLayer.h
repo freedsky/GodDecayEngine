@@ -9,6 +9,7 @@
 #include "GodDecay/Renderer/Renderer.h"
 #include "GodDecay/Renderer/RendererCamera.h"
 #include "Platform/OpenGL/OpenGLShader.h"
+#include "GodDecay/Renderer/Texture.h"
 
 #include "GodDecay/GodDecayKeyCodes.h"
 #include "GodDecay/GodDecayMouseButtonCodes.h"
@@ -38,5 +39,7 @@ private:
 
 	glm::vec3 m_CameraPosition = glm::vec3(0.0f);
 	float Speeds = 1.0f;
+
+	GodDecay::Ref<GodDecay::Texture2D> m_Texture;
 };
 
