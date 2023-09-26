@@ -1469,6 +1469,7 @@
     </ClInclude>
     <ClInclude Include="src\GodDecay\Renderer\Texture.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h" />
+    <ClInclude Include="src\GodDecay\Renderer\ShaderLibrary.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GodDecay\Application.cpp">
@@ -1542,5 +1543,6 @@
     </ClCompile>
     <ClCompile Include="src\GodDecay\Renderer\Texture.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp" />
+    <ClCompile Include="src\GodDecay\Renderer\ShaderLibrary.cpp" />
   </ItemGroup>
 </Project>

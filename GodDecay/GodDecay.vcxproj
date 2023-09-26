@@ -143,6 +143,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\GodDecay\Renderer\ShaderLibrary.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h" />
     <ClInclude Include="src\GodDecay\Application.h" />
     <ClInclude Include="src\GodDecay\Core.h" />
@@ -617,6 +618,7 @@
     <ClInclude Include="vendor\stb_image\stb_voxel_render.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\GodDecay\Renderer\ShaderLibrary.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp" />
     <ClCompile Include="src\GodDecay\Application.cpp" />
     <ClCompile Include="src\GodDecay\ImGui\ImGuiBuild.cpp" />

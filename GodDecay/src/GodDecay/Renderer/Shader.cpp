@@ -17,12 +17,12 @@ namespace GodDecay
 		GD_ENGINE_ASSERT(false, "Unknown RendererAPI!");
 		return nullptr;
 	}
-	Ref<Shader> Shader::Create(const std::string& vertexSrc, const std::string& fragmentSrc)
+	Ref<Shader> Shader::Create(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc)
 	{
 		switch (RendererAPI::GetAPI()) 
 		{
 			case RendererAPI::API::None: GD_CLIENT_ASSERT(false, "RednererAPI is None"); return nullptr;
-			case RendererAPI::API::OpenGL: return CreateRef<OpenGLShader>(vertexSrc, fragmentSrc);
+			case RendererAPI::API::OpenGL: return CreateRef<OpenGLShader>(name, vertexSrc, fragmentSrc);
 		}
 
 		GD_ENGINE_ASSERT(false, "Unknown RendererAPI!");

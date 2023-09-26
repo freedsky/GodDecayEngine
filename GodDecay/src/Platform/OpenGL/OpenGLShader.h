@@ -13,12 +13,13 @@ namespace GodDecay
 	class OpenGLShader : public Shader
 	{
 	public:
-		OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc);
+		OpenGLShader(const std::string name, const std::string& vertexSrc, const std::string& fragmentSrc);
 		OpenGLShader(const std::string& filepath);
 		virtual ~OpenGLShader();
 
 		virtual void Bind() const override;
 		virtual void UnBind() const override;
+		virtual const std::string& GetShaderName() const override { return m_ShaderName; }
 
 		std::string ReadFile(const std::string& filepath);
 		std::unordered_map<uint32_t, std::string> PreProcess(const std::string& source);
@@ -37,6 +38,7 @@ namespace GodDecay
 
 	private:
 		uint32_t m_RendererID;
+		std::string m_ShaderName;
 	};
 }
 

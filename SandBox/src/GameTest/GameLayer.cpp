@@ -20,6 +20,7 @@ void GameLayer::OnAttach()
 			 -0.5f,  0.5f, 0.0f, 0.1f, 0.1f, 0.5f, 1.0f, 0.0f, 1.0f
 	};
 	uint32_t indices[6] = { 0, 1, 2 ,2,3,0 };
+	m_ShaderLibraries = GodDecay::CreateRef<GodDecay::ShaderLibrary>();
 
 	m_Shader = GodDecay::Shader::Create("assets/shader/Texture.glsl");
 
@@ -47,6 +48,9 @@ void GameLayer::OnAttach()
 
 	m_Shader->Bind();
 	std::dynamic_pointer_cast<GodDecay::OpenGLShader>(m_Shader)->UploadUniformInt("u_Texture", 0);
+
+	//加入到shader管理对象中
+	m_ShaderLibraries->Add(m_Shader);
 }
 
 void GameLayer::OnDetach()

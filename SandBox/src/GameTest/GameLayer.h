@@ -9,6 +9,7 @@
 #include "GodDecay/Renderer/Renderer.h"
 #include "GodDecay/Renderer/RendererCamera.h"
 #include "Platform/OpenGL/OpenGLShader.h"
+#include "GodDecay/Renderer/ShaderLibrary.h"
 #include "GodDecay/Renderer/Texture.h"
 
 #include "GodDecay/GodDecayKeyCodes.h"
@@ -31,6 +32,8 @@ public:
 	void OnEvents(const GodDecay::Event& e) override;
 	void OnImGuiRender() override;
 private:
+	GodDecay::Ref< GodDecay::ShaderLibrary> m_ShaderLibraries;
+
 	GodDecay::Ref<GodDecay::Shader> m_Shader;
 
 	GodDecay::Ref<GodDecay::VertexArrayBuffer> vertexarray;
