@@ -7,7 +7,7 @@
 #include "GodDecay/Renderer/VertexArrayBuffer.h"
 #include "GodDecay/Renderer/RenderCommand.h"
 #include "GodDecay/Renderer/Renderer.h"
-#include "GodDecay/Renderer/RendererCamera.h"
+#include "GodDecay/Controller/OrthographicCameraController.h"
 #include "Platform/OpenGL/OpenGLShader.h"
 #include "GodDecay/Renderer/ShaderLibrary.h"
 #include "GodDecay/Renderer/Texture.h"
@@ -29,7 +29,7 @@ public:
 	void OnAttach() override;
 	void OnDetach() override;
 	void OnUpDate(float deltaTime) override;
-	void OnEvents(const GodDecay::Event& e) override;
+	void OnEvents(GodDecay::Event& e) override;
 	void OnImGuiRender() override;
 private:
 	GodDecay::Ref< GodDecay::ShaderLibrary> m_ShaderLibraries;
@@ -38,7 +38,7 @@ private:
 
 	GodDecay::Ref<GodDecay::VertexArrayBuffer> vertexarray;
 
-	GodDecay::Ref<GodDecay::RendererCamera> m_Camera;
+	GodDecay::Ref<GodDecay::OrthographicCameraController> m_Camera;
 
 	glm::vec3 m_CameraPosition = glm::vec3(0.0f);
 	float Speeds = 1.0f;

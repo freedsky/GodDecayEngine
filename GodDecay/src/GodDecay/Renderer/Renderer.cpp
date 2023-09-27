@@ -12,7 +12,7 @@ namespace GodDecay
 		RenderCommand::Init();
 	}
 
-	void Renderer::BeginScene(const Ref<RendererCamera>& camera)
+	void Renderer::BeginScene(const Ref<OrthographicCamera>& camera)
 	{
 		m_SceneData->ViewProjectionMatrix = camera->GetViewProjectionMatrix();
 	}

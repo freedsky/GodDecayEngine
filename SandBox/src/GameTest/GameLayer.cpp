@@ -3,7 +3,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 GameLayer::GameLayer(std::string name)
-	:Layer(name),m_Camera(GodDecay::CreateRef<GodDecay::RendererCamera>(-2.0f, 2.0f, -2.0f, 2.0f, -1.0f, 1.0f))
+	:Layer(name), m_Camera(GodDecay::CreateRef<GodDecay::OrthographicCameraController>(1280.0f / 720.0f))
 {
 }
 
@@ -59,23 +59,12 @@ void GameLayer::OnDetach()
 
 void GameLayer::OnUpDate(float deltaTime)
 {
-	if (GodDecay::Input::IsKeyPressed(GODDECAY_KEY_A))
-		m_CameraPosition.x -= Speeds * deltaTime;
-	if (GodDecay::Input::IsKeyPressed(GODDECAY_KEY_D))
-		m_CameraPosition.x += Speeds * deltaTime;
-	if (GodDecay::Input::IsKeyPressed(GODDECAY_KEY_W))
-		m_CameraPosition.y += Speeds * deltaTime;
-	if (GodDecay::Input::IsKeyPressed(GODDECAY_KEY_S))
-		m_CameraPosition.y -= Speeds * deltaTime;
-
+	m_Camera->OnUpdate(deltaTime);
 
 	GodDecay::RenderCommand::SetClearColor(glm::vec4(0.1, 0.1, 0.1, 1.0));
 	GodDecay::RenderCommand::Clear();
 
-	m_Camera->Set2DPosition(m_CameraPosition);
-	m_Camera->Set2DRotation(0.0f);
-
-	GodDecay::Renderer::BeginScene(m_Camera);
+	GodDecay::Renderer::BeginScene(m_Camera->GetCamera());
 	glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
 	for (int y = 0; y < 20; y++)
@@ -90,9 +79,9 @@ void GameLayer::OnUpDate(float deltaTime)
 	}
 }
 
-void GameLayer::OnEvents(const GodDecay::Event& e)
+void GameLayer::OnEvents(GodDecay::Event& e)
 {
-	//GD_CLIENT_DEBUG("{0}", e.GetName());
+	m_Camera->OnEvent(e);
 }
 
 void GameLayer::OnImGuiRender()

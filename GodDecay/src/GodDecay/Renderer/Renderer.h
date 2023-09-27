@@ -1,6 +1,6 @@
 #pragma once
 #include "RenderCommand.h"
-#include "RendererCamera.h"
+#include "OrthographicCamera.h"
 #include "Shader.h"
 
 
@@ -16,7 +16,7 @@ namespace GodDecay
 	public:
 		static void Init();
 
-		static void BeginScene(const Ref<RendererCamera>& camera);
+		static void BeginScene(const Ref<OrthographicCamera>& camera);
 		static void EndScene();
 
 		static void Submit(Ref<Shader> shader, const Ref<VertexArrayBuffer>& vertexArray, const glm::mat4& transform);

@@ -21,7 +21,7 @@ namespace GodDecay
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
 		virtual void OnUpDate(float deltaTime) {}
-		virtual void OnEvents(const Event& e) {}
+		virtual void OnEvents(Event& e) {}
 		virtual void OnImGuiRender() {}
 
 		//just bebug
