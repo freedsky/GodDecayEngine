@@ -1,4 +1,4 @@
-workspace "GodDecayEngine"
+workspace "GodDecayEngine_3D"
     architecture "x64"
 	startproject "SandBox"
 
@@ -12,20 +12,20 @@ workspace "GodDecayEngine"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
-IncludeDir["src"] = "GodDecay/src"
-IncludeDir["GLFW"] = "GodDecay/vendor/GLFW/include"
-IncludeDir["spdlog"] = "GodDecay/vendor/spdlog/include"
-IncludeDir["glad"] = "GodDecay/vendor/glad/include"
-IncludeDir["ImGui"] = "GodDecay/vendor/ImGui"
-IncludeDir["glm"] = "GodDecay/vendor/glm"
-IncludeDir["stb_image"] = "GodDecay/vendor/stb_image"
+IncludeDir["src"] = "GodDecay_3D/src"
+IncludeDir["GLFW"] = "GodDecay_3D/vendor/GLFW/include"
+IncludeDir["spdlog"] = "GodDecay_3D/vendor/spdlog/include"
+IncludeDir["glad"] = "GodDecay_3D/vendor/glad/include"
+IncludeDir["ImGui"] = "GodDecay_3D/vendor/ImGui"
+IncludeDir["glm"] = "GodDecay_3D/vendor/glm"
+IncludeDir["stb_image"] = "GodDecay_3D/vendor/stb_image"
 
 group "Dependencies"
-	include "GodDecay/vendor/GLFW"
-	include "GodDecay/vendor/glad"
-	include "GodDecay/vendor/ImGui"
+	include "GodDecay_3D/vendor/GLFW"
+	include "GodDecay_3D/vendor/glad"
+	include "GodDecay_3D/vendor/ImGui"
 
-project "GodDecay"
+project "GodDecay_3D"
     location "GodDecay"
     kind "StaticLib"
 	cppdialect "C++17"
@@ -36,7 +36,7 @@ project "GodDecay"
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
 	pchheader "gdpch.h"
-	pchsource "GodDecay/src/gdpch.cpp"
+	pchsource "GodDecay_3D/src/gdpch.cpp"
 
     files
 	{
@@ -124,7 +124,7 @@ project "SandBox"
 
     links
 	{
-		"GodDecay"
+		"GodDecay_3D"
 	}
 
     filter "system:windows"
