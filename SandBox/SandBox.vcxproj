@@ -79,7 +79,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GD_ENABLE_ASSERTS;GD_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\GodDecay\src;..\GodDecay\vendor\spdlog\include;..\GodDecay\vendor\ImGui;..\GodDecay\vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\GodDecay_2D\src;..\GodDecay_2D\vendor\spdlog\include;..\GodDecay_2D\vendor\ImGui;..\GodDecay_2D\vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -96,7 +96,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GD_ENABLE_ASSERTS;GD_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\GodDecay\src;..\GodDecay\vendor\spdlog\include;..\GodDecay\vendor\ImGui;..\GodDecay\vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\GodDecay_2D\src;..\GodDecay_2D\vendor\spdlog\include;..\GodDecay_2D\vendor\ImGui;..\GodDecay_2D\vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -117,7 +117,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GD_ENABLE_ASSERTS;GD_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\GodDecay\src;..\GodDecay\vendor\spdlog\include;..\GodDecay\vendor\ImGui;..\GodDecay\vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\GodDecay_2D\src;..\GodDecay_2D\vendor\spdlog\include;..\GodDecay_2D\vendor\ImGui;..\GodDecay_2D\vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -141,12 +141,9 @@
     <ClCompile Include="src\SandBox.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GodDecay\GodDecay.vcxproj">
-      <Project>{A521C150-91EE-1B5C-BA07-0A04A63351EA}</Project>
+    <ProjectReference Include="..\GodDecay_2D\GodDecay_2D.vcxproj">
+      <Project>{5A969537-C64B-0E2D-4F40-0804BBF40431}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="assets\shader\Texture.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
