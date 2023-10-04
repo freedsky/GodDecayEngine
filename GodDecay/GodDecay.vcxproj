@@ -143,6 +143,8 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\GodDecay\Controller\PerspectiveCameraController.h" />
+    <ClInclude Include="src\GodDecay\Renderer\PerspectiveCamera.h" />
     <ClInclude Include="src\GodDecay\Controller\OrthographicCameraController.h" />
     <ClInclude Include="src\GodDecay\Renderer\ShaderLibrary.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h" />
@@ -619,6 +621,8 @@
     <ClInclude Include="vendor\stb_image\stb_voxel_render.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\GodDecay\Controller\PerspectiveCameraController.cpp" />
+    <ClCompile Include="src\GodDecay\Renderer\PerspectiveCamera.cpp" />
     <ClCompile Include="src\GodDecay\Controller\OrthographicCameraController.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\ShaderLibrary.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp" />

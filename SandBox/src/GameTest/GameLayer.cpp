@@ -3,7 +3,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 GameLayer::GameLayer(std::string name)
-	:Layer(name), m_Camera(GodDecay::CreateRef<GodDecay::OrthographicCameraController>(1280.0f / 720.0f))
+	:Layer(name), m_OrthographicCamera(GodDecay::CreateRef<GodDecay::OrthographicCameraController>(1280.0f / 720.0f, true)),
+	m_PerspectiveCamera(GodDecay::CreateRef<GodDecay::PerspectiveCameraController>(1280.0f / 720.0f))
 {
 }
 
@@ -59,12 +60,13 @@ void GameLayer::OnDetach()
 
 void GameLayer::OnUpDate(float deltaTime)
 {
-	m_Camera->OnUpdate(deltaTime);
+	m_OrthographicCamera->OnUpdate(deltaTime);
+	m_PerspectiveCamera->OnUpdate(deltaTime);
 
 	GodDecay::RenderCommand::SetClearColor(glm::vec4(0.1, 0.1, 0.1, 1.0));
 	GodDecay::RenderCommand::Clear();
 
-	GodDecay::Renderer::BeginScene(m_Camera->GetCamera());
+	GodDecay::Renderer::BeginScene(m_PerspectiveCamera->GetCamera());
 	glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
 	for (int y = 0; y < 20; y++)
@@ -81,7 +83,8 @@ void GameLayer::OnUpDate(float deltaTime)
 
 void GameLayer::OnEvents(GodDecay::Event& e)
 {
-	m_Camera->OnEvent(e);
+	m_OrthographicCamera->OnEvent(e);
+	m_PerspectiveCamera->OnEvent(e);
 }
 
 void GameLayer::OnImGuiRender()

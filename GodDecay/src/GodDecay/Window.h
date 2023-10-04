@@ -37,6 +37,8 @@ namespace GodDecay
 		virtual void SetVSync(bool enable) = 0;
 		virtual bool IsVSync() const = 0;
 
+		virtual void SetHideMouse(bool enabled) = 0;
+
 		static Ref<Window> Create(const WindowProperty& property = WindowProperty());
 	};
 }

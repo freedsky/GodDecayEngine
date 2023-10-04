@@ -24,6 +24,7 @@ namespace GodDecay
 		case TimeType::DeltaTime: return GetDeltaTime(); break;
 		}
 
+		GD_ENGINE_ASSERT(false, "this Time Type is UnKnow");
 		return -1.0f;
 	}
 

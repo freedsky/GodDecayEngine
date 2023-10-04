@@ -18,7 +18,7 @@ namespace GodDecay
 		virtual void UnBind() const = 0;
 
 		virtual void AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer) = 0;
-		virtual void SetIndexBuffer(const Ref<IndexBuffer>& IndqexBuffer) = 0;
+		virtual void SetIndexBuffer(const Ref<IndexBuffer>& IndexBuffer) = 0;
 
 		virtual std::vector<Ref<VertexBuffer>> GetVertexBuffers() const = 0;
 		virtual Ref<IndexBuffer> GetIndexBuffer() const = 0;

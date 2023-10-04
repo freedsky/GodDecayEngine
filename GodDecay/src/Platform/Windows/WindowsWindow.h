@@ -29,7 +29,7 @@ namespace GodDecay
 
 		void SetVSync(bool enabled) override;
 		bool IsVSync() const override;
-
+		void SetHideMouse(bool enabled) override;
 	private:
 		void Init(const WindowProperty& property);
 		void Shutdown();

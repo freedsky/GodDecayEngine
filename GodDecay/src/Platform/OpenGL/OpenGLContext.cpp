@@ -9,7 +9,7 @@ namespace GodDecay
 	OpenGLContext::OpenGLContext(GLFWwindow* windowHandle)
 		:m_WindowHandle(windowHandle)
 	{
-		GD_ENGINE_ASSERT(windowHandle, "this Window Handle is NULL");
+		GD_ENGINE_ASSERT(windowHandle, "This Window Handle is NULL");
 	}
 
 	void OpenGLContext::ContextInit()
@@ -23,6 +23,7 @@ namespace GodDecay
 		GD_ENGINE_INFO("  Vendor: {0}", (char*)glGetString(GL_VENDOR));
 		GD_ENGINE_INFO("  Renderer: {0}", (char*)glGetString(GL_RENDERER));
 		GD_ENGINE_INFO("  Version: {0}", (char*)glGetString(GL_VERSION));
+		GD_ENGINE_INFO("  Shader Version: {0}", (char*)glGetString(GL_SHADING_LANGUAGE_VERSION));
 	}
 
 	void OpenGLContext::SwapBuffers()

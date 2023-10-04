@@ -5,7 +5,7 @@
 /// <summary>
 /// 创建数据缓冲区以及绑定数据[vetex \ index]
 /// 抽象不同CG API 
-/// 增加了缓冲布局，使得对数据的属性封装变得更加任意
+/// 增加了缓冲布局，使得对数据的属性封装变得更加容易 
 /// </summary>
 
 namespace GodDecay 
@@ -46,7 +46,7 @@ namespace GodDecay
 		uint32_t Offset;
 		bool Normalized;
 
-		BufferElement() {}
+		BufferElement() = default;
 		BufferElement(ShaderDataType type, const std::string& name, bool normalized = false)
 			: Name(name), Type(type), Size(ShaderDataTypeSize(type)), Offset(0), Normalized(normalized)
 		{

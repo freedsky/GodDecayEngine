@@ -26,12 +26,22 @@ namespace GodDecay
 
 		Renderer::Init();
 
-		for (Layer* layer : m_LayerStack)
-			layer->OnAttach();
+		//因为在每次push时都会调用OnAttach，除非有什么功能层在application之上，要不然这里什么都不会执行
+		//for (Layer* layer : m_LayerStack)
+		//	layer->OnAttach();
 		
 
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
+	}
+
+	Application::~Application()
+	{
+		//在这里释放层栈对象，
+		for (Layer* layer : m_LayerStack) 
+		{
+			layer->OnDetach();
+		}
 	}
 
 	//===============================================
@@ -73,7 +83,7 @@ namespace GodDecay
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENTS(OnWindowClose));
-
+		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENTS(OnWindowResize));
 		//GD_ENGINE_INFO("{0}", e);
 
 		for(std::vector<Layer*>::iterator it = m_LayerStack.end();it != m_LayerStack.begin();)
@@ -82,6 +92,19 @@ namespace GodDecay
 			if (e.GetHandle())
 				break;
 		}
+	}
+
+	bool Application::OnWindowResize(WindowResizeEvent& e)
+	{
+		if (e.GetWidth() == 0 || e.GetHeight() == 0)
+		{
+			m_Minimized = true;
+			return false;
+		}
+
+		m_Minimized = false;
+		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+		return false;
 	}
 
 	bool Application::OnWindowClose(WindowCloseEvent& e)

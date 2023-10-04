@@ -19,7 +19,7 @@ namespace GodDecay
 
 	ImGuiLayer::~ImGuiLayer()
 	{
-		OnDetach();
+		//OnDetach();
 	}
 
 	void ImGuiLayer::OnAttach()

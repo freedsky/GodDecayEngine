@@ -21,7 +21,7 @@ namespace GodDecay
 	{
 	public:
 		Application();
-		virtual ~Application() = default;
+		virtual ~Application();
 
 		void OnEvents(Event& e);
 
@@ -36,12 +36,14 @@ namespace GodDecay
 		Ref<Window> m_Window = nullptr;
 		static Application* m_Instance;
 		bool m_Running = true;
+		bool m_Minimized = false;
 
 		LayerStack m_LayerStack;
 		ImGuiLayer* m_ImGuiLayer;
 
 		Ref<Time> m_Time;
-
+	private:
+		bool OnWindowResize(WindowResizeEvent& e);
 		bool OnWindowClose(WindowCloseEvent& e);
 	};
 

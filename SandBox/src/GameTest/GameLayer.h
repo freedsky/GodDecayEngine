@@ -8,6 +8,7 @@
 #include "GodDecay/Renderer/RenderCommand.h"
 #include "GodDecay/Renderer/Renderer.h"
 #include "GodDecay/Controller/OrthographicCameraController.h"
+#include "GodDecay/Controller/PerspectiveCameraController.h"
 #include "Platform/OpenGL/OpenGLShader.h"
 #include "GodDecay/Renderer/ShaderLibrary.h"
 #include "GodDecay/Renderer/Texture.h"
@@ -38,7 +39,8 @@ private:
 
 	GodDecay::Ref<GodDecay::VertexArrayBuffer> vertexarray;
 
-	GodDecay::Ref<GodDecay::OrthographicCameraController> m_Camera;
+	GodDecay::Ref<GodDecay::OrthographicCameraController> m_OrthographicCamera;
+	GodDecay::Ref<GodDecay::PerspectiveCameraController> m_PerspectiveCamera;
 
 	glm::vec3 m_CameraPosition = glm::vec3(0.0f);
 	float Speeds = 1.0f;

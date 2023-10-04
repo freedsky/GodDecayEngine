@@ -6,7 +6,7 @@
 
 namespace GodDecay 
 {
-	//关于文件加载的静态函数
+	//关于文件加载来判断为顶点还是片段着色器的静态函数
 	static GLenum ShaderTypeFromString(const std::string& type)
 	{
 		if (type == "vertex")

@@ -18,6 +18,7 @@ namespace GodDecay
 
 		Ref<Shader> Load(const std::string& filepath);
 		Ref<Shader> Load(const std::string& name, const std::string& filepath);
+		//这种方法可能在此后不会进行支持
 		Ref<Shader> Load(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);
 
 		Ref<Shader> Get(const std::string& name);
