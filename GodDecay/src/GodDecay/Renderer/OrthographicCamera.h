@@ -24,9 +24,9 @@ namespace GodDecay
 		inline void SetFarPlan(float f) { FarPlan = f; }
 		inline float GetFarPlan() { return FarPlan; }
 
-		inline const glm::mat4& GetViewMatrix() { return m_ViewMatrix; }
-		inline const glm::mat4& GetProjectionMatrix() { return m_ProjectionMatrix; }
-		inline const glm::mat4& GetViewProjectionMatrix() { return m_ViewProjectionMatrix; }
+		inline const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
+		inline const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
+		inline const glm::mat4& GetViewProjectionMatrix() const { return m_ViewProjectionMatrix; }
 	private:
 		//更新位置或者旋转
 		void RecalculateViewMatrix();

@@ -34,9 +34,9 @@ namespace GodDecay
 		inline void SetAspectRatio(float aspect) { m_AspectRatio = aspect; }
 		inline float GetAspectRatio() { return m_AspectRatio; }
 
-		inline const glm::mat4& GetViewMatrix() { return m_ViewMatrix; }
-		inline const glm::mat4& GetProjectionMatrix() { return m_ProjectionMatrix; }
-		inline const glm::mat4& GetViewProjectionMatrix() { return m_ViewProjectionMatrix; }
+		inline const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
+		inline const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
+		inline const glm::mat4& GetViewProjectionMatrix() const { return m_ViewProjectionMatrix; }
 
 		void UpDateViewProjectionMatrix();
 		void UpDateViewMatrix(glm::vec3 WorldUp);
