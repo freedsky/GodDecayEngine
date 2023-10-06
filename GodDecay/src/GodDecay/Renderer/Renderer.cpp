@@ -1,6 +1,8 @@
 #include "gdpch.h"
 #include "Renderer.h"
 
+#include "Renderer2D.h"
+
 #include "Platform/OpenGL/OpenGLShader.h"
 
 namespace GodDecay 
@@ -10,6 +12,7 @@ namespace GodDecay
 	void Renderer::Init()
 	{
 		RenderCommand::Init();
+		Renderer2D::Init();
 	}
 
 	void Renderer::BeginScene(const Ref<OrthographicCamera>& camera)

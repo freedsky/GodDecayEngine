@@ -7,6 +7,9 @@
     <Filter Include="src\GodDecay">
       <UniqueIdentifier>{9C243B81-8887-CA25-310D-03DC1D4F96A8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\GodDecay\Controller">
+      <UniqueIdentifier>{AF9636F8-1BCE-7E8F-24D8-E2B2908EA588}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\GodDecay\Events">
       <UniqueIdentifier>{00095E76-6C6A-3B84-F5D7-813661387243}</UniqueIdentifier>
     </Filter>
@@ -60,6 +63,12 @@
     <ClInclude Include="src\GodDecay\Application.h">
       <Filter>src\GodDecay</Filter>
     </ClInclude>
+    <ClInclude Include="src\GodDecay\Controller\OrthographicCameraController.h">
+      <Filter>src\GodDecay\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Controller\PerspectiveCameraController.h">
+      <Filter>src\GodDecay\Controller</Filter>
+    </ClInclude>
     <ClInclude Include="src\GodDecay\Core.h">
       <Filter>src\GodDecay</Filter>
     </ClInclude>
@@ -102,6 +111,12 @@
     <ClInclude Include="src\GodDecay\Renderer\Buffer.h">
       <Filter>src\GodDecay\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\GodDecay\Renderer\OrthographicCamera.h">
+      <Filter>src\GodDecay\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Renderer\PerspectiveCamera.h">
+      <Filter>src\GodDecay\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\GodDecay\Renderer\RenderCommand.h">
       <Filter>src\GodDecay\Renderer</Filter>
     </ClInclude>
@@ -111,13 +126,16 @@
     <ClInclude Include="src\GodDecay\Renderer\RendererAPI.h">
       <Filter>src\GodDecay\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\GodDecay\Renderer\OrthographicCamera.h">
-      <Filter>src\GodDecay\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="src\GodDecay\Renderer\RendererContext.h">
       <Filter>src\GodDecay\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\GodDecay\Renderer\Shader.h">
+      <Filter>src\GodDecay\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Renderer\ShaderLibrary.h">
+      <Filter>src\GodDecay\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Renderer\Texture.h">
       <Filter>src\GodDecay\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\GodDecay\Renderer\VertexArrayBuffer.h">
@@ -142,6 +160,9 @@
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArrayBuffer.h">
@@ -1467,14 +1488,17 @@
     <ClInclude Include="vendor\stb_image\stb_voxel_render.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\GodDecay\Renderer\Texture.h" />
-    <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h" />
-    <ClInclude Include="src\GodDecay\Renderer\ShaderLibrary.h" />
-    <ClInclude Include="src\GodDecay\Controller\OrthographicCameraController.h" />
+    <ClInclude Include="src\GodDecay\Renderer\Renderer2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GodDecay\Application.cpp">
       <Filter>src\GodDecay</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GodDecay\Controller\OrthographicCameraController.cpp">
+      <Filter>src\GodDecay\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GodDecay\Controller\PerspectiveCameraController.cpp">
+      <Filter>src\GodDecay\Controller</Filter>
     </ClCompile>
     <ClCompile Include="src\GodDecay\ImGui\ImGuiBuild.cpp">
       <Filter>src\GodDecay\ImGui</Filter>
@@ -1494,6 +1518,12 @@
     <ClCompile Include="src\GodDecay\Renderer\Buffer.cpp">
       <Filter>src\GodDecay\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\GodDecay\Renderer\OrthographicCamera.cpp">
+      <Filter>src\GodDecay\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GodDecay\Renderer\PerspectiveCamera.cpp">
+      <Filter>src\GodDecay\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\GodDecay\Renderer\RenderCommand.cpp">
       <Filter>src\GodDecay\Renderer</Filter>
     </ClCompile>
@@ -1503,10 +1533,13 @@
     <ClCompile Include="src\GodDecay\Renderer\RendererAPI.cpp">
       <Filter>src\GodDecay\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\GodDecay\Renderer\OrthographicCamera.cpp">
+    <ClCompile Include="src\GodDecay\Renderer\Shader.cpp">
       <Filter>src\GodDecay\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\GodDecay\Renderer\Shader.cpp">
+    <ClCompile Include="src\GodDecay\Renderer\ShaderLibrary.cpp">
+      <Filter>src\GodDecay\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GodDecay\Renderer\Texture.cpp">
       <Filter>src\GodDecay\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\GodDecay\Renderer\VertexArrayBuffer.cpp">
@@ -1522,6 +1555,9 @@
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArrayBuffer.cpp">
@@ -1542,9 +1578,6 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\GodDecay\Renderer\Texture.cpp" />
-    <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp" />
-    <ClCompile Include="src\GodDecay\Renderer\ShaderLibrary.cpp" />
-    <ClCompile Include="src\GodDecay\Controller\OrthographicCameraController.cpp" />
+    <ClCompile Include="src\GodDecay\Renderer\Renderer2D.cpp" />
   </ItemGroup>
 </Project>

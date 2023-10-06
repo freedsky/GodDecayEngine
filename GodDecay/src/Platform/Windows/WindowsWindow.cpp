@@ -13,6 +13,8 @@ namespace GodDecay
 {
 	static bool s_GLFWInitialized = false;
 
+	bool HideMouse = false;
+
 	static void GLFWErrorCallback(int error, const char* description) 
 	{
 		GD_ENGINE_ERROR("({0}),{1}", errno, description);
@@ -51,6 +53,19 @@ namespace GodDecay
 	bool WindowsWindow::IsVSync() const
 	{
 		return m_WindowDate.vsync;
+	}
+
+	void WindowsWindow::SetHideMouse(bool enabled)
+	{
+		HideMouse = enabled;
+		if (HideMouse)
+		{
+			glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		}
+		else
+		{
+			glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		}
 	}
 
 	void WindowsWindow::Init(const WindowProperty& property)
@@ -163,7 +178,9 @@ namespace GodDecay
 
 	void WindowsWindow::Shutdown()
 	{
-		glfwDestroyWindow(m_Window);
+		if(m_Window != nullptr)
+			glfwDestroyWindow(m_Window);
+		glfwTerminate();
 	}
 }
 

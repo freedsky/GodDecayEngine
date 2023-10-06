@@ -13,10 +13,10 @@
 #include "GodDecay/Renderer/VertexArrayBuffer.h"
 #include "GodDecay/Renderer/RenderCommand.h"
 #include "GodDecay/Renderer/Renderer.h"
+#include "GodDecay/Renderer/Renderer2D.h"
 #include "GodDecay/Controller/OrthographicCameraController.h"
 #include "Platform/OpenGL/OpenGLShader.h"
 #include "GodDecay/Renderer/ShaderLibrary.h"
 #include "GodDecay/Renderer/Texture.h"
 
-#include "GodDecay/EnterPoint.h"
 
