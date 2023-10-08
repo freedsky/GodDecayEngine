@@ -7,3 +7,6 @@
 [submodule "GodDecay/vendor/glm"]
 	path = GodDecay/vendor/glm
 	url = https://github.com/g-truc/glm.git
+[submodule "GodDecay/vendor/assimp"]
+	path = GodDecay/vendor/assimp
+	url = https://github.com/assimp/assimp.git

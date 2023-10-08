@@ -1,6 +1,5 @@
-#include "gdpch.h"
-
 #include <GodDecayTop.h>
+#include <GodDecay/EnterPoint.h>
 
 #include "GameTest/GameLayer.h"
 

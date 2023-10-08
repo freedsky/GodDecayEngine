@@ -12,20 +12,21 @@ workspace "GodDecayEngine_3D"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
-IncludeDir["src"] = "GodDecay_3D/src"
-IncludeDir["GLFW"] = "GodDecay_3D/vendor/GLFW/include"
-IncludeDir["spdlog"] = "GodDecay_3D/vendor/spdlog/include"
-IncludeDir["glad"] = "GodDecay_3D/vendor/glad/include"
-IncludeDir["ImGui"] = "GodDecay_3D/vendor/ImGui"
-IncludeDir["glm"] = "GodDecay_3D/vendor/glm"
-IncludeDir["stb_image"] = "GodDecay_3D/vendor/stb_image"
+IncludeDir["src"] = "GodDecay/src"
+IncludeDir["GLFW"] = "GodDecay/vendor/GLFW/include"
+IncludeDir["spdlog"] = "GodDecay/vendor/spdlog/include"
+IncludeDir["glad"] = "GodDecay/vendor/glad/include"
+IncludeDir["ImGui"] = "GodDecay/vendor/ImGui"
+IncludeDir["glm"] = "GodDecay/vendor/glm"
+IncludeDir["stb_image"] = "GodDecay/vendor/stb_image"
+IncludeDir["assimp"] = "GodDecay/vendor/assimp/include"
 
 group "Dependencies"
-	include "GodDecay_3D/vendor/GLFW"
-	include "GodDecay_3D/vendor/glad"
-	include "GodDecay_3D/vendor/ImGui"
+	include "GodDecay/vendor/GLFW"
+	include "GodDecay/vendor/glad"
+	include "GodDecay/vendor/ImGui"
 
-project "GodDecay_3D"
+project "GodDecay"
     location "GodDecay"
     kind "StaticLib"
 	cppdialect "C++17"
@@ -36,7 +37,7 @@ project "GodDecay_3D"
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
 	pchheader "gdpch.h"
-	pchsource "GodDecay_3D/src/gdpch.cpp"
+	pchsource "GodDecay/src/gdpch.cpp"
 
     files
 	{
@@ -45,7 +46,10 @@ project "GodDecay_3D"
 		"%{prj.name}/vendor/glm/glm/**.hpp",
 		"%{prj.name}/vendor/glm/glm/**.inl",
 		"%{prj.name}/vendor/stb_image/**.h",
-		"%{prj.name}/vendor/stb_image/**.cpp"
+		"%{prj.name}/vendor/stb_image/**.cpp",
+		"%{prj.name}/vendor/assimp/include/**.h",
+		"%{prj.name}/vendor/assimp/include/**.hpp",
+		"%{prj.name}/vendor/assimp/include/**.cpp"
 	}
 
 	defines
@@ -61,7 +65,13 @@ project "GodDecay_3D"
 		"%{IncludeDir.glad}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.stb_image}"
+		"%{IncludeDir.stb_image}",
+		"%{IncludeDir.assimp}"
+	}
+
+	libdirs
+	{
+		"GodDecay/vendor/assimp/lib/Debug"
 	}
 
 	links
@@ -69,8 +79,10 @@ project "GodDecay_3D"
 		"GLFW",
 		"glad",
 		"ImGui",
-		"opengl32.lib"
+		"opengl32.lib",
+		"assimp-vc143-mtd.lib"
 	}
+	
 
     filter "system:windows"
 		systemversion "latest"
@@ -119,12 +131,13 @@ project "SandBox"
 		"%{IncludeDir.src}",
 		"%{IncludeDir.spdlog}",
 		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.assimp}"
 	}
 
     links
 	{
-		"GodDecay_3D"
+		"GodDecay"
 	}
 
     filter "system:windows"

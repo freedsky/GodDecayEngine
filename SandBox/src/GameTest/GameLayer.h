@@ -1,19 +1,5 @@
 #pragma once
-#include <GodDecay/Layer.h>
-#include <GodDecay/Logger.h>
-#include <GodDecay/Input.h>
-
-#include "GodDecay/Renderer/Buffer.h"
-#include "GodDecay/Renderer/VertexArrayBuffer.h"
-#include "GodDecay/Renderer/RenderCommand.h"
-#include "GodDecay/Renderer/Renderer.h"
-#include "GodDecay/Controller/OrthographicCameraController.h"
-#include "Platform/OpenGL/OpenGLShader.h"
-#include "GodDecay/Renderer/ShaderLibrary.h"
-#include "GodDecay/Renderer/Texture.h"
-
-#include "GodDecay/GodDecayKeyCodes.h"
-#include "GodDecay/GodDecayMouseButtonCodes.h"
+#include <GodDecayTop.h>
 
 #include <imgui.h>
 
@@ -32,17 +18,15 @@ public:
 	void OnEvents(GodDecay::Event& e) override;
 	void OnImGuiRender() override;
 private:
-	GodDecay::Ref< GodDecay::ShaderLibrary> m_ShaderLibraries;
-
-	GodDecay::Ref<GodDecay::Shader> m_Shader;
-
-	GodDecay::Ref<GodDecay::VertexArrayBuffer> vertexarray;
-
-	GodDecay::Ref<GodDecay::OrthographicCameraController> m_Camera;
+	GodDecay::Ref<GodDecay::PerspectiveCameraController> m_Camera;
 
 	glm::vec3 m_CameraPosition = glm::vec3(0.0f);
 	float Speeds = 1.0f;
 
-	GodDecay::Ref<GodDecay::Texture2D> m_Texture;
+	glm::vec4 m_2DSquareColor;
+	glm::vec4 m_3DCubeColor;
+	glm::vec4 m_3DCirleColor;
+
+	GodDecay::Ref<GodDecay::Model> model;
 };
 
