@@ -24,5 +24,6 @@ private:
 	float Speeds = 1.0f;
 
 	glm::vec4 m_TextureColor;
+	GodDecay::Ref<GodDecay::Texture2D> m_SquareTexture;
 };
 

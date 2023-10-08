@@ -31,6 +31,9 @@ namespace GodDecay
 		}
 		GD_ENGINE_ASSERT(internalFormat & dataFormat, "Format not supported!");
 
+		m_InternalFormat = GL_RGBA8;
+		m_DataFormat = GL_RGBA;
+
 		//加载纹理到缓冲区以及设置纹理环绕模式
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
 		glTextureStorage2D(m_RendererID, 1, internalFormat, m_Width, m_Height);
@@ -44,9 +47,32 @@ namespace GodDecay
 		stbi_image_free(data);
 	}
 
+	OpenGLTexture::OpenGLTexture(uint32_t width, uint32_t height)
+		:m_Width(width), m_Height(height), m_Channels(4)
+	{
+		m_InternalFormat = GL_RGBA8;
+		m_DataFormat = GL_RGBA;
+
+		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
+		glTextureStorage2D(m_RendererID, 1, m_InternalFormat, m_Width, m_Height);
+
+		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	}
+
 	OpenGLTexture::~OpenGLTexture()
 	{
 		glDeleteTextures(1, &m_RendererID);
+	}
+
+	void OpenGLTexture::SetData(void* data, uint32_t size)
+	{
+		uint32_t bpp = m_DataFormat == GL_RGBA ? 4 : 3;
+		GD_ENGINE_ASSERT(size == m_Width * m_Height * bpp, "ata must be entire texture!");
+		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, data);
 	}
 
 	void OpenGLTexture::Bind(uint32_t slot) const

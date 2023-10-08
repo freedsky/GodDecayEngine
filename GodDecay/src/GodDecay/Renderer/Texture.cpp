@@ -17,4 +17,15 @@ namespace GodDecay
 		GD_ENGINE_ASSERT(false, "UnKonw this API"); 
 		return nullptr;
 	}
+	Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height)
+	{
+		switch (RendererAPI::GetAPI())
+		{
+		case RendererAPI::API::None: GD_ENGINE_ASSERT(false, "this API is None"); return nullptr;
+		case RendererAPI::API::OpenGL: return CreateRef<OpenGLTexture>(width, height);
+		}
+
+		GD_ENGINE_ASSERT(false, "UnKonw this API");
+		return nullptr;
+	}
 }
