@@ -26,6 +26,10 @@ private:
 	glm::vec4 m_2DSquareColor;
 	glm::vec4 m_3DCubeColor;
 	glm::vec4 m_3DCirleColor;
+	GodDecay::Ref<GodDecay::Texture2D> m_SqueraTexure;
+	GodDecay::Ref<GodDecay::Texture2D> m_CubeTexture;
+	GodDecay::Ref<GodDecay::Texture2D> m_CirleTexture;
+	GodDecay::Ref<GodDecay::Texture2D> m_ModelTexture;
 
 	GodDecay::Ref<GodDecay::Model> model;
 };

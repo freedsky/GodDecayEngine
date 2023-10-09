@@ -28,7 +28,7 @@ namespace GodDecay
 	{
 	public:
 		Mesh() = default;
-		Mesh(std::vector<ModelData> modelData, std::vector<uint32_t> indices);
+		Mesh(std::vector<ModelData> modelData, std::vector<uint32_t> indices, std::vector<ModelTexture> texture);
 		~Mesh() = default;
 
 		inline const std::vector<ModelData>& GetModelData() const { return m_Data; }

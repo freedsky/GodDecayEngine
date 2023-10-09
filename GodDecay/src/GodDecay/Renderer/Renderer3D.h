@@ -5,6 +5,8 @@
 
 #include "Model.h"
 
+#include "Texture.h"
+
 /// <summary>
 /// 增加3D模型渲染
 /// </summary>
@@ -22,13 +24,16 @@ namespace GodDecay
 		static void EndScene();
 
 		//DrawCube---------------------
-		static void DrawCube(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
+		static void DrawCube(const glm::vec3& position, const glm::vec3& size, const glm::vec4& color);
+		static void DrawCube(const glm::vec3& position, const glm::vec3& size, const Ref<Texture2D>& texture);
 
 		//DrawCirle---------------------
-		static void DrawCirle(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
+		static void DrawCirle(const glm::vec3& position, const glm::vec3& size, const glm::vec4& color);
+		static void DrawCirle(const glm::vec3& position, const glm::vec3& size, const Ref<Texture2D>& texture);
 
 		//DrawModel---------------------
-		static void DrawModel(const Ref<RendererModelStorage> modelData, const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
+		static void DrawModel(const Ref<RendererModelStorage> modelData, const glm::vec3& position, const glm::vec3& size, const glm::vec4& color);
+		static void DrawModel(const Ref<RendererModelStorage> modelData, const glm::vec3& position, const glm::vec3& size, const Ref<Texture2D>& texture);
 	};
 }
 

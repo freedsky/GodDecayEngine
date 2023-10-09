@@ -3,10 +3,11 @@
 
 namespace GodDecay 
 {
-	Mesh::Mesh(std::vector<ModelData> modelData, std::vector<uint32_t> indices)
+	Mesh::Mesh(std::vector<ModelData> modelData, std::vector<uint32_t> indices, std::vector<ModelTexture> texture)
 	{
-		this->m_Data = modelData;
-		this->m_indices = indices;
+		m_Data = modelData;
+		m_indices = indices;
+		m_Texture = texture;
 	}
 
 }

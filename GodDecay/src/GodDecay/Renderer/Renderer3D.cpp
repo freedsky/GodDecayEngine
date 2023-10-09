@@ -8,6 +8,8 @@
 
 #include "Platform/OpenGL/OpenGLShader.h"
 
+#include <glm/gtx/transform.hpp>
+
 namespace GodDecay 
 {
 	const unsigned int X_SEGMENTS = 64;
@@ -18,7 +20,8 @@ namespace GodDecay
 	{
 		Ref<VertexArrayBuffer> CubeVertexArray;
 		Ref<VertexArrayBuffer> CirleVertexArray;
-		Ref<Shader> FlatColorShader;
+		Ref<Shader> StandardShader;
+		Ref<Texture2D> WhiteTexture;
 	};
 	static Renderer3DStorage* s_Data;
 
@@ -29,18 +32,50 @@ namespace GodDecay
 		//---------------------Cube--------------------------
 		s_Data->CubeVertexArray = VertexArrayBuffer::Create();
 
-		float cubeData[8 * 8] = 
+		float cubeData[36 * 8] = 
 		{
-			// front face							 
-			-1.0f, -1.0f,  1.0f,  0.0f, 0.0f,  1.0f,  0.0f, 0.0f,
-			 1.0f, -1.0f,  1.0f,  0.0f, 0.0f,  1.0f,  1.0f, 0.0f,
-			 1.0f,  1.0f,  1.0f,  0.0f, 0.0f,  1.0f,  1.0f, 1.0f,
-			-1.0f,  1.0f,  1.0f,  0.0f, 0.0f,  1.0f,  0.0f, 1.0f,
 			// back face
-			-1.0f, -1.0f, -1.0f,  0.0f, 0.0f, -1.0f,  0.0f, 0.0f,
-			 1.0f, -1.0f, -1.0f,  0.0f, 0.0f, -1.0f,  1.0f, 0.0f,
-			 1.0f,  1.0f, -1.0f,  0.0f, 0.0f, -1.0f,  1.0f, 1.0f,
-			-1.0f,  1.0f, -1.0f,  0.0f, 0.0f, -1.0f,  0.0f, 1.0f,
+			-1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
+			 1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
+			 1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 0.0f, // bottom-right         
+			 1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
+			-1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
+			-1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 1.0f, // top-left
+			// front face
+			-1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
+			 1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 0.0f, // bottom-right
+			 1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
+			 1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
+			-1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 1.0f, // top-left
+			-1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
+			// left face
+			-1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
+			-1.0f,  1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-left
+			-1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
+			-1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
+			-1.0f, -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-right
+			-1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
+			// right face
+			 1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
+			 1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
+			 1.0f,  1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-right         
+			 1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
+			 1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
+			 1.0f, -1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-left     
+			// bottom face
+			-1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
+			 1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 1.0f, // top-left
+			 1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
+			 1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
+			-1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f, // bottom-right
+			-1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
+			// top face
+			-1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
+			 1.0f,  1.0f , 1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
+			 1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 1.0f, // top-right     
+			 1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
+			-1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
+			-1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f  // bottom-left
 		};
 
 		Ref<VertexBuffer> cubeVBO = VertexBuffer::Create(cubeData, sizeof(cubeData));
@@ -53,12 +88,12 @@ namespace GodDecay
 
 		uint32_t cubeIndices[6 * 6] =
 		{
-			0,1,2,2,3,0,
-			4,5,6,6,7,4,
-			3,2,6,6,7,3,
-			0,1,5,5,4,0,
-			4,0,3,3,7,4,
-			1,5,6,6,2,1
+			0,1,2,3,4,5,
+			6,7,8,9,10,11,
+			12,13,14,15,16,17,
+			18,19,20,21,22,23,
+			24,25,26,27,28,29,
+			30,31,32,33,34,35
 		};
 		Ref<IndexBuffer> cubeEBO = IndexBuffer::Create(cubeIndices, sizeof(cubeIndices));
 		s_Data->CubeVertexArray->SetIndexBuffer(cubeEBO);
@@ -137,7 +172,15 @@ namespace GodDecay
 		Ref<IndexBuffer> cirleEBO = IndexBuffer::Create(cirleIndices.data(), (uint32_t)cirleIndices.size() * sizeof(uint32_t));
 		s_Data->CirleVertexArray->SetIndexBuffer(cirleEBO);
 
-		s_Data->FlatColorShader = Shader::Create("assets/shader/PureColor3D.glsl");
+		s_Data->StandardShader = Shader::Create("assets/shader/Standard3DShader.glsl");
+
+		//Texture
+		s_Data->WhiteTexture = Texture2D::Create(1, 1);
+		uint32_t whiteTextureData = 0xffffffff;
+		s_Data->WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
+
+		s_Data->StandardShader->Bind();
+		s_Data->StandardShader->SetInt("u_Texture", 0);
 	}
 
 	void Renderer3D::Shutdown()
@@ -149,33 +192,51 @@ namespace GodDecay
 
 	void Renderer3D::BeginScene(const OrthographicCamera& camera)
 	{
-		std::dynamic_pointer_cast<OpenGLShader>(s_Data->FlatColorShader)->Bind();
-		std::dynamic_pointer_cast<OpenGLShader>(s_Data->FlatColorShader)->UploadUniformMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
-		std::dynamic_pointer_cast<OpenGLShader>(s_Data->FlatColorShader)->UploadUniformMat4("u_Transform", glm::mat4(1.0f));
+		s_Data->StandardShader->Bind();
+		s_Data->StandardShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 	}
 
 	void Renderer3D::BeginScene(const PerspectiveCamera& camera)
 	{
-		std::dynamic_pointer_cast<OpenGLShader>(s_Data->FlatColorShader)->Bind();
-		std::dynamic_pointer_cast<OpenGLShader>(s_Data->FlatColorShader)->UploadUniformMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
-		std::dynamic_pointer_cast<OpenGLShader>(s_Data->FlatColorShader)->UploadUniformMat4("u_Transform", glm::mat4(1.0f));
+		s_Data->StandardShader->Bind();
+		s_Data->StandardShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 	}
 
 	void Renderer3D::BeginSceneModel(const PerspectiveCamera& camera, const Ref<Shader>& modelShader)
 	{
-		std::dynamic_pointer_cast<OpenGLShader>(modelShader)->Bind();
-		std::dynamic_pointer_cast<OpenGLShader>(modelShader)->UploadUniformMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
-		std::dynamic_pointer_cast<OpenGLShader>(modelShader)->UploadUniformMat4("u_Transform", glm::mat4(1.0f));
+		modelShader->Bind();
+		modelShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 	}
 
 	void Renderer3D::EndScene()
 	{
 	}
 
-	void Renderer3D::DrawCube(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
+	void Renderer3D::DrawCube(const glm::vec3& position, const glm::vec3& size, const glm::vec4& color)
 	{
-		std::dynamic_pointer_cast<OpenGLShader>(s_Data->FlatColorShader)->Bind();
-		std::dynamic_pointer_cast<OpenGLShader>(s_Data->FlatColorShader)->UploadUniformFloat4("u_Color", color);
+		s_Data->StandardShader->Bind();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, size.z });
+		s_Data->StandardShader->SetMat4("u_Transform", transform);
+
+		s_Data->StandardShader->SetFloat4("u_Color", color);
+
+		s_Data->WhiteTexture->Bind();
+
+		s_Data->CubeVertexArray->Bind();
+		RenderCommand::DrawIndexed(s_Data->CubeVertexArray);
+	}
+
+	void Renderer3D::DrawCube(const glm::vec3& position, const glm::vec3& size, const Ref<Texture2D>& texture)
+	{
+		s_Data->StandardShader->Bind();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, size.z });
+		s_Data->StandardShader->SetMat4("u_Transform", transform);
+
+		s_Data->StandardShader->SetFloat4("u_Color", glm::vec4(1.0f));
+
+		texture->Bind();
 
 		s_Data->CubeVertexArray->Bind();
 		RenderCommand::DrawIndexed(s_Data->CubeVertexArray);
@@ -183,19 +244,48 @@ namespace GodDecay
 
 	//==================================================================
 
-	void Renderer3D::DrawCirle(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
+	void Renderer3D::DrawCirle(const glm::vec3& position, const glm::vec3& size, const glm::vec4& color)
 	{
-		std::dynamic_pointer_cast<OpenGLShader>(s_Data->FlatColorShader)->Bind();
-		std::dynamic_pointer_cast<OpenGLShader>(s_Data->FlatColorShader)->UploadUniformFloat4("u_Color", color);
+		s_Data->StandardShader->Bind();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, size.z });
+		s_Data->StandardShader->SetMat4("u_Transform", transform);
+
+		s_Data->StandardShader->SetFloat4("u_Color", color);
+
+		s_Data->WhiteTexture->Bind();
 
 		s_Data->CirleVertexArray->Bind();
 		RenderCommand::DrawIndexed(s_Data->CirleVertexArray, RendererAPI::DrawType::STRIP);
 	}
 
-	void Renderer3D::DrawModel(const Ref<RendererModelStorage> modelData, const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
+	void Renderer3D::DrawCirle(const glm::vec3& position, const glm::vec3& size, const Ref<Texture2D>& texture)
 	{
-		std::dynamic_pointer_cast<OpenGLShader>(modelData->ModelShader)->Bind();
-		std::dynamic_pointer_cast<OpenGLShader>(modelData->ModelShader)->UploadUniformFloat4("u_Color", color);
+		s_Data->StandardShader->Bind();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, size.z });
+		s_Data->StandardShader->SetMat4("u_Transform", transform);
+
+		s_Data->StandardShader->SetFloat4("u_Color", glm::vec4(1.0f));
+
+		texture->Bind();
+
+		s_Data->CirleVertexArray->Bind();
+		RenderCommand::DrawIndexed(s_Data->CirleVertexArray, RendererAPI::DrawType::STRIP);
+	}
+
+	//=========================================================================================================================================
+
+	void Renderer3D::DrawModel(const Ref<RendererModelStorage> modelData, const glm::vec3& position, const glm::vec3& size, const glm::vec4& color)
+	{
+		modelData->ModelShader->Bind();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, size.z });
+		modelData->ModelShader->SetMat4("u_Transform", transform);
+
+		modelData->ModelShader->SetFloat4("u_Color", color);
+
+		modelData->m_WhiteTexture->Bind();
 
 		for (int i = 0; i < modelData->ModelVertexArray.size();++i) 
 		{
@@ -203,5 +293,22 @@ namespace GodDecay
 			RenderCommand::DrawIndexed(modelData->ModelVertexArray[i]);
 		}
 		
+	}
+	void Renderer3D::DrawModel(const Ref<RendererModelStorage> modelData, const glm::vec3& position, const glm::vec3& size, const Ref<Texture2D>& texture)
+	{
+		modelData->ModelShader->Bind();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, size.z });
+		modelData->ModelShader->SetMat4("u_Transform", transform);
+
+		modelData->ModelShader->SetFloat4("u_Color", glm::vec4(1.0f));
+
+		texture->Bind();
+
+		for (int i = 0; i < modelData->ModelVertexArray.size(); ++i)
+		{
+			modelData->ModelVertexArray[i]->Bind();
+			RenderCommand::DrawIndexed(modelData->ModelVertexArray[i]);
+		}
 	}
 }
