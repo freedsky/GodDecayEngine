@@ -15,6 +15,7 @@ namespace GodDecay
 	{
 	public:
 		static void Init();
+		static void Shutdown();
 
 		static void BeginScene(const Ref<OrthographicCamera>& camera);
 		static void BeginScene(const Ref<PerspectiveCamera>& camera);

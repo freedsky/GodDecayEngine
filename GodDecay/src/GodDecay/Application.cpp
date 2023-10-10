@@ -42,6 +42,8 @@ namespace GodDecay
 		{
 			layer->OnDetach();
 		}
+
+		Renderer::Shutdown();
 	}
 
 	//===============================================

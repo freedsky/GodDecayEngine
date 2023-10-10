@@ -227,14 +227,44 @@ namespace GodDecay
 		RenderCommand::DrawIndexed(s_Data->CubeVertexArray);
 	}
 
-	void Renderer3D::DrawCube(const glm::vec3& position, const glm::vec3& size, const Ref<Texture2D>& texture)
+	void Renderer3D::DrawCube(const glm::vec3& position, const glm::vec3& size, const Ref<Texture2D>& texture, const glm::vec4& texColor)
 	{
 		s_Data->StandardShader->Bind();
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, size.z });
 		s_Data->StandardShader->SetMat4("u_Transform", transform);
 
-		s_Data->StandardShader->SetFloat4("u_Color", glm::vec4(1.0f));
+		s_Data->StandardShader->SetFloat4("u_Color", texColor);
+
+		texture->Bind();
+
+		s_Data->CubeVertexArray->Bind();
+		RenderCommand::DrawIndexed(s_Data->CubeVertexArray);
+	}
+
+	void Renderer3D::DrawRotationCube(const glm::vec3& position, const glm::vec3& size, float rotation, const glm::vec3& axle, const glm::vec4& color)
+	{
+		s_Data->StandardShader->Bind();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::rotate(glm::mat4(1.0f), glm::radians(rotation), axle) * glm::scale(glm::mat4(1.0f), { size.x, size.y, size.z });
+		s_Data->StandardShader->SetMat4("u_Transform", transform);
+
+		s_Data->StandardShader->SetFloat4("u_Color", color);
+
+		s_Data->WhiteTexture->Bind();
+
+		s_Data->CubeVertexArray->Bind();
+		RenderCommand::DrawIndexed(s_Data->CubeVertexArray);
+	}
+
+	void Renderer3D::DrawRotationCube(const glm::vec3& position, const glm::vec3& size, float rotation, const glm::vec3& axle, const Ref<Texture2D>& texture, const glm::vec4& texColor)
+	{
+		s_Data->StandardShader->Bind();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::rotate(glm::mat4(1.0f), glm::radians(rotation), axle) * glm::scale(glm::mat4(1.0f), { size.x, size.y, size.z });
+		s_Data->StandardShader->SetMat4("u_Transform", transform);
+
+		s_Data->StandardShader->SetFloat4("u_Color", texColor);
 
 		texture->Bind();
 
@@ -259,14 +289,44 @@ namespace GodDecay
 		RenderCommand::DrawIndexed(s_Data->CirleVertexArray, RendererAPI::DrawType::STRIP);
 	}
 
-	void Renderer3D::DrawCirle(const glm::vec3& position, const glm::vec3& size, const Ref<Texture2D>& texture)
+	void Renderer3D::DrawCirle(const glm::vec3& position, const glm::vec3& size, const Ref<Texture2D>& texture, const glm::vec4& texColor)
 	{
 		s_Data->StandardShader->Bind();
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, size.z });
 		s_Data->StandardShader->SetMat4("u_Transform", transform);
 
-		s_Data->StandardShader->SetFloat4("u_Color", glm::vec4(1.0f));
+		s_Data->StandardShader->SetFloat4("u_Color", texColor);
+
+		texture->Bind();
+
+		s_Data->CirleVertexArray->Bind();
+		RenderCommand::DrawIndexed(s_Data->CirleVertexArray, RendererAPI::DrawType::STRIP);
+	}
+
+	void Renderer3D::DrawRotationCirle(const glm::vec3& position, const glm::vec3& size, float rotation, const glm::vec3& axle, const glm::vec4& color)
+	{
+		s_Data->StandardShader->Bind();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::rotate(glm::mat4(1.0f), glm::radians(rotation), axle) * glm::scale(glm::mat4(1.0f), { size.x, size.y, size.z });
+		s_Data->StandardShader->SetMat4("u_Transform", transform);
+
+		s_Data->StandardShader->SetFloat4("u_Color", color);
+
+		s_Data->WhiteTexture->Bind();
+
+		s_Data->CirleVertexArray->Bind();
+		RenderCommand::DrawIndexed(s_Data->CirleVertexArray, RendererAPI::DrawType::STRIP);
+	}
+
+	void Renderer3D::DrawRotationCirle(const glm::vec3& position, const glm::vec3& size, float rotation, const glm::vec3& axle, const Ref<Texture2D>& texture, const glm::vec4& texColor)
+	{
+		s_Data->StandardShader->Bind();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::rotate(glm::mat4(1.0f), glm::radians(rotation), axle) * glm::scale(glm::mat4(1.0f), { size.x, size.y, size.z });
+		s_Data->StandardShader->SetMat4("u_Transform", transform);
+
+		s_Data->StandardShader->SetFloat4("u_Color", texColor);
 
 		texture->Bind();
 
@@ -294,14 +354,50 @@ namespace GodDecay
 		}
 		
 	}
-	void Renderer3D::DrawModel(const Ref<RendererModelStorage> modelData, const glm::vec3& position, const glm::vec3& size, const Ref<Texture2D>& texture)
+	void Renderer3D::DrawModel(const Ref<RendererModelStorage> modelData, const glm::vec3& position, const glm::vec3& size, const Ref<Texture2D>& texture, const glm::vec4& texColor)
 	{
 		modelData->ModelShader->Bind();
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, size.z });
 		modelData->ModelShader->SetMat4("u_Transform", transform);
 
-		modelData->ModelShader->SetFloat4("u_Color", glm::vec4(1.0f));
+		modelData->ModelShader->SetFloat4("u_Color", texColor);
+
+		texture->Bind();
+
+		for (int i = 0; i < modelData->ModelVertexArray.size(); ++i)
+		{
+			modelData->ModelVertexArray[i]->Bind();
+			RenderCommand::DrawIndexed(modelData->ModelVertexArray[i]);
+		}
+	}
+
+	void Renderer3D::DrawRotationModel(const Ref<RendererModelStorage> modelData, const glm::vec3& position, const glm::vec3& size, float rotation, const glm::vec3& axle, const glm::vec4& color)
+	{
+		modelData->ModelShader->Bind();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::rotate(glm::mat4(1.0f), glm::radians(rotation), axle) * glm::scale(glm::mat4(1.0f), { size.x, size.y, size.z });
+		modelData->ModelShader->SetMat4("u_Transform", transform);
+
+		modelData->ModelShader->SetFloat4("u_Color", color);
+
+		modelData->m_WhiteTexture->Bind();
+
+		for (int i = 0; i < modelData->ModelVertexArray.size(); ++i)
+		{
+			modelData->ModelVertexArray[i]->Bind();
+			RenderCommand::DrawIndexed(modelData->ModelVertexArray[i]);
+		}
+	}
+
+	void Renderer3D::DrawRotationModel(const Ref<RendererModelStorage> modelData, const glm::vec3& position, const glm::vec3& size, float rotation, const glm::vec3& axle, const Ref<Texture2D>& texture, const glm::vec4& texColor)
+	{
+		modelData->ModelShader->Bind();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::rotate(glm::mat4(1.0f), glm::radians(rotation), axle) * glm::scale(glm::mat4(1.0f), { size.x, size.y, size.z });
+		modelData->ModelShader->SetMat4("u_Transform", transform);
+
+		modelData->ModelShader->SetFloat4("u_Color", texColor);
 
 		texture->Bind();
 

@@ -17,5 +17,6 @@
 #endif
 
 #include "GodDecay/Logger.h"
+#include "GodDecay/Debug/Instrumentor.h"
 
 

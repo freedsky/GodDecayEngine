@@ -42,10 +42,10 @@ void GameLayer::OnUpDate(float deltaTime)
 	GodDecay::Renderer3D::BeginScene(*m_Camera->GetCamera().get());
 
 	//GodDecay::Renderer3D::DrawCirle(glm::vec3(-2.0f, 2.0f,0.0f), glm::vec3(1.0f, 1.0f,1.0f), m_3DCirleColor);
-	GodDecay::Renderer3D::DrawCirle(glm::vec3(-2.0f, 2.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), m_CirleTexture);
+	GodDecay::Renderer3D::DrawRotationCirle(glm::vec3(-2.0f, 2.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 45.0f, glm::vec3(0.5f, 1.0f, 0.3f), m_CirleTexture);
 
 	//GodDecay::Renderer3D::DrawCube(glm::vec3(-2.0f, 0.0f,0.0f), glm::vec3(1.0f, 1.0f, 1.0f), m_3DCubeColor);
-	GodDecay::Renderer3D::DrawCube(glm::vec3(-2.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), m_CubeTexture);
+	GodDecay::Renderer3D::DrawCube(glm::vec3(-2.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), m_CubeTexture, m_3DCubeColor);
 
 	GodDecay::Renderer3D::EndScene();
 
@@ -53,7 +53,7 @@ void GameLayer::OnUpDate(float deltaTime)
 
 	GodDecay::Renderer3D::BeginSceneModel(*m_Camera->GetCamera().get(), model->GetModelData()->ModelShader);
 	
-	GodDecay::Renderer3D::DrawModel(model->GetModelData(), glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.2f, 0.2f,0.2f), m_3DCubeColor);
+	GodDecay::Renderer3D::DrawRotationModel(model->GetModelData(), glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.2f, 0.2f, 0.2f), 90.0f, glm::vec3(0.4f, 0.7f, 1.0f), m_3DCubeColor);
 	//GodDecay::Renderer3D::DrawModel(model->GetModelData(), glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.2f, 0.2f, 0.2f), m_ModelTexture);
 
 	GodDecay::Renderer3D::EndScene();
@@ -64,6 +64,7 @@ void GameLayer::OnUpDate(float deltaTime)
 
 	GodDecay::Renderer2D::DrawQuad(glm::vec2(2.0f, 2.0f), glm::vec2(1.0f, 1.0f), m_2DSquareColor);
 	GodDecay::Renderer2D::DrawQuad(glm::vec2(0.0f, 2.0f), glm::vec2(1.0f, 1.0f), m_SqueraTexure);
+	GodDecay::Renderer2D::DrawRotatedQuad(glm::vec2(2.0f, 2.0f), glm::vec2(1.0f, 1.0f), 45.0f, m_SqueraTexure, m_2DSquareColor);
 
 	GodDecay::Renderer2D::EndScene();
 
