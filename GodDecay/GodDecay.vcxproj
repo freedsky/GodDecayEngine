@@ -143,6 +143,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\GodDecay\Debug\Instrumentor.h" />
     <ClInclude Include="src\GodDecay\Renderer\Renderer2D.h" />
     <ClInclude Include="src\GodDecay\Application.h" />
     <ClInclude Include="src\GodDecay\Controller\OrthographicCameraController.h" />

@@ -1489,6 +1489,7 @@
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
     <ClInclude Include="src\GodDecay\Renderer\Renderer2D.h" />
+    <ClInclude Include="src\GodDecay\Debug\Instrumentor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GodDecay\Application.cpp">

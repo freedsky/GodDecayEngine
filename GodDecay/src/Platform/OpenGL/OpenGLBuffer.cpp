@@ -16,6 +16,13 @@ namespace GodDecay
 		glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
 	}
 
+	OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t size)
+	{
+		glCreateBuffers(1, &m_VertexRendererID);
+		glBindBuffer(GL_ARRAY_BUFFER, m_VertexRendererID);
+		glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
+	}
+
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	{
 		glDeleteBuffers(1, &m_VertexRendererID);
@@ -31,6 +38,12 @@ namespace GodDecay
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
+	void OpenGLVertexBuffer::SetData(const void* data, uint32_t size)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, m_VertexRendererID);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
+	}
+
 	/*
 	* IndexBuffer
 	*/
@@ -40,7 +53,7 @@ namespace GodDecay
 	{
 		glCreateBuffers(1, &m_IndexRendererID);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexRendererID);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count, indices, GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(count), indices, GL_STATIC_DRAW);
 	}
 
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()

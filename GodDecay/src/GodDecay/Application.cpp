@@ -42,6 +42,8 @@ namespace GodDecay
 		{
 			layer->OnDetach();
 		}
+
+		Renderer::Shutdown();
 	}
 
 	//===============================================
@@ -86,9 +88,9 @@ namespace GodDecay
 		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENTS(OnWindowResize));
 		//GD_ENGINE_INFO("{0}", e);
 
-		for(std::vector<Layer*>::iterator it = m_LayerStack.end();it != m_LayerStack.begin();)
+		for (std::vector<Layer*>::reverse_iterator it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
 		{
-			(*--it)->OnEvents(e);
+			(*it)->OnEvents(e);
 			if (e.GetHandle())
 				break;
 		}
