@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GodDecay/Core.h"
+#include "GodDecay/Core/Base.h"
 
 /// <summary>
 /// 创建数据缓冲区以及绑定数据[vetex \ index]
@@ -61,8 +61,8 @@ namespace GodDecay
 				case ShaderDataType::Float2:  return 2;
 				case ShaderDataType::Float3:  return 3;
 				case ShaderDataType::Float4:  return 4;
-				case ShaderDataType::Mat3:    return 3 * 3;
-				case ShaderDataType::Mat4:    return 4 * 4;
+				case ShaderDataType::Mat3:    return 3;
+				case ShaderDataType::Mat4:    return 4;//因为在属性传递时，会有大小限制，对于mat3以上的便会超出限制，需要进行特殊处理
 				case ShaderDataType::Int:     return 1;
 				case ShaderDataType::Int2:    return 2;
 				case ShaderDataType::Int3:    return 3;

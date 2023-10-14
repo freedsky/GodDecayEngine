@@ -10,6 +10,12 @@
     <Filter Include="src\GodDecay\Controller">
       <UniqueIdentifier>{AF9636F8-1BCE-7E8F-24D8-E2B2908EA588}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\GodDecay\Core">
+      <UniqueIdentifier>{748A2FE7-E0A0-2D7D-2918-B99E956DFE04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\GodDecay\Debug">
+      <UniqueIdentifier>{12342DCD-FE17-EE22-6778-E875537BD8A4}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\GodDecay\Events">
       <UniqueIdentifier>{00095E76-6C6A-3B84-F5D7-813661387243}</UniqueIdentifier>
     </Filter>
@@ -60,20 +66,44 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\GodDecay\Application.h">
-      <Filter>src\GodDecay</Filter>
-    </ClInclude>
     <ClInclude Include="src\GodDecay\Controller\OrthographicCameraController.h">
       <Filter>src\GodDecay\Controller</Filter>
     </ClInclude>
     <ClInclude Include="src\GodDecay\Controller\PerspectiveCameraController.h">
       <Filter>src\GodDecay\Controller</Filter>
     </ClInclude>
-    <ClInclude Include="src\GodDecay\Core.h">
-      <Filter>src\GodDecay</Filter>
+    <ClInclude Include="src\GodDecay\Core\Application.h">
+      <Filter>src\GodDecay\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\GodDecay\EnterPoint.h">
-      <Filter>src\GodDecay</Filter>
+    <ClInclude Include="src\GodDecay\Core\Base.h">
+      <Filter>src\GodDecay\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Core\EnterPoint.h">
+      <Filter>src\GodDecay\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Core\GodDecayKeyCodes.h">
+      <Filter>src\GodDecay\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Core\GodDecayMouseButtonCodes.h">
+      <Filter>src\GodDecay\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Core\Input.h">
+      <Filter>src\GodDecay\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Core\Layer.h">
+      <Filter>src\GodDecay\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Core\LayerStack.h">
+      <Filter>src\GodDecay\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Core\Logger.h">
+      <Filter>src\GodDecay\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Core\Window.h">
+      <Filter>src\GodDecay\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Debug\Instrumentor.h">
+      <Filter>src\GodDecay\Debug</Filter>
     </ClInclude>
     <ClInclude Include="src\GodDecay\Events\ApplicationEvent.h">
       <Filter>src\GodDecay\Events</Filter>
@@ -87,26 +117,8 @@
     <ClInclude Include="src\GodDecay\Events\MouseEvent.h">
       <Filter>src\GodDecay\Events</Filter>
     </ClInclude>
-    <ClInclude Include="src\GodDecay\GodDecayKeyCodes.h">
-      <Filter>src\GodDecay</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GodDecay\GodDecayMouseButtonCodes.h">
-      <Filter>src\GodDecay</Filter>
-    </ClInclude>
     <ClInclude Include="src\GodDecay\ImGui\ImGuiLayer.h">
       <Filter>src\GodDecay\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GodDecay\Input.h">
-      <Filter>src\GodDecay</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GodDecay\Layer.h">
-      <Filter>src\GodDecay</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GodDecay\LayerStack.h">
-      <Filter>src\GodDecay</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GodDecay\Logger.h">
-      <Filter>src\GodDecay</Filter>
     </ClInclude>
     <ClInclude Include="src\GodDecay\Renderer\Buffer.h">
       <Filter>src\GodDecay\Renderer</Filter>
@@ -121,6 +133,9 @@
       <Filter>src\GodDecay\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\GodDecay\Renderer\Renderer.h">
+      <Filter>src\GodDecay\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Renderer\Renderer2D.h">
       <Filter>src\GodDecay\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\GodDecay\Renderer\RendererAPI.h">
@@ -143,9 +158,6 @@
     </ClInclude>
     <ClInclude Include="src\GodDecay\Tools\TimeTool.h">
       <Filter>src\GodDecay\Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GodDecay\Window.h">
-      <Filter>src\GodDecay</Filter>
     </ClInclude>
     <ClInclude Include="src\GodDecayTop.h">
       <Filter>src</Filter>
@@ -1488,33 +1500,31 @@
     <ClInclude Include="vendor\stb_image\stb_voxel_render.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\GodDecay\Renderer\Renderer2D.h" />
-    <ClInclude Include="src\GodDecay\Debug\Instrumentor.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\GodDecay\Application.cpp">
-      <Filter>src\GodDecay</Filter>
-    </ClCompile>
     <ClCompile Include="src\GodDecay\Controller\OrthographicCameraController.cpp">
       <Filter>src\GodDecay\Controller</Filter>
     </ClCompile>
     <ClCompile Include="src\GodDecay\Controller\PerspectiveCameraController.cpp">
       <Filter>src\GodDecay\Controller</Filter>
     </ClCompile>
+    <ClCompile Include="src\GodDecay\Core\Application.cpp">
+      <Filter>src\GodDecay\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GodDecay\Core\Layer.cpp">
+      <Filter>src\GodDecay\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GodDecay\Core\LayerStack.cpp">
+      <Filter>src\GodDecay\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GodDecay\Core\Logger.cpp">
+      <Filter>src\GodDecay\Core</Filter>
+    </ClCompile>
     <ClCompile Include="src\GodDecay\ImGui\ImGuiBuild.cpp">
       <Filter>src\GodDecay\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\GodDecay\ImGui\ImGuiLayer.cpp">
       <Filter>src\GodDecay\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GodDecay\Layer.cpp">
-      <Filter>src\GodDecay</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GodDecay\LayerStack.cpp">
-      <Filter>src\GodDecay</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GodDecay\Logger.cpp">
-      <Filter>src\GodDecay</Filter>
     </ClCompile>
     <ClCompile Include="src\GodDecay\Renderer\Buffer.cpp">
       <Filter>src\GodDecay\Renderer</Filter>
@@ -1529,6 +1539,9 @@
       <Filter>src\GodDecay\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\GodDecay\Renderer\Renderer.cpp">
+      <Filter>src\GodDecay\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GodDecay\Renderer\Renderer2D.cpp">
       <Filter>src\GodDecay\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\GodDecay\Renderer\RendererAPI.cpp">
@@ -1579,6 +1592,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\GodDecay\Renderer\Renderer2D.cpp" />
   </ItemGroup>
 </Project>

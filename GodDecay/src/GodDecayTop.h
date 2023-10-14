@@ -1,13 +1,13 @@
 #pragma once
 
-#include "GodDecay/Application.h"
-#include "GodDecay/Logger.h"
-#include "GodDecay/Layer.h"
+#include "GodDecay/Core/Application.h"
+#include "GodDecay/Core/Logger.h"
+#include "GodDecay/Core/Layer.h"
 #include "GodDecay/ImGui/ImGuiLayer.h"
 
-#include "GodDecay/Input.h"
-#include "GodDecay/GodDecayKeyCodes.h"
-#include "GodDecay/GodDecayMouseButtonCodes.h"
+#include "GodDecay/Core/Input.h"
+#include "GodDecay/Core/GodDecayKeyCodes.h"
+#include "GodDecay/Core/GodDecayMouseButtonCodes.h"
 
 #include "GodDecay/Renderer/Buffer.h"
 #include "GodDecay/Renderer/VertexArrayBuffer.h"

@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 
-#include "GodDecay/Core.h"
+#include "GodDecay/Core/Base.h"
 #include "VertexArrayBuffer.h"
 
 /// <summary>

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core.h"
-#include "Events/Event.h"
+#include "Base.h"
+#include "GodDecay/Events/Event.h"
 #include "Platform/PlatformTools/OpenGLTimeTool.h"
 
 /// <summary>

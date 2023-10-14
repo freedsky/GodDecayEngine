@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "GodDecay/Core.h"
+#include "GodDecay/Core/Base.h"
 
 /// <summary>
 /// ≥ÈœÛŒ∆¿Ìº”‘ÿ
@@ -18,6 +18,7 @@ namespace GodDecay
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;
 		virtual uint32_t GetChannel() const = 0;
+		virtual uint32_t GetRendererID() const = 0;
 
 		virtual void SetData(void* data, uint32_t size) = 0;
 

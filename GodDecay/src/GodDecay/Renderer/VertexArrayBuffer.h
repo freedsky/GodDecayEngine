@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GodDecay/Core.h"
+#include "GodDecay/Core/Base.h"
 #include "Buffer.h"
 
 /// <summary>

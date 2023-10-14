@@ -143,29 +143,30 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\GodDecay\Debug\Instrumentor.h" />
-    <ClInclude Include="src\GodDecay\Renderer\Renderer2D.h" />
-    <ClInclude Include="src\GodDecay\Application.h" />
     <ClInclude Include="src\GodDecay\Controller\OrthographicCameraController.h" />
     <ClInclude Include="src\GodDecay\Controller\PerspectiveCameraController.h" />
-    <ClInclude Include="src\GodDecay\Core.h" />
-    <ClInclude Include="src\GodDecay\EnterPoint.h" />
+    <ClInclude Include="src\GodDecay\Core\Application.h" />
+    <ClInclude Include="src\GodDecay\Core\Base.h" />
+    <ClInclude Include="src\GodDecay\Core\EnterPoint.h" />
+    <ClInclude Include="src\GodDecay\Core\GodDecayKeyCodes.h" />
+    <ClInclude Include="src\GodDecay\Core\GodDecayMouseButtonCodes.h" />
+    <ClInclude Include="src\GodDecay\Core\Input.h" />
+    <ClInclude Include="src\GodDecay\Core\Layer.h" />
+    <ClInclude Include="src\GodDecay\Core\LayerStack.h" />
+    <ClInclude Include="src\GodDecay\Core\Logger.h" />
+    <ClInclude Include="src\GodDecay\Core\Window.h" />
+    <ClInclude Include="src\GodDecay\Debug\Instrumentor.h" />
     <ClInclude Include="src\GodDecay\Events\ApplicationEvent.h" />
     <ClInclude Include="src\GodDecay\Events\Event.h" />
     <ClInclude Include="src\GodDecay\Events\KeyEvent.h" />
     <ClInclude Include="src\GodDecay\Events\MouseEvent.h" />
-    <ClInclude Include="src\GodDecay\GodDecayKeyCodes.h" />
-    <ClInclude Include="src\GodDecay\GodDecayMouseButtonCodes.h" />
     <ClInclude Include="src\GodDecay\ImGui\ImGuiLayer.h" />
-    <ClInclude Include="src\GodDecay\Input.h" />
-    <ClInclude Include="src\GodDecay\Layer.h" />
-    <ClInclude Include="src\GodDecay\LayerStack.h" />
-    <ClInclude Include="src\GodDecay\Logger.h" />
     <ClInclude Include="src\GodDecay\Renderer\Buffer.h" />
     <ClInclude Include="src\GodDecay\Renderer\OrthographicCamera.h" />
     <ClInclude Include="src\GodDecay\Renderer\PerspectiveCamera.h" />
     <ClInclude Include="src\GodDecay\Renderer\RenderCommand.h" />
     <ClInclude Include="src\GodDecay\Renderer\Renderer.h" />
+    <ClInclude Include="src\GodDecay\Renderer\Renderer2D.h" />
     <ClInclude Include="src\GodDecay\Renderer\RendererAPI.h" />
     <ClInclude Include="src\GodDecay\Renderer\RendererContext.h" />
     <ClInclude Include="src\GodDecay\Renderer\Shader.h" />
@@ -173,7 +174,6 @@
     <ClInclude Include="src\GodDecay\Renderer\Texture.h" />
     <ClInclude Include="src\GodDecay\Renderer\VertexArrayBuffer.h" />
     <ClInclude Include="src\GodDecay\Tools\TimeTool.h" />
-    <ClInclude Include="src\GodDecay\Window.h" />
     <ClInclude Include="src\GodDecayTop.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
@@ -623,20 +623,20 @@
     <ClInclude Include="vendor\stb_image\stb_voxel_render.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\GodDecay\Renderer\Renderer2D.cpp" />
-    <ClCompile Include="src\GodDecay\Application.cpp" />
     <ClCompile Include="src\GodDecay\Controller\OrthographicCameraController.cpp" />
     <ClCompile Include="src\GodDecay\Controller\PerspectiveCameraController.cpp" />
+    <ClCompile Include="src\GodDecay\Core\Application.cpp" />
+    <ClCompile Include="src\GodDecay\Core\Layer.cpp" />
+    <ClCompile Include="src\GodDecay\Core\LayerStack.cpp" />
+    <ClCompile Include="src\GodDecay\Core\Logger.cpp" />
     <ClCompile Include="src\GodDecay\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\GodDecay\ImGui\ImGuiLayer.cpp" />
-    <ClCompile Include="src\GodDecay\Layer.cpp" />
-    <ClCompile Include="src\GodDecay\LayerStack.cpp" />
-    <ClCompile Include="src\GodDecay\Logger.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\Buffer.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\PerspectiveCamera.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\RenderCommand.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\GodDecay\Renderer\Renderer2D.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\RendererAPI.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\Shader.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\ShaderLibrary.cpp" />

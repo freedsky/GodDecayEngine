@@ -1,10 +1,10 @@
 #include "gdpch.h"
 #include "PerspectiveCameraController.h"
 
-#include "GodDecay/Input.h"
-#include "GodDecay/GodDecayKeyCodes.h"
+#include "GodDecay/Core/Input.h"
+#include "GodDecay/Core/GodDecayKeyCodes.h"
 
-#include "GodDecay/Application.h"
+#include "GodDecay/Core/Application.h"
 
 namespace GodDecay 
 {

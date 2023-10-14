@@ -1,7 +1,7 @@
 #pragma once
 
-#include "GodDecay/Input.h"
-#include "GodDecay/Application.h"
+#include "GodDecay/Core/Input.h"
+#include "GodDecay/Core/Application.h"
 
 /// <summary>
 /// windows平台下利用GLFW来实现输入轮询

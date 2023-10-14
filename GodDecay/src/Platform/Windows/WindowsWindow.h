@@ -1,7 +1,7 @@
 #pragma once
 
-#include "GodDecay/Core.h"
-#include "GodDecay/Window.h"
+#include "GodDecay/Core/Base.h"
+#include "GodDecay/Core/Window.h"
 #include "GodDecay/Renderer/RendererContext.h"
 
 #include <GLFW/glfw3.h>

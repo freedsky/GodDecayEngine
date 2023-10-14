@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GodDecay/Core.h"
+#include "GodDecay/Core/Base.h"
 #include "GodDecay/Tools/TimeTool.h"
 #include "GodDecay/Renderer/PerspectiveCamera.h"
 		  

@@ -1,8 +1,8 @@
 #include "gdpch.h"
 #include "OrthographicCameraController.h"
 
-#include "GodDecay/Input.h"
-#include "GodDecay/GodDecayKeyCodes.h"
+#include "GodDecay/Core/Input.h"
+#include "GodDecay/Core/GodDecayKeyCodes.h"
 
 namespace GodDecay 
 {

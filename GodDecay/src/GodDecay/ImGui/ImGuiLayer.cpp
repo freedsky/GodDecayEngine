@@ -5,7 +5,7 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 
-#include "GodDecay/Application.h"
+#include "GodDecay/Core/Application.h"
 
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
@@ -58,6 +58,15 @@ namespace GodDecay
 	{
 		/*static bool show = true;
 		ImGui::ShowDemoWindow(&show);*/
+	}
+
+	//这个添加的意思是，当其他层的事件在执行完毕后都会返回执行这个事件的句柄(Bool)
+	//而之前，并未在ImGuiLayer中返回这样的事件句柄，可以会导致事件执行的穿透
+	void ImGuiLayer::OnEvents(Event& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		e.GetHandle() |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
+		e.GetHandle() |= e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
 	}
 
 	void ImGuiLayer::Begin()

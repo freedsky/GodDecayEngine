@@ -2,7 +2,7 @@
 #include "Application.h"
 #include "Logger.h"
 
-#include "Renderer/Renderer.h"
+#include "GodDecay/Renderer/Renderer.h"
 
 #include <glad/glad.h>
 
@@ -58,6 +58,11 @@ namespace GodDecay
 		m_LayerStack.PushOverlay(layer);
 		layer->OnAttach();
 	}
+
+	void Application::Close()
+	{
+		m_Running = false;
+	}
 	//===============================================
 
 	void Application::Run()
@@ -90,9 +95,9 @@ namespace GodDecay
 
 		for (std::vector<Layer*>::reverse_iterator it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
 		{
-			(*it)->OnEvents(e);
 			if (e.GetHandle())
 				break;
+			(*it)->OnEvents(e);
 		}
 	}
 

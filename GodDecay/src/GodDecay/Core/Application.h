@@ -5,7 +5,7 @@
 /// <returns>
 /// 它可以让应用程序在启动和关闭时创建初始化和释放各种数据
 /// </returns>
-#include "Core.h"
+#include "Base.h"
 #include "Window.h"
 #include "Platform/PlatformTools/OpenGLTimeTool.h"
 
@@ -32,6 +32,8 @@ namespace GodDecay
 
 		inline Ref<Window> GetWindow() { return m_Window; }
 		inline static Application& Get() { return *m_Instance; }
+
+		void Close();
 	private:
 		Ref<Window> m_Window = nullptr;
 		static Application* m_Instance;
