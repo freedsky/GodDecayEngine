@@ -41,7 +41,7 @@ namespace GodDecay
 		}
 
 		Application& app = Application::Get();
-		GLFWwindow* window = static_cast<GLFWwindow*>(app.GetWindow()->GetNativeWindow());
+		GLFWwindow* window = static_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());
 
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
 		ImGui_ImplOpenGL3_Init("#version 410");
@@ -64,9 +64,9 @@ namespace GodDecay
 	//而之前，并未在ImGuiLayer中返回这样的事件句柄，可以会导致事件执行的穿透
 	void ImGuiLayer::OnEvents(Event& e)
 	{
-		ImGuiIO& io = ImGui::GetIO();
-		e.GetHandle() |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
-		e.GetHandle() |= e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+		//ImGuiIO& io = ImGui::GetIO();
+		//e.GetHandle() |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
+		//e.GetHandle() |= e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
 	}
 
 	void ImGuiLayer::Begin()
@@ -80,7 +80,7 @@ namespace GodDecay
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		Application& app = Application::Get();
-		io.DisplaySize = ImVec2((float)app.GetWindow()->GetWidth(), (float)app.GetWindow()->GetHeight());
+		io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

@@ -20,7 +20,7 @@ namespace GodDecay
 	class Application
 	{
 	public:
-		Application();
+		Application(const std::string& name = "GodDecay Engine App");
 		virtual ~Application();
 
 		void OnEvents(Event& e);
@@ -30,12 +30,12 @@ namespace GodDecay
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* layer);
 
-		inline Ref<Window> GetWindow() { return m_Window; }
+		inline Window& GetWindow() { return *m_Window; }
 		inline static Application& Get() { return *m_Instance; }
 
 		void Close();
 	private:
-		Ref<Window> m_Window = nullptr;
+		Scope<Window> m_Window = nullptr;
 		static Application* m_Instance;
 		bool m_Running = true;
 		bool m_Minimized = false;

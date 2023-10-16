@@ -123,6 +123,9 @@
     <ClInclude Include="src\GodDecay\Renderer\Buffer.h">
       <Filter>src\GodDecay\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\GodDecay\Renderer\Framebuffer.h">
+      <Filter>src\GodDecay\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\GodDecay\Renderer\OrthographicCamera.h">
       <Filter>src\GodDecay\Renderer</Filter>
     </ClInclude>
@@ -166,6 +169,9 @@
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLFramebuffer.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h">
@@ -1520,6 +1526,9 @@
     <ClCompile Include="src\GodDecay\Core\Logger.cpp">
       <Filter>src\GodDecay\Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\GodDecay\Core\Window.cpp">
+      <Filter>src\GodDecay\Core</Filter>
+    </ClCompile>
     <ClCompile Include="src\GodDecay\ImGui\ImGuiBuild.cpp">
       <Filter>src\GodDecay\ImGui</Filter>
     </ClCompile>
@@ -1527,6 +1536,9 @@
       <Filter>src\GodDecay\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\GodDecay\Renderer\Buffer.cpp">
+      <Filter>src\GodDecay\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GodDecay\Renderer\Framebuffer.cpp">
       <Filter>src\GodDecay\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\GodDecay\Renderer\OrthographicCamera.cpp">
@@ -1563,6 +1575,9 @@
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLFramebuffer.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp">

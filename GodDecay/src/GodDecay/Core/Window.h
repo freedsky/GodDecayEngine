@@ -39,6 +39,6 @@ namespace GodDecay
 
 		virtual void SetHideMouse(bool enabled) = 0;
 
-		static Ref<Window> Create(const WindowProperty& property = WindowProperty());
+		static Scope<Window> Create(const WindowProperty& property = WindowProperty());
 	};
 }

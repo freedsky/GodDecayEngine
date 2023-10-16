@@ -14,6 +14,7 @@
 #include "GodDecay/Renderer/RenderCommand.h"
 #include "GodDecay/Renderer/Renderer.h"
 #include "GodDecay/Renderer/Renderer2D.h"
+#include "GodDecay/Renderer/Framebuffer.h"
 #include "GodDecay/Controller/OrthographicCameraController.h"
 #include "Platform/OpenGL/OpenGLShader.h"
 #include "GodDecay/Renderer/ShaderLibrary.h"

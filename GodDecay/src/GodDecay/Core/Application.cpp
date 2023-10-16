@@ -13,12 +13,12 @@ namespace GodDecay
 
 	Application* Application::m_Instance = nullptr;
 
-	Application::Application()
+	Application::Application(const std::string& name)
 	{
 		GD_ENGINE_ASSERT(!m_Instance, "this Application already exitity");
 		m_Instance = this;
 
-		m_Window = Window::Create();
+		m_Window = Window::Create(WindowProperty(name));
 		//把Windowswindow的函数指针指向Application的事件进行绑定
 		m_Window->SetEventCallback(BIND_EVENTS(OnEvents));
 

@@ -19,9 +19,7 @@ public:
 	void OnImGuiRender() override;
 private:
 	GodDecay::Ref<GodDecay::OrthographicCameraController> m_Camera;
-
-	glm::vec3 m_CameraPosition = glm::vec3(0.0f);
-	float Speeds = 1.0f;
+	GodDecay::Ref<GodDecay::Framebuffer> m_Framebuffer;
 
 	glm::vec4 m_TextureColor;
 	GodDecay::Ref<GodDecay::Texture2D> m_SquareTexture;

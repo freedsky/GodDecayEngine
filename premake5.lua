@@ -1,6 +1,6 @@
 workspace "GodDecayEngine_2D"
     architecture "x64"
-	startproject "SandBox"
+	startproject "GodDecay-Editor"
 
     configurations
     {
@@ -97,6 +97,59 @@ project "GodDecay"
 			defines "GD_DIST"
 			runtime "Release"
 			optimize "on"
+
+
+project "GodDecay-Editor"
+    location "GodDecay-Editor"
+    kind "ConsoleApp"
+	cppdialect "C++17"
+    language "C++"
+	staticruntime "on"
+
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+    files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+
+	includedirs
+	{
+		"%{IncludeDir.src}",
+		"%{IncludeDir.spdlog}",
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.glm}"
+	}
+
+    links
+	{
+		"GodDecay"
+	}
+
+    filter "system:windows"
+		systemversion "latest"
+
+		defines
+		{
+			"GD_ENABLE_ASSERTS"
+		}
+
+        filter "configurations:Debug"
+            defines "GD_DEBUG"
+			runtime "Debug"
+            symbols "on"
+
+        filter "configurations:Release"
+            defines "GD_RELEASE"
+			runtime "Release"
+            optimize "on"
+
+        filter "configurations:Dist"
+            defines "GD_DIST"
+			runtime "Release"
+            optimize "on"
 
 project "SandBox"
     location "Sandbox"

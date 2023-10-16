@@ -19,8 +19,8 @@ namespace GodDecay
 		m_CameraTranslationSpeed = 3.0f;
 		m_CameraRotateSpeed = 0.1f;
 
-		lastX = Application::Get().GetWindow()->GetWidth() / 2.0f;
-		lastY = Application::Get().GetWindow()->GetHeight() / 2.0f;
+		lastX = Application::Get().GetWindow().GetWidth() / 2.0f;
+		lastY = Application::Get().GetWindow().GetHeight() / 2.0f;
 	}
 
 	void PerspectiveCameraController::OnUpdate(float deltaTime)
@@ -46,12 +46,12 @@ namespace GodDecay
 		{
 			if (!hide_mouse)
 			{
-				Application::Get().GetWindow()->SetHideMouse(!hide_mouse);
+				Application::Get().GetWindow().SetHideMouse(!hide_mouse);
 				hide_mouse = true;
 			}
 			else
 			{
-				Application::Get().GetWindow()->SetHideMouse(!hide_mouse);
+				Application::Get().GetWindow().SetHideMouse(!hide_mouse);
 				hide_mouse = false;
 			}
 

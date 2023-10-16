@@ -162,6 +162,7 @@
     <ClInclude Include="src\GodDecay\Events\MouseEvent.h" />
     <ClInclude Include="src\GodDecay\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\GodDecay\Renderer\Buffer.h" />
+    <ClInclude Include="src\GodDecay\Renderer\Framebuffer.h" />
     <ClInclude Include="src\GodDecay\Renderer\OrthographicCamera.h" />
     <ClInclude Include="src\GodDecay\Renderer\PerspectiveCamera.h" />
     <ClInclude Include="src\GodDecay\Renderer\RenderCommand.h" />
@@ -177,6 +178,7 @@
     <ClInclude Include="src\GodDecayTop.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLFramebuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h" />
@@ -629,9 +631,11 @@
     <ClCompile Include="src\GodDecay\Core\Layer.cpp" />
     <ClCompile Include="src\GodDecay\Core\LayerStack.cpp" />
     <ClCompile Include="src\GodDecay\Core\Logger.cpp" />
+    <ClCompile Include="src\GodDecay\Core\Window.cpp" />
     <ClCompile Include="src\GodDecay\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\GodDecay\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\GodDecay\Renderer\Framebuffer.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\PerspectiveCamera.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\RenderCommand.cpp" />
@@ -644,6 +648,7 @@
     <ClCompile Include="src\GodDecay\Renderer\VertexArrayBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLFramebuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp" />
