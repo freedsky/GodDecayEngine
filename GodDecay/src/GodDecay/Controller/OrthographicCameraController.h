@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GodDecay/Core.h"
+#include "GodDecay/Core/Base.h"
 #include "GodDecay/Tools/TimeTool.h"
 #include "GodDecay/Renderer/OrthographicCamera.h"
 
@@ -19,6 +19,8 @@ namespace GodDecay
 
 		void OnUpdate(float deltaTime);
 		void OnEvent(Event& e);
+
+		void OnResize(float width, float height);
 
 		Ref<OrthographicCamera>& GetCamera() { return m_Camera; }
 		const Ref<OrthographicCamera>& GetCamera() const { return m_Camera; }

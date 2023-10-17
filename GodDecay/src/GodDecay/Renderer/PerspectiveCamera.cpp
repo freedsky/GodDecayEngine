@@ -6,7 +6,7 @@
 namespace GodDecay 
 {
 	PerspectiveCamera::PerspectiveCamera(float zoom, float aspect, float n, float f)
-		:PerspectivePosition(0.0f, 0.0f, 2.0f), PerspectiveFront(0.0f, 0.0f, -1.0f), PerspectiveUp(0.0f, 1.0f, 0.0f)
+		:PerspectivePosition(0.0f, 0.0f, 2.0f), PerspectiveFront(0.0f, 0.0f, -1.0f), PerspectiveUp(0.0f, 1.0f, 0.0f), PerspectiveRight(0.0f)
 	{
 		m_ZoomLevel = zoom;
 		m_AspectRatio = aspect;

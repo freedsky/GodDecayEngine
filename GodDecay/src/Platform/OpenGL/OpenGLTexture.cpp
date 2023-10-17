@@ -82,57 +82,6 @@ namespace GodDecay
 	{
 		glBindTextureUnit(slot, m_RendererID);
 	}
-
-	uint32_t OpenGLTexture::LoadModelFileTexture(const char* path, const std::string& directory)
-	{
-		std::string filename = std::string(path);
-		filename = directory + "/" + filename;
-
-		uint32_t id;
-		int width, height, nrComponents;
-		unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
-		if (data)
-		{
-			GLenum internalFormat = 0, dataFormat = 0;
-			if (nrComponents == 4)
-			{
-				internalFormat = GL_RGBA8;
-				dataFormat = GL_RGBA;
-			}
-			else if (nrComponents == 3)
-			{
-				internalFormat = GL_RGB8;
-				dataFormat = GL_RGB;
-			}
-			else if (nrComponents == 1)
-			{
-				internalFormat = GL_RED;
-				dataFormat = GL_RED;
-			}
-			GD_ENGINE_ASSERT(internalFormat & dataFormat, "Format not supported!");
-
-			//加载纹理到缓冲区以及设置纹理环绕模式
-			glCreateTextures(GL_TEXTURE_2D, 1, &id);
-			glTextureStorage2D(id, 1, internalFormat, width, height);
-
-			//这里设置了纹理对于放大和缩小时，它应用的插值方式
-			glTextureParameteri(id, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-			glTextureParameteri(id, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-
-			glTextureParameteri(id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTextureParameteri(id, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-			glTextureSubImage2D(id, 0, 0, 0, width, height, dataFormat, GL_UNSIGNED_BYTE, data);
-
-			stbi_image_free(data);
-		}
-		else
-		{
-			GD_ENGINE_ERROR("Texture failed to load at path : ");
-			stbi_image_free(data);
-		}
-		return id;
-	}
 }
 
 

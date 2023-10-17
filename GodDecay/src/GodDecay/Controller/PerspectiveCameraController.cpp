@@ -1,10 +1,10 @@
 #include "gdpch.h"
 #include "PerspectiveCameraController.h"
 
-#include "GodDecay/Input.h"
-#include "GodDecay/GodDecayKeyCodes.h"
+#include "GodDecay/Core/Input.h"
+#include "GodDecay/Core/GodDecayKeyCodes.h"
 
-#include "GodDecay/Application.h"
+#include "GodDecay/Core/Application.h"
 
 namespace GodDecay 
 {
@@ -19,8 +19,8 @@ namespace GodDecay
 		m_CameraTranslationSpeed = 3.0f;
 		m_CameraRotateSpeed = 0.1f;
 
-		lastX = Application::Get().GetWindow()->GetWidth() / 2.0f;
-		lastY = Application::Get().GetWindow()->GetHeight() / 2.0f;
+		lastX = Application::Get().GetWindow().GetWidth() / 2.0f;
+		lastY = Application::Get().GetWindow().GetHeight() / 2.0f;
 	}
 
 	void PerspectiveCameraController::OnUpdate(float deltaTime)
@@ -41,21 +41,6 @@ namespace GodDecay
 		m_Camera->SetPerspectivePosition(position);
 		m_Camera->UpDateViewMatrix(WorldUp);
 		m_Camera->UpDateViewProjectionMatrix();
-
-		if (GodDecay::Input::IsKeyPressed(GODDECAY_KEY_V))
-		{
-			if (!hide_mouse)
-			{
-				Application::Get().GetWindow()->SetHideMouse(!hide_mouse);
-				hide_mouse = true;
-			}
-			else
-			{
-				Application::Get().GetWindow()->SetHideMouse(!hide_mouse);
-				hide_mouse = false;
-			}
-
-		}
 	}
 
 	void PerspectiveCameraController::OnEvent(Event& e)
@@ -63,6 +48,15 @@ namespace GodDecay
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<MouseScrolledEvent>(std::bind(&PerspectiveCameraController::OnMouseScrolled, this, std::placeholders::_1));
 		dispatcher.Dispatch<MouseMovedEvent>(std::bind(&PerspectiveCameraController::OnMosueMoved, this, std::placeholders::_1));
+		dispatcher.Dispatch<KeyPressedEvent>(std::bind(&PerspectiveCameraController::OnKeyDown, this, std::placeholders::_1));
+		dispatcher.Dispatch<WindowResizeEvent>(std::bind(&PerspectiveCameraController::OnWindowResized, this, std::placeholders::_1));
+	}
+
+	void PerspectiveCameraController::OnResize(float width, float height)
+	{
+		m_Camera->SetAspectRatio(width / height);
+		m_Camera->UpDateProjectionMatrix();
+		m_Camera->UpDateViewProjectionMatrix();
 	}
 
 	bool PerspectiveCameraController::OnMouseScrolled(MouseScrolledEvent& e)
@@ -78,6 +72,11 @@ namespace GodDecay
 		m_Camera->SetZoomLevel(zoom);
 		m_Camera->UpDateProjectionMatrix();
 		m_Camera->UpDateViewProjectionMatrix();
+		return false;
+	}
+	bool PerspectiveCameraController::OnWindowResized(WindowResizeEvent& e)
+	{
+		OnResize((float)e.GetWidth(), (float)e.GetHeight());
 		return false;
 	}
 	bool PerspectiveCameraController::OnMosueMoved(MouseMovedEvent& e)
@@ -121,6 +120,24 @@ namespace GodDecay
 		m_Camera->UpDateViewMatrix(WorldUp);
 		m_Camera->UpDateViewProjectionMatrix();
 
+		return false;
+	}
+
+	bool PerspectiveCameraController::OnKeyDown(KeyPressedEvent& e) 
+	{
+		if (e.GetKetCode() == GODDECAY_KEY_V)
+		{
+			if (!hide_mouse)
+			{
+				Application::Get().GetWindow().SetHideMouse(!hide_mouse);
+				hide_mouse = true;
+			}
+			else
+			{
+				Application::Get().GetWindow().SetHideMouse(!hide_mouse);
+				hide_mouse = false;
+			}
+		}
 		return false;
 	}
 }

@@ -1,7 +1,7 @@
 #pragma once
 #include <unordered_map>
 
-#include "GodDecay/Core.h"
+#include "GodDecay/Core/Base.h"
 #include "Shader.h"
 
 /// <summary>

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GodDecay/Core.h"
+#include "GodDecay/Core/Base.h"
 
 /// <summary>
 /// 创建数据缓冲区以及绑定数据[vetex \ index]
@@ -61,8 +61,8 @@ namespace GodDecay
 				case ShaderDataType::Float2:  return 2;
 				case ShaderDataType::Float3:  return 3;
 				case ShaderDataType::Float4:  return 4;
-				case ShaderDataType::Mat3:    return 3 * 3;
-				case ShaderDataType::Mat4:    return 4 * 4;
+				case ShaderDataType::Mat3:    return 3;//更改Mat是因为在为顶点属性赋值时，有大小限制，这里会在vertexarray中对mat类型进行特殊处理并再去赋值
+				case ShaderDataType::Mat4:    return 4;
 				case ShaderDataType::Int:     return 1;
 				case ShaderDataType::Int2:    return 2;
 				case ShaderDataType::Int3:    return 3;
@@ -122,8 +122,10 @@ namespace GodDecay
 
 		virtual const BufferLayout& GetLayout() const = 0;
 		virtual void Setlayout(const BufferLayout& layout) = 0;
+		virtual void SetData(const void* data, uint32_t size) = 0;
 
 		static Ref<VertexBuffer> Create(float* vertices, uint32_t size);
+		static Ref<VertexBuffer> Create(uint32_t size);
 	};
 
 	class IndexBuffer 

@@ -31,9 +31,9 @@ namespace GodDecay
 			m_RendererAPI->Clear();
 		}
 
-		inline static void DrawIndexed(const Ref<VertexArrayBuffer>& vertexArray, RendererAPI::DrawType type = RendererAPI::DrawType::Normal)
+		inline static void DrawIndexed(const Ref<VertexArrayBuffer>& vertexArray, RendererAPI::DrawType type = RendererAPI::DrawType::Normal, uint32_t indexCount = 0)
 		{
-			m_RendererAPI->DrawIndexed(vertexArray, type);
+			m_RendererAPI->DrawIndexed(vertexArray, type, indexCount);
 		}
 	private:
 		static Ref<RendererAPI> m_RendererAPI;

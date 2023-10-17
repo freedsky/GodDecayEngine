@@ -27,12 +27,14 @@ namespace GodDecay
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArrayBuffer>& vertexArray, DrawType type)
+	void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArrayBuffer>& vertexArray, DrawType type, uint32_t indexCount)
 	{
+		uint32_t count = indexCount ? indexCount : vertexArray->GetIndexBuffer()->GetCount();
+
 		if (type == DrawType::STRIP)
-			glDrawElements(GL_TRIANGLE_STRIP, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_TRIANGLE_STRIP, count, GL_UNSIGNED_INT, nullptr);
 		else if (type == DrawType::Normal)
-			glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 		else if (type == DrawType::None)
 			GD_ENGINE_ERROR("UnKnow this DrawType");
 

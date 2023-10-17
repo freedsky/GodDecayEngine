@@ -16,7 +16,4 @@
     </ClCompile>
     <ClCompile Include="src\SandBox.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="assets\shader\StandardModelShader.glsl" />
-  </ItemGroup>
 </Project>

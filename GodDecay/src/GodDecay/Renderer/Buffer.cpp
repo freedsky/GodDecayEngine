@@ -11,7 +11,18 @@ namespace GodDecay
 		switch (RendererAPI::GetAPI()) 
 		{
 		case RendererAPI::API::None: GD_ENGINE_ASSERT(false, "RednererAPI is None"); return nullptr;
-			case RendererAPI::API::OpenGL: return CreateRef<OpenGLVertexBuffer>(vertices, size);
+		case RendererAPI::API::OpenGL: return CreateRef<OpenGLVertexBuffer>(vertices, size);
+		}
+		GD_ENGINE_ASSERT(false, "Plateform is not RendererAPI");
+		return nullptr;
+	}
+
+	Ref<VertexBuffer> VertexBuffer::Create(uint32_t size)
+	{
+		switch (RendererAPI::GetAPI())
+		{
+		case RendererAPI::API::None: GD_ENGINE_ASSERT(false, "RednererAPI is None"); return nullptr;
+		case RendererAPI::API::OpenGL: return CreateRef<OpenGLVertexBuffer>(size);
 		}
 		GD_ENGINE_ASSERT(false, "Plateform is not RendererAPI");
 		return nullptr;

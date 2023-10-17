@@ -5,7 +5,7 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 
-#include "GodDecay/Application.h"
+#include "GodDecay/Core/Application.h"
 
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
@@ -41,7 +41,7 @@ namespace GodDecay
 		}
 
 		Application& app = Application::Get();
-		GLFWwindow* window = static_cast<GLFWwindow*>(app.GetWindow()->GetNativeWindow());
+		GLFWwindow* window = static_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());
 
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
 		ImGui_ImplOpenGL3_Init("#version 410");
@@ -60,6 +60,16 @@ namespace GodDecay
 		ImGui::ShowDemoWindow(&show);*/
 	}
 
+	void ImGuiLayer::OnEvents(Event& e)
+	{
+		if (m_BlockEvents)
+		{
+			ImGuiIO& io = ImGui::GetIO();
+			e.GetHandle() |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
+			e.GetHandle() |= e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+		}
+	}
+
 	void ImGuiLayer::Begin()
 	{
 		ImGui_ImplOpenGL3_NewFrame();
@@ -71,7 +81,7 @@ namespace GodDecay
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		Application& app = Application::Get();
-		io.DisplaySize = ImVec2((float)app.GetWindow()->GetWidth(), (float)app.GetWindow()->GetHeight());
+		io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

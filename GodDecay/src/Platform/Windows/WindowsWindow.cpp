@@ -20,11 +20,6 @@ namespace GodDecay
 		GD_ENGINE_ERROR("({0}),{1}", errno, description);
 	}
 
-	Ref<Window> Window::Create(const WindowProperty& property) 
-	{
-		return CreateRef<WindowsWindow>(property);
-	}
-
 	WindowsWindow::WindowsWindow(const WindowProperty& property)
 	{
 		Init(property);

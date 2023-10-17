@@ -1,6 +1,6 @@
 workspace "GodDecayEngine_3D"
     architecture "x64"
-	startproject "SandBox"
+	startproject "GodDecaylnut"
 
     configurations
     {
@@ -109,6 +109,59 @@ project "GodDecay"
 			defines "GD_DIST"
 			runtime "Release"
 			optimize "on"
+
+project "GodDecaylnut"
+    location "GodDecaylnut"
+    kind "ConsoleApp"
+	cppdialect "C++17"
+    language "C++"
+	staticruntime "on"
+
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+    files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+
+	includedirs
+	{
+		"%{IncludeDir.src}",
+		"%{IncludeDir.spdlog}",
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.assimp}"
+	}
+
+    links
+	{
+		"GodDecay"
+	}
+
+    filter "system:windows"
+		systemversion "latest"
+
+		defines
+		{
+			"GD_ENABLE_ASSERTS"
+		}
+
+        filter "configurations:Debug"
+            defines "GD_DEBUG"
+			runtime "Debug"
+            symbols "on"
+
+        filter "configurations:Release"
+            defines "GD_RELEASE"
+			runtime "Release"
+            optimize "on"
+
+        filter "configurations:Dist"
+            defines "GD_DIST"
+			runtime "Release"
+            optimize "on"
 
 project "SandBox"
     location "Sandbox"

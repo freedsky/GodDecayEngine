@@ -21,7 +21,7 @@ namespace GodDecay
 			return;
 		}
 		//得到模型文件所在位置，也是纹理加载的位置[后期可以自己把纹理文件位置进行调整]
-		directory = path.substr(0, path.find_last_of('/'));
+		//directory = path.substr(0, path.find_last_of('/'));
 		//GD_ENGINE_INFO(directory);
 		//从根节点出发递归处理每个子节点数据
 		processNode(scene->mRootNode, scene);
@@ -45,7 +45,6 @@ namespace GodDecay
 	{
 		std::vector<ModelData> data;
 		std::vector<uint32_t> indices;
-		std::vector<ModelTexture> textures;
 
 		for (uint32_t i = 0; i < mesh->mNumVertices; ++i) 
 		{
@@ -87,45 +86,18 @@ namespace GodDecay
 				indices.push_back(face.mIndices[k]);
 		}
 
-		//材质索引==========================================================================================================
-		if (mesh->mMaterialIndex >= 0) 
-		{
-			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-			//漫反射贴图
-			std::vector<ModelTexture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-			textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-			//高光反射贴图
-			std::vector<ModelTexture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-			textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-			//法线贴图
-			std::vector<ModelTexture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
-			textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-		}
+		return Mesh(data, indices);
 
-		//==========================================================================================================
-		return Mesh(data, indices, textures);
-
-	}
-
-	std::vector<ModelTexture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
-	{
-		std::vector<ModelTexture> textures;
-		for (int i = 0; i < mat->GetTextureCount(type); ++i) 
-		{
-			//对应类型的纹理的文件名称
-			aiString str;
-			mat->GetTexture(type, i, &str);
-			ModelTexture texture;
-			texture.id = m_ModelData->m_WhiteTexture->LoadModelFileTexture(str.C_Str(), directory);
-			texture.type = typeName;
-			texture.path = str.C_Str();
-			textures.push_back(texture);
-		}
-		return textures;
 	}
 
 	void Model::BindModelData()
 	{
+		m_ModelData->ModelShader = Shader::Create("assets/shader/StandardModelShader.glsl");
+
+		m_ModelData->WhiteTexture = Texture2D::Create(1, 1);
+		uint32_t whiteTextureData = 0xffffffff;
+		m_ModelData->WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
+
 		std::vector<float> modelData;
 		std::vector<uint32_t> modelIndices;
 		for (int i = 0; i < m_Meshes.size(); ++i) 
@@ -166,24 +138,16 @@ namespace GodDecay
 
 			modelData.clear();
 			modelIndices.clear();
+
+			//默认纹理设置[0下标为默认纹理设置]
+			m_ModelData->ModelShader->Bind();
+
+			m_ModelData->ModelShader->SetInt("u_Texture", 0);
 		}
 
-		//============================================================================
-		m_ModelData->m_WhiteTexture = Texture2D::Create(1, 1);
-		uint32_t whiteTextureData = 0xffffffff;
-		m_ModelData->m_WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
+		
 
-		m_ModelData->ModelShader = Shader::Create("assets/shader/StandardModelShader.glsl");
-
-		if (m_Meshes.size() == 1) 
-		{
-			if (m_Meshes[0].GetModelTexture().size() == 0) 
-			{
-				m_ModelData->ModelShader->Bind();
-				m_ModelData->ModelShader->SetInt("u_Texture", 0);
-			}
-		}
-
-		//============================================================================
+		
+			
 	} 
 }

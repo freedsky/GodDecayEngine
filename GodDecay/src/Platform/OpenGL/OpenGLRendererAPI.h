@@ -15,7 +15,7 @@ namespace GodDecay
 		virtual void SetClearColor(const glm::vec4& color) override;
 		virtual void Clear() override;
 
-		virtual void DrawIndexed(const Ref<VertexArrayBuffer>& vertexArray, DrawType type = DrawType::Normal) override;
+		virtual void DrawIndexed(const Ref<VertexArrayBuffer>& vertexArray, DrawType type = DrawType::Normal, uint32_t indexCount = 0) override;
 	};
 }
 

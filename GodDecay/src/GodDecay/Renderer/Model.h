@@ -15,6 +15,8 @@
 /// 模型的数据加载
 /// 
 /// 对于多mesh的纹理加载需要更多的扩展支持，这里暂时先搁置多mesh的纹理加载，只考虑但mesh的纹理加载
+/// 
+/// 这里不考虑纹理的加载
 /// </summary>
 
 namespace GodDecay
@@ -23,7 +25,7 @@ namespace GodDecay
 	{
 		std::vector<Ref<VertexArrayBuffer>> ModelVertexArray;
 		Ref<Shader> ModelShader;
-		Ref<Texture2D> m_WhiteTexture;
+		Ref<Texture2D> WhiteTexture;
 	};
 
 	class Model
@@ -37,12 +39,10 @@ namespace GodDecay
 	private:
 		std::vector<Mesh> m_Meshes;
 		Ref<RendererModelStorage> m_ModelData;
-		std::string directory;
 
 		void loadModel(const std::string& path);
 		void processNode(aiNode* node, const aiScene* scene);
 		Mesh processMesh(aiMesh* mesh, const aiScene* scene);
-		std::vector<ModelTexture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 
 		void BindModelData();
 	};

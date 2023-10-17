@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GodDecay/Core.h"
+#include "GodDecay/Core/Base.h"
 
 #include <functional>
 
@@ -47,7 +47,7 @@ namespace GodDecay
 		virtual int GetCategoryFlags() const = 0;
 		virtual std::string ToString() const { return GetName(); }
 
-		inline bool GetHandle() { return m_Handled; }
+		inline bool& GetHandle() { return m_Handled; }
 
 		inline bool IsInCategory(EventCategory category)
 		{

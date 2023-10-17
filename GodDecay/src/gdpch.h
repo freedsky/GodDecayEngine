@@ -16,7 +16,7 @@
 #include <Windows.h>
 #endif
 
-#include "GodDecay/Logger.h"
+#include "GodDecay/Core/Logger.h"
 #include "GodDecay/Debug/Instrumentor.h"
 
 
