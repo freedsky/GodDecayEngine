@@ -6,7 +6,7 @@
 namespace GodDecay 
 {
 	EditorLayer::EditorLayer(std::string name)
-		:Layer(name), m_Camera(GodDecay::CreateRef<GodDecay::OrthographicCameraController>(1280.0f / 720.0f))
+		:Layer(name), m_Camera(CreateRef<GodDecay::OrthographicCameraController>(1280.0f / 720.0f))
 	{
 	}
 
@@ -31,8 +31,11 @@ namespace GodDecay
 
 	void EditorLayer::OnUpDate(float deltaTime)
 	{
-		m_Camera->OnUpdate(deltaTime);
-		
+		//防止事件在相机和UI之间进行穿透
+		if (m_ViewportFocused) 
+		{
+			m_Camera->OnUpdate(deltaTime);
+		}
 		m_Framebuffer->Bind();
 
 		GodDecay::RenderCommand::SetClearColor(glm::vec4(0.1, 0.1, 0.1, 1.0));
@@ -64,7 +67,7 @@ namespace GodDecay
 
 	void EditorLayer::OnImGuiRender()
 	{
-
+		//启用浮动和吸附窗口
 		static bool dockspaceOpen = true;
 		static bool opt_fullscreen_persistant = true;
 		bool opt_fullscreen = opt_fullscreen_persistant;
@@ -99,7 +102,7 @@ namespace GodDecay
 			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 		}
-
+		//窗口导航栏
 		if (ImGui::BeginMenuBar())
 		{
 			if (ImGui::BeginMenu("File"))
@@ -109,14 +112,7 @@ namespace GodDecay
 			}
 			ImGui::EndMenuBar();
 		}
-		ImGui::Begin("Viewpoint");
-		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
-		ImGui::Image((void*)textureID, ImVec2{ 1280, 720 }, { 0,1 }, { 1,0 });
-		ImGui::End();
-
-		ImGui::End();
-		//===============================================================
-
+		//状态栏===============================================================
 		ImGui::Begin("Status");
 		auto stats = GodDecay::Renderer2D::GetStats();
 		ImGui::Text("Renderer2D Stats:");
@@ -124,8 +120,30 @@ namespace GodDecay
 		ImGui::Text("Quads: %d", stats.QuadCount);
 		ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
 		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
-
 		ImGui::End();
+
+		//View窗口（把这个窗口移动到最下面好像就不会出现最小化时窗口出现比列不协调的问题）
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });//推送一个风格样式，注意要以ImGui::PopStyleVar();结束
+		ImGui::Begin("Viewpoint");
+		//判断当前鼠标的聚焦区域是否在该窗口，防止事件穿透
+		m_ViewportFocused = ImGui::IsWindowFocused();
+		m_ViewportHovered = ImGui::IsWindowHovered();
+		Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused || !m_ViewportHovered);
+		//可以获取到当前begine创建窗口的大小
+		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
+
+		if (m_ViewportSize != *((glm::vec2*)&viewportPanelSize) && viewportPanelSize.x > 0 && viewportPanelSize.y > 0)
+		{
+			m_Framebuffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
+			m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
+
+			m_Camera->OnResize(viewportPanelSize.x, viewportPanelSize.y);
+		}
+		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
+		ImGui::Image((void*)textureID, ImVec2{ m_ViewportSize.x,m_ViewportSize.y }, { 0,1 }, { 1,0 });
+		ImGui::End();
+		ImGui::PopStyleVar();
 		
+		ImGui::End();
 	}
 }

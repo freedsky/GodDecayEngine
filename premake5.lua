@@ -1,6 +1,6 @@
 workspace "GodDecayEngine_2D"
     architecture "x64"
-	startproject "GodDecay-Editor"
+	startproject "GodDecaylnut"
 
     configurations
     {
@@ -99,8 +99,8 @@ project "GodDecay"
 			optimize "on"
 
 
-project "GodDecay-Editor"
-    location "GodDecay-Editor"
+project "GodDecaylnut"
+    location "GodDecaylnut"
     kind "ConsoleApp"
 	cppdialect "C++17"
     language "C++"

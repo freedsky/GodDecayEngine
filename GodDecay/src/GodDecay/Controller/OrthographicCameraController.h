@@ -20,6 +20,8 @@ namespace GodDecay
 		void OnUpdate(float deltaTime);
 		void OnEvent(Event& e);
 
+		void OnResize(float width, float height);
+
 		Ref<OrthographicCamera>& GetCamera() { return m_Camera; }
 		const Ref<OrthographicCamera>& GetCamera() const { return m_Camera; }
 		//如果要对near和far平面做修改请在此类中去编写函数，并在最后调用相机的SetOrthographicProjection方法进行更新

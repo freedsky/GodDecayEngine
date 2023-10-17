@@ -64,9 +64,12 @@ namespace GodDecay
 	//而之前，并未在ImGuiLayer中返回这样的事件句柄，可以会导致事件执行的穿透
 	void ImGuiLayer::OnEvents(Event& e)
 	{
-		//ImGuiIO& io = ImGui::GetIO();
-		//e.GetHandle() |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
-		//e.GetHandle() |= e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+		if (m_BlockEvents) 
+		{
+			ImGuiIO& io = ImGui::GetIO();
+			e.GetHandle() |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
+			e.GetHandle() |= e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+		}
 	}
 
 	void ImGuiLayer::Begin()

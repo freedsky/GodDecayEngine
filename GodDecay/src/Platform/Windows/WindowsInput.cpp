@@ -1,13 +1,12 @@
 #include "gdpch.h"
-#include "WindowsInput.h"
+#include "GodDecay/Core/Input.h"
+#include "GodDecay/Core/Application.h"
 
 #include <GLFW/glfw3.h>
 
 namespace GodDecay
 {
-	Input* Input::m_Instance = new WindowsInput();
-
-	bool WindowsInput::IsKeyPressedImpl(uint32_t keycode) const
+	bool Input::IsKeyPressed(uint32_t keycode)
 	{
 		GLFWwindow* window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 
@@ -15,7 +14,7 @@ namespace GodDecay
 		return status == GLFW_PRESS || status == GLFW_REPEAT;
 	}
 
-	bool WindowsInput::IsMosueButtonPressedImpl(uint32_t button) const
+	bool Input::IsMosueButtonPressed(uint32_t button)
 	{
 		GLFWwindow* window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 
@@ -23,7 +22,7 @@ namespace GodDecay
 		return status == GLFW_PRESS;
 	}
 
-	std::pair<float, float> WindowsInput::GetMosuePositionImpl() const
+	std::pair<float, float> Input::GetMosuePosition()
 	{
 		GLFWwindow* window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		int width, height;
@@ -37,13 +36,13 @@ namespace GodDecay
 		return{ (float)-1,(float)-1 };
 	}
 
-	float WindowsInput::GetMouseXImpl() const
+	float Input::GetMouseX()
 	{
 		std::pair<float, float> position = GetMosuePosition();
 		return position.first;
 	}
 
-	float WindowsInput::GetMouseYImpl() const
+	float Input::GetMouseY()
 	{
 		std::pair<float, float> position = GetMosuePosition();
 		return position.second;
