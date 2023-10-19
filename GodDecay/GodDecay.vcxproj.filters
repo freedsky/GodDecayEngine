@@ -1503,6 +1503,11 @@
     <ClInclude Include="vendor\stb_image\stb_voxel_render.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
+    <ClInclude Include="src\GodDecay\Scene\Scene.h" />
+    <ClInclude Include="src\GodDecay\Scene\Components.h" />
+    <ClInclude Include="src\GodDecay\Scene\Entity.h" />
+    <ClInclude Include="src\GodDecay\Scene\SceneCamera.h" />
+    <ClInclude Include="src\GodDecay\Renderer\Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GodDecay\Controller\OrthographicCameraController.cpp">
@@ -1604,5 +1609,8 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
+    <ClCompile Include="src\GodDecay\Scene\Scene.cpp" />
+    <ClCompile Include="src\GodDecay\Scene\Entity.cpp" />
+    <ClCompile Include="src\GodDecay\Scene\SceneCamera.cpp" />
   </ItemGroup>
 </Project>

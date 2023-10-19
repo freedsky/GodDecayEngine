@@ -19,6 +19,7 @@ IncludeDir["glad"] = "GodDecay/vendor/glad/include"
 IncludeDir["ImGui"] = "GodDecay/vendor/ImGui"
 IncludeDir["glm"] = "GodDecay/vendor/glm"
 IncludeDir["stb_image"] = "GodDecay/vendor/stb_image"
+IncludeDir["entt"] = "GodDecay/vendor/entt/include"
 
 group "Dependencies"
 	include "GodDecay/vendor/GLFW"
@@ -61,7 +62,8 @@ project "GodDecay"
 		"%{IncludeDir.glad}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.stb_image}"
+		"%{IncludeDir.stb_image}",
+		"%{IncludeDir.entt}"
 	}
 
 	links
@@ -120,7 +122,8 @@ project "GodDecaylnut"
 		"%{IncludeDir.src}",
 		"%{IncludeDir.spdlog}",
 		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.entt}"
 	}
 
     links

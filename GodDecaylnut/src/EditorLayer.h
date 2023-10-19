@@ -26,6 +26,13 @@ namespace GodDecay
 		glm::vec2 m_ViewportSize = { 0.0f,0.0f };
 		bool m_ViewportFocused = false, m_ViewportHovered = false;
 
+		//entt test
+		Ref<Scene> m_ActionScene;
+		Entity m_SquareEntity;
+		Entity m_FirstCamera;
+		Entity m_SecondCamera;
+		bool m_PrimaryCamera = true;
+
 		glm::vec4 m_TextureColor;
 		Ref<Texture2D> m_SquareTexture;
 	};

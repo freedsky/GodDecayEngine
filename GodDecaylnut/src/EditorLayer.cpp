@@ -23,6 +23,19 @@ namespace GodDecay
 		fbSpec.Width = 1280;
 		fbSpec.Height = 720;
 		m_Framebuffer = GodDecay::Framebuffer::Create(fbSpec);
+
+		//-----------entt---test----------
+		m_ActionScene = CreateRef<Scene>();
+
+		m_SquareEntity = m_ActionScene->CreateEntity();
+		m_SquareEntity.AddComponent<SpriteRendererComponent>();
+
+		m_FirstCamera = m_ActionScene->CreateEntity("First");
+		m_FirstCamera.AddComponent<CameraComponent>();
+
+		m_SecondCamera = m_ActionScene->CreateEntity("Second");
+		auto& c = m_SecondCamera.AddComponent<CameraComponent>();
+		c.Primary = false;
 	}
 
 	void EditorLayer::OnDetach()
@@ -31,11 +44,22 @@ namespace GodDecay
 
 	void EditorLayer::OnUpDate(float deltaTime)
 	{
+		//在Updata中每帧去检测viewport是否进行了改变
+		if (FramebufferSpecification spec = m_Framebuffer->GetSpecification();
+			m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && // zero sized framebuffer is invalid
+			(spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
+		{
+			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			//m_CameraController->OnResize(m_ViewportSize.x, m_ViewportSize.y);
+			//给场景相机调整viewport大小
+			m_ActionScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		}
+
 		//防止事件在相机和UI之间进行穿透
-		if (m_ViewportFocused) 
+		/*if (m_ViewportFocused) 
 		{
 			m_Camera->OnUpdate(deltaTime);
-		}
+		}*/
 		m_Framebuffer->Bind();
 
 		GodDecay::RenderCommand::SetClearColor(glm::vec4(0.1, 0.1, 0.1, 1.0));
@@ -43,7 +67,7 @@ namespace GodDecay
 
 		GodDecay::Renderer2D::ResetStats();
 			
-		GodDecay::Renderer2D::BeginScene(*m_Camera->GetCamera().get());
+		/*GodDecay::Renderer2D::BeginScene(*m_Camera->GetCamera().get());
 
 		GodDecay::Renderer2D::DrawQuad(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), m_TextureColor);
 
@@ -55,7 +79,9 @@ namespace GodDecay
 
 		GodDecay::Renderer2D::DrawRotatedQuad(glm::vec2(5.0f, 5.0f), glm::vec2(2.0f, 2.0f), 45.0f, m_SquareTexture, m_TextureColor);
 
-		GodDecay::Renderer2D::EndScene();
+		GodDecay::Renderer2D::EndScene();*/
+
+		m_ActionScene->OnUpdata(deltaTime);
 
 		m_Framebuffer->UnBind();
 	}
@@ -120,6 +146,25 @@ namespace GodDecay
 		ImGui::Text("Quads: %d", stats.QuadCount);
 		ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
 		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
+		//通过组件获取到物体身上的组件引用
+		glm::vec4& square = m_SquareEntity.GetComponent<SpriteRendererComponent>().Color;
+		ImGui::ColorEdit4("entt color", glm::value_ptr(square));
+
+		ImGui::DragFloat3("Camera Transform",
+			glm::value_ptr(m_FirstCamera.GetComponent<TransformComponent>().Transform[3]));
+
+		if (ImGui::Checkbox("Camera A", &m_PrimaryCamera))
+		{
+			m_FirstCamera.GetComponent<CameraComponent>().Primary = m_PrimaryCamera;
+			m_SecondCamera.GetComponent<CameraComponent>().Primary = !m_PrimaryCamera;
+		}
+		{
+			auto& camera = m_SecondCamera.GetComponent<CameraComponent>().Camera;
+			float orthoSize = camera.GetOrthographicSize();
+			if (ImGui::DragFloat("Second Camera Ortho Size", &orthoSize))
+				camera.SetOrthographicSize(orthoSize);
+		}
+		
 		ImGui::End();
 
 		//View窗口（把这个窗口移动到最下面好像就不会出现最小化时窗口出现比列不协调的问题）
@@ -129,16 +174,10 @@ namespace GodDecay
 		m_ViewportFocused = ImGui::IsWindowFocused();
 		m_ViewportHovered = ImGui::IsWindowHovered();
 		Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused || !m_ViewportHovered);
-		//可以获取到当前begine创建窗口的大小
+		//可以获取到当前begine创建窗口的大小,在此处更新view大小，在updata实际更新framebuffer的大小，这样在调整时才不会出现闪屏的现象
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-
-		if (m_ViewportSize != *((glm::vec2*)&viewportPanelSize) && viewportPanelSize.x > 0 && viewportPanelSize.y > 0)
-		{
-			m_Framebuffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
-			m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
-
-			m_Camera->OnResize(viewportPanelSize.x, viewportPanelSize.y);
-		}
+		m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
+		//渲染framebuffer
 		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
 		ImGui::Image((void*)textureID, ImVec2{ m_ViewportSize.x,m_ViewportSize.y }, { 0,1 }, { 1,0 });
 		ImGui::End();
