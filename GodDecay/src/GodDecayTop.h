@@ -22,4 +22,10 @@
 #include "GodDecay/Renderer/ShaderLibrary.h"
 #include "GodDecay/Renderer/Texture.h"
 
+//entt
+#include "GodDecay/Scene/Components.h"
+#include "GodDecay/Scene/Entity.h"
+#include "GodDecay/Scene/Scene.h"
+#include "GodDecay/Scene/SceneCamera.h"
+
 

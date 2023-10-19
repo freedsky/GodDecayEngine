@@ -2,6 +2,7 @@
 
 #include "OrthographicCamera.h"
 #include "PerspectiveCamera.h"
+#include "Camera.h"
 
 #include "Texture.h"
 
@@ -18,6 +19,8 @@ namespace GodDecay
 
 		static void BeginScene(const OrthographicCamera& camera);
 		static void BeginScene(const PerspectiveCamera& camera);
+		//entity‰÷»æ
+		static void BeginScene(const Camera& camera, const glm::mat4& transform);
 		static void EndScene();
 		static void Flush();
 
@@ -33,6 +36,10 @@ namespace GodDecay
 
 		static void DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, const glm::vec4& texColor = glm::vec4(1.0f), const float tilingFactor = 1.0f);
 		static void DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, const glm::vec4& texColor = glm::vec4(1.0f), const float tilingFactor = 1.0f);
+
+		//entt---------------------------------
+		static void DrawQuad(const glm::mat4& transform, const glm::vec4& color);
+		static void DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
 
 		//√Ë ˆªÊ÷∆µƒ◊¥Ã¨
 		struct Statistics

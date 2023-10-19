@@ -28,6 +28,13 @@ namespace GodDecay
 
 		glm::vec2 m_ViewportSize = { 0.0f, 0.0f };
 
+		//entt test
+		Ref<Scene> m_ActionScene;
+		Entity m_SquareEntity;
+		Entity m_FirstCamera;
+		Entity m_SecondCamera;
+		bool m_PrimaryCamera = true;
+
 		//-------TEST-------------------------
 		glm::vec4 m_2DSquareColor;
 		glm::vec4 m_3DCubeColor;
