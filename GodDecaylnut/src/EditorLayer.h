@@ -34,7 +34,6 @@ namespace GodDecay
 		SceneHierarchyPanel m_SceneHierarchyPanel;
 		//entt test
 		Ref<Scene> m_ActionScene;
-		Entity m_SquareEntity;
 		Entity m_FirstCamera;
 		Entity m_SecondCamera;
 		bool m_PrimaryCamera = true;
