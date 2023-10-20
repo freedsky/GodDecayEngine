@@ -1,7 +1,11 @@
 #include "EditorLayer.h"
 
+#include <imgui.h>
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include "Scripts/CameraController.hpp"
 
 namespace GodDecay 
 {
@@ -27,15 +31,23 @@ namespace GodDecay
 		//-----------entt---test----------
 		m_ActionScene = CreateRef<Scene>();
 
-		m_SquareEntity = m_ActionScene->CreateEntity();
-		m_SquareEntity.AddComponent<SpriteRendererComponent>();
+		auto bule = m_ActionScene->CreateEntity("Bule Square");
+		bule.AddComponent<SpriteRendererComponent>(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
+
+		auto red = m_ActionScene->CreateEntity("Red Square");
+		red.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
 		m_FirstCamera = m_ActionScene->CreateEntity("First");
 		m_FirstCamera.AddComponent<CameraComponent>();
+		m_FirstCamera.AddComponent<NativeScriptComponent>().Bind<CameraContorller>();
+
 
 		m_SecondCamera = m_ActionScene->CreateEntity("Second");
 		auto& c = m_SecondCamera.AddComponent<CameraComponent>();
 		c.Primary = false;
+
+		//在场景创建完成后才添加进面板
+		m_SceneHierarchyPanel.SetContext(m_ActionScene);
 	}
 
 	void EditorLayer::OnDetach()
@@ -67,20 +79,6 @@ namespace GodDecay
 
 		GodDecay::Renderer2D::ResetStats();
 			
-		/*GodDecay::Renderer2D::BeginScene(*m_Camera->GetCamera().get());
-
-		GodDecay::Renderer2D::DrawQuad(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), m_TextureColor);
-
-		GodDecay::Renderer2D::DrawQuad(glm::vec2(1.0f, 1.0f), glm::vec2(1.0f, 1.0f), glm::vec4(1.0, 0.0, 0.0, 1.0));
-
-		GodDecay::Renderer2D::DrawRotatedQuad(glm::vec2(-2.0f, -2.0f), glm::vec2(1.0f, 1.0f), 45.0f, m_TextureColor);
-
-		GodDecay::Renderer2D::DrawQuad(glm::vec2(0.0f, 0.0f), glm::vec2(10.0f, 10.0f), m_SquareTexture, m_TextureColor, 20);
-
-		GodDecay::Renderer2D::DrawRotatedQuad(glm::vec2(5.0f, 5.0f), glm::vec2(2.0f, 2.0f), 45.0f, m_SquareTexture, m_TextureColor);
-
-		GodDecay::Renderer2D::EndScene();*/
-
 		m_ActionScene->OnUpdata(deltaTime);
 
 		m_Framebuffer->UnBind();
@@ -138,6 +136,8 @@ namespace GodDecay
 			}
 			ImGui::EndMenuBar();
 		}
+		//属性面板更新
+		m_SceneHierarchyPanel.OnImGuiRender();
 		//状态栏===============================================================
 		ImGui::Begin("Status");
 		auto stats = GodDecay::Renderer2D::GetStats();
@@ -147,24 +147,6 @@ namespace GodDecay
 		ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
 		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
 		//通过组件获取到物体身上的组件引用
-		glm::vec4& square = m_SquareEntity.GetComponent<SpriteRendererComponent>().Color;
-		ImGui::ColorEdit4("entt color", glm::value_ptr(square));
-
-		ImGui::DragFloat3("Camera Transform",
-			glm::value_ptr(m_FirstCamera.GetComponent<TransformComponent>().Transform[3]));
-
-		if (ImGui::Checkbox("Camera A", &m_PrimaryCamera))
-		{
-			m_FirstCamera.GetComponent<CameraComponent>().Primary = m_PrimaryCamera;
-			m_SecondCamera.GetComponent<CameraComponent>().Primary = !m_PrimaryCamera;
-		}
-		{
-			auto& camera = m_SecondCamera.GetComponent<CameraComponent>().Camera;
-			float orthoSize = camera.GetOrthographicSize();
-			if (ImGui::DragFloat("Second Camera Ortho Size", &orthoSize))
-				camera.SetOrthographicSize(orthoSize);
-		}
-		
 		ImGui::End();
 
 		//View窗口（把这个窗口移动到最下面好像就不会出现最小化时窗口出现比列不协调的问题）

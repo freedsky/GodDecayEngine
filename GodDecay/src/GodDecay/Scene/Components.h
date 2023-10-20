@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 
 #include "SceneCamera.h"
+#include "ScriptableEntity.h"
 
 /// <summary>
 /// 组件Components
@@ -53,5 +54,23 @@ namespace GodDecay
 
 		CameraComponent() = default;
 		CameraComponent(const CameraComponent&) = default;
+	};
+
+	//Script组件(内部实现)
+	struct NativeScriptComponent
+	{
+		ScriptableEntity* Instance = nullptr;
+
+		//定义脚本对象的引用，会在创建脚本时创建出该泛型对应的对象
+		ScriptableEntity* (*InstantiateScript)();
+		void (*DestroyScript)(NativeScriptComponent*);
+
+		//绑定回调
+		template<typename T>
+		void Bind()
+		{
+			InstantiateScript = []() {return static_cast<ScriptableEntity*>(new T()); };
+			DestroyScript = [](NativeScriptComponent* nsc) { delete nsc->Instance; nsc->Instance = nullptr; };
+		}
 	};
 }

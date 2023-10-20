@@ -80,7 +80,9 @@
       <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\glad\include;vendor\ImGui;vendor\glm;vendor\stb_image;vendor\entt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
+      <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
@@ -105,6 +107,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
@@ -130,6 +133,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
@@ -143,11 +147,6 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\GodDecay\Renderer\Camera.h" />
-    <ClInclude Include="src\GodDecay\Scene\SceneCamera.h" />
-    <ClInclude Include="src\GodDecay\Scene\Entity.h" />
-    <ClInclude Include="src\GodDecay\Scene\Components.h" />
-    <ClInclude Include="src\GodDecay\Scene\Scene.h" />
     <ClInclude Include="src\GodDecay\Controller\OrthographicCameraController.h" />
     <ClInclude Include="src\GodDecay\Controller\PerspectiveCameraController.h" />
     <ClInclude Include="src\GodDecay\Core\Application.h" />
@@ -167,6 +166,7 @@
     <ClInclude Include="src\GodDecay\Events\MouseEvent.h" />
     <ClInclude Include="src\GodDecay\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\GodDecay\Renderer\Buffer.h" />
+    <ClInclude Include="src\GodDecay\Renderer\Camera.h" />
     <ClInclude Include="src\GodDecay\Renderer\Framebuffer.h" />
     <ClInclude Include="src\GodDecay\Renderer\OrthographicCamera.h" />
     <ClInclude Include="src\GodDecay\Renderer\PerspectiveCamera.h" />
@@ -179,6 +179,11 @@
     <ClInclude Include="src\GodDecay\Renderer\ShaderLibrary.h" />
     <ClInclude Include="src\GodDecay\Renderer\Texture.h" />
     <ClInclude Include="src\GodDecay\Renderer\VertexArrayBuffer.h" />
+    <ClInclude Include="src\GodDecay\Scene\Components.h" />
+    <ClInclude Include="src\GodDecay\Scene\Entity.h" />
+    <ClInclude Include="src\GodDecay\Scene\Scene.h" />
+    <ClInclude Include="src\GodDecay\Scene\SceneCamera.h" />
+    <ClInclude Include="src\GodDecay\Scene\ScriptableEntity.h" />
     <ClInclude Include="src\GodDecay\Tools\TimeTool.h" />
     <ClInclude Include="src\GodDecayTop.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
@@ -629,9 +634,6 @@
     <ClInclude Include="vendor\stb_image\stb_voxel_render.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\GodDecay\Scene\SceneCamera.cpp" />
-    <ClCompile Include="src\GodDecay\Scene\Entity.cpp" />
-    <ClCompile Include="src\GodDecay\Scene\Scene.cpp" />
     <ClCompile Include="src\GodDecay\Controller\OrthographicCameraController.cpp" />
     <ClCompile Include="src\GodDecay\Controller\PerspectiveCameraController.cpp" />
     <ClCompile Include="src\GodDecay\Core\Application.cpp" />
@@ -653,6 +655,9 @@
     <ClCompile Include="src\GodDecay\Renderer\ShaderLibrary.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\Texture.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\VertexArrayBuffer.cpp" />
+    <ClCompile Include="src\GodDecay\Scene\Entity.cpp" />
+    <ClCompile Include="src\GodDecay\Scene\Scene.cpp" />
+    <ClCompile Include="src\GodDecay\Scene\SceneCamera.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLFramebuffer.cpp" />

@@ -1,7 +1,7 @@
 #pragma once
 #include <GodDecayTop.h>
 
-#include <imgui.h>
+#include "Panels/SceneHierarchyPanel.h"
 
 /// <summary>
 /// ≤‚ ‘¿‡
@@ -25,7 +25,8 @@ namespace GodDecay
 		GodDecay::Ref<GodDecay::Framebuffer> m_Framebuffer;
 		glm::vec2 m_ViewportSize = { 0.0f,0.0f };
 		bool m_ViewportFocused = false, m_ViewportHovered = false;
-
+		//Panels
+		SceneHierarchyPanel m_SceneHierarchyPanel;
 		//entt test
 		Ref<Scene> m_ActionScene;
 		Entity m_SquareEntity;

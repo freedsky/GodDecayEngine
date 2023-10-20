@@ -4,6 +4,7 @@
 #include "GodDecay/Core/Logger.h"
 #include "GodDecay/Core/Layer.h"
 #include "GodDecay/ImGui/ImGuiLayer.h"
+#include "GodDecay/Tools/TimeTool.h"
 
 #include "GodDecay/Core/Input.h"
 #include "GodDecay/Core/GodDecayKeyCodes.h"
@@ -25,4 +26,5 @@
 #include "GodDecay/Scene/Entity.h"
 #include "GodDecay/Scene/Scene.h"
 #include "GodDecay/Scene/SceneCamera.h"
+#include "GodDecay/Scene/ScriptableEntity.h"
 
