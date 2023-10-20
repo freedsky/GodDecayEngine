@@ -19,24 +19,24 @@ namespace GodDecay
 
 		virtual void OnUpdate(float delteTime) override
 		{
-			auto& transform = GetComponent<TransformComponent>().Transform;
+			auto& transform = GetComponent<TransformComponent>().Translation;
 			static float speed = 2.0f;
 
 			if (Input::IsKeyPressed(GODDECAY_KEY_A))
 			{
-				transform[3][0] -= speed * delteTime;
+				transform.x -= speed * delteTime;
 			}
 			if (Input::IsKeyPressed(GODDECAY_KEY_D))
 			{
-				transform[3][0] += speed * delteTime;
+				transform.x += speed * delteTime;
 			}
 			if (Input::IsKeyPressed(GODDECAY_KEY_W))
 			{
-				transform[3][1] += speed * delteTime;
+				transform.y += speed * delteTime;
 			}
 			if (Input::IsKeyPressed(GODDECAY_KEY_S))
 			{
-				transform[3][1] -= speed * delteTime;
+				transform.y -= speed * delteTime;
 			}
 		}
 	};

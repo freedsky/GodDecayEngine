@@ -10,6 +10,7 @@ project "GodDecaylnut"
     files
 	{
 		"src/**.h",
+		"src/**.hpp",
 		"src/**.cpp"
 	}
 

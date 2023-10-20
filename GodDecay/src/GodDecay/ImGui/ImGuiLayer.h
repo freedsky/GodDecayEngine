@@ -23,6 +23,9 @@ namespace GodDecay
 		void End();
 
 		void BlockEvents(bool block) { m_BlockEvents = block; }
+
+		//调整整体配色
+		void SetDarkThemeColors();
 	private:
 		bool m_BlockEvents = true;
 		float m_Time = 0.0f;
