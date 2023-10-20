@@ -80,7 +80,9 @@
       <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\glad\include;vendor\ImGui;vendor\glm;vendor\stb_image;vendor\assimp\include;vendor\entt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
+      <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
@@ -106,6 +108,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
@@ -132,6 +135,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
@@ -186,6 +190,7 @@
     <ClInclude Include="src\GodDecay\Scene\Entity.h" />
     <ClInclude Include="src\GodDecay\Scene\Scene.h" />
     <ClInclude Include="src\GodDecay\Scene\SceneCamera.h" />
+    <ClInclude Include="src\GodDecay\Scene\ScriptableEntity.h" />
     <ClInclude Include="src\GodDecay\Tools\TimeTool.h" />
     <ClInclude Include="src\GodDecayTop.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />

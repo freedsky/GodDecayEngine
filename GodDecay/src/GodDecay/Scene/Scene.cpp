@@ -37,6 +37,23 @@ namespace GodDecay
 	//entity渲染
 	void Scene::OnUpdata(float deltaTime)
 	{
+		//更新脚本
+		{
+			m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
+			{
+				if (!nsc.Instance)
+				{
+					nsc.Instance = nsc.InstantiateScript();
+
+					nsc.Instance->m_Entity = Entity{ entity,this };
+
+					nsc.Instance->OnCreate();
+				}
+
+				nsc.Instance->OnUpdate(deltaTime);
+			});
+		}
+
 		//先创建一个默认相机,并设置为主相机
 		Camera* mainCamera = nullptr;
 		glm::mat4* cameraTransform = nullptr;

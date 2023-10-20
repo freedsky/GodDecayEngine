@@ -144,6 +144,9 @@
     <ClInclude Include="src\GodDecay\Renderer\Buffer.h">
       <Filter>src\GodDecay\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\GodDecay\Renderer\Camera.h">
+      <Filter>src\GodDecay\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\GodDecay\Renderer\Framebuffer.h">
       <Filter>src\GodDecay\Renderer</Filter>
     </ClInclude>
@@ -202,6 +205,9 @@
       <Filter>src\GodDecay\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\GodDecay\Scene\SceneCamera.h">
+      <Filter>src\GodDecay\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Scene\ScriptableEntity.h">
       <Filter>src\GodDecay\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\GodDecay\Tools\TimeTool.h">
@@ -1794,7 +1800,6 @@
     <ClInclude Include="vendor\stb_image\stb_voxel_render.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\GodDecay\Renderer\Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GodDecay\Controller\OrthographicCameraController.cpp">

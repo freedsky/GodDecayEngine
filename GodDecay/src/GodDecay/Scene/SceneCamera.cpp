@@ -10,6 +10,15 @@ namespace GodDecay
 		RecalculateProjection();
 	}
 
+	void SceneCamera::SetPerspective(float verticalFOV, float nearClip, float farClip)
+	{
+		m_ProjectionType = ProjectionType::Perspective;
+		m_PerspectiveFOV = verticalFOV;
+		m_PerspectiveNear = nearClip;
+		m_PerspectiveFar = farClip;
+		RecalculateProjection();
+	}
+
 	void SceneCamera::SetOrthographic(float size, float nearClip, float farClip)
 	{
 		m_OrthographicSize = size;
@@ -26,12 +35,20 @@ namespace GodDecay
 
 	void SceneCamera::RecalculateProjection()
 	{
-		float orthoLeft = -m_OrthographicSize * m_AspectRatio * 0.5f;
-		float orthoRight = m_OrthographicSize * m_AspectRatio * 0.5f;
-		float orthoBottom = -m_OrthographicSize * 0.5f;
-		float orthoTop = m_OrthographicSize * 0.5f;
+		//这里的更新用if进行判断相机模式更新view and protivation
+		if (m_ProjectionType == ProjectionType::Perspective)
+		{
+			m_Projection = glm::perspective(m_PerspectiveFOV, m_AspectRatio, m_OrthographicNear, m_OrthographicFar);
+		}
+		else
+		{
+			float orthoLeft = -m_OrthographicSize * m_AspectRatio * 0.5f;
+			float orthoRight = m_OrthographicSize * m_AspectRatio * 0.5f;
+			float orthoBottom = -m_OrthographicSize * 0.5f;
+			float orthoTop = m_OrthographicSize * 0.5f;
 
-		m_Projection = glm::ortho(orthoLeft, orthoRight,
-			orthoBottom, orthoTop, m_OrthographicNear, m_OrthographicFar);
+			m_Projection = glm::ortho(orthoLeft, orthoRight,
+				orthoBottom, orthoTop, m_OrthographicNear, m_OrthographicFar);
+		}
 	}
 }

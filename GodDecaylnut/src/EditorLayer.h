@@ -3,6 +3,8 @@
 
 #include <imgui.h>
 
+#include "Panels/SceneHierarchyPanel.h"
+
 /// <summary>
 /// ÒýÇæ±à¼­²ã
 /// </summary>
@@ -28,6 +30,8 @@ namespace GodDecay
 
 		glm::vec2 m_ViewportSize = { 0.0f, 0.0f };
 
+		//Panels
+		SceneHierarchyPanel m_SceneHierarchyPanel;
 		//entt test
 		Ref<Scene> m_ActionScene;
 		Entity m_SquareEntity;
@@ -35,13 +39,6 @@ namespace GodDecay
 		Entity m_SecondCamera;
 		bool m_PrimaryCamera = true;
 
-		//-------TEST-------------------------
-		glm::vec4 m_2DSquareColor;
-		glm::vec4 m_3DCubeColor;
-		glm::vec4 m_3DCirleColor;
-		Ref<Texture2D> m_SqueraTexure;
-		Ref<Texture2D> m_CubeTexture;
-		Ref<Texture2D> m_CirleTexture;
-		Ref<Texture2D> m_ModelTexture;
+		
 	};
 }

@@ -5,6 +5,7 @@
 #include <entt.hpp>
 
 #include "Scene.h"
+#include "GodDecay/Core/Logger.h"
 
 /// <summary>
 /// 用于管理entity，对其进行添加，删除或者判断它是否存在等等
@@ -47,6 +48,17 @@ namespace GodDecay
 		}
 
 		operator bool() const { return m_EntityHandle != entt::null; }
+		operator uint32_t() const { return (uint32_t)m_EntityHandle; }
+
+		bool operator==(const Entity& other) const
+		{
+			return m_EntityHandle == other.m_EntityHandle && m_Scene == other.m_Scene;
+		}
+
+		bool operator!=(const Entity& other) const
+		{
+			return !(*this == other);
+		}
 	private:
 		entt::entity m_EntityHandle{ entt::null };
 		Scene* m_Scene = nullptr;
