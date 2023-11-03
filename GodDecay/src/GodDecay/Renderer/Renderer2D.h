@@ -3,6 +3,7 @@
 #include "OrthographicCamera.h"
 #include "PerspectiveCamera.h"
 #include "Camera.h"
+#include "EditorCamera.h"
 
 #include "Texture.h"
 
@@ -21,6 +22,8 @@ namespace GodDecay
 		static void BeginScene(const PerspectiveCamera& camera);
 		//entity‰÷»æ
 		static void BeginScene(const Camera& camera, const glm::mat4& transform);
+		//EditorCamera
+		static void BeginScene(const EditorCamera& camera);
 		static void EndScene();
 		static void Flush();
 

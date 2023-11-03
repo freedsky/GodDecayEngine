@@ -22,6 +22,9 @@
     <Filter Include="src\GodDecay\ImGui">
       <UniqueIdentifier>{C69E8BCD-B282-4C23-1BE3-467607E636A5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\GodDecay\Math">
+      <UniqueIdentifier>{F5CA34E7-61E1-327D-AA58-BE9E16AE0305}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\GodDecay\Renderer">
       <UniqueIdentifier>{C257FF7C-2EC4-BA77-F7B7-52D563E3DCDF}</UniqueIdentifier>
     </Filter>
@@ -30,6 +33,9 @@
     </Filter>
     <Filter Include="src\GodDecay\Tools">
       <UniqueIdentifier>{1C6E54CE-0852-1524-71B2-0F775DB5FFA5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\GodDecay\Utils">
+      <UniqueIdentifier>{FC2A69CE-E80E-2A24-516F-24773D7214A6}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Platform">
       <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
@@ -45,6 +51,9 @@
     </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\ImGuizmo">
+      <UniqueIdentifier>{73BF7F4C-DF4A-ED10-E85B-700554664911}</UniqueIdentifier>
     </Filter>
     <Filter Include="vendor\assimp">
       <UniqueIdentifier>{6F57A1F8-DB17-1D2F-A452-66AC10D2610B}</UniqueIdentifier>
@@ -141,6 +150,9 @@
     <ClInclude Include="src\GodDecay\ImGui\ImGuiLayer.h">
       <Filter>src\GodDecay\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="src\GodDecay\Math\Math.h">
+      <Filter>src\GodDecay\Math</Filter>
+    </ClInclude>
     <ClInclude Include="src\GodDecay\Renderer\Buffer.h">
       <Filter>src\GodDecay\Renderer</Filter>
     </ClInclude>
@@ -207,11 +219,17 @@
     <ClInclude Include="src\GodDecay\Scene\SceneCamera.h">
       <Filter>src\GodDecay\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\GodDecay\Scene\SceneSerializer.h">
+      <Filter>src\GodDecay\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\GodDecay\Scene\ScriptableEntity.h">
       <Filter>src\GodDecay\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\GodDecay\Tools\TimeTool.h">
       <Filter>src\GodDecay\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GodDecay\Utils\PlatformUtils.h">
+      <Filter>src\GodDecay\Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\GodDecayTop.h">
       <Filter>src</Filter>
@@ -245,6 +263,9 @@
     </ClInclude>
     <ClInclude Include="src\gdpch.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\ImGuizmo\ImGuizmo.h">
+      <Filter>vendor\ImGuizmo</Filter>
     </ClInclude>
     <ClInclude Include="vendor\assimp\include\assimp\Base64.hpp">
       <Filter>vendor\assimp\include\assimp</Filter>
@@ -1800,6 +1821,7 @@
     <ClInclude Include="vendor\stb_image\stb_voxel_render.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
+    <ClInclude Include="src\GodDecay\Renderer\EditorCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GodDecay\Controller\OrthographicCameraController.cpp">
@@ -1828,6 +1850,9 @@
     </ClCompile>
     <ClCompile Include="src\GodDecay\ImGui\ImGuiLayer.cpp">
       <Filter>src\GodDecay\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GodDecay\Math\Math.cpp">
+      <Filter>src\GodDecay\Math</Filter>
     </ClCompile>
     <ClCompile Include="src\GodDecay\Renderer\Buffer.cpp">
       <Filter>src\GodDecay\Renderer</Filter>
@@ -1886,6 +1911,9 @@
     <ClCompile Include="src\GodDecay\Scene\SceneCamera.cpp">
       <Filter>src\GodDecay\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\GodDecay\Scene\SceneSerializer.cpp">
+      <Filter>src\GodDecay\Scene</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
@@ -1913,14 +1941,21 @@
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp">
       <Filter>src\Platform\Windows</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsPlatformUtils.cpp">
+      <Filter>src\Platform\Windows</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
       <Filter>src\Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\gdpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="vendor\ImGuizmo\ImGuizmo.cpp">
+      <Filter>vendor\ImGuizmo</Filter>
+    </ClCompile>
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
+    <ClCompile Include="src\GodDecay\Renderer\EditorCamera.cpp" />
   </ItemGroup>
 </Project>

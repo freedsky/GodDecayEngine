@@ -3,6 +3,7 @@
 
 #include <imgui.h>
 
+#include "GodDecay/Renderer/EditorCamera.h"
 #include "Panels/SceneHierarchyPanel.h"
 
 /// <summary>
@@ -23,7 +24,15 @@ namespace GodDecay
 		void OnEvents(Event& e) override;
 		void OnImGuiRender() override;
 	private:
+		bool OnKeyPressed(KeyRepetiedEvent& e);
+
+		void NewScene();
+		void OpenScene();
+		void SaveSceneAs();
+	private:
 		Ref<GodDecay::PerspectiveCameraController> m_Camera;
+		EditorCamera m_EditorCamera;
+		
 		GodDecay::Ref<GodDecay::Framebuffer> m_Framebuffer;
 
 		bool m_ViewportFocused = false, m_ViewportHovered = false;
@@ -32,12 +41,9 @@ namespace GodDecay
 
 		//Panels
 		SceneHierarchyPanel m_SceneHierarchyPanel;
-		//entt test
+		//entt
 		Ref<Scene> m_ActionScene;
-		Entity m_FirstCamera;
-		Entity m_SecondCamera;
-		bool m_PrimaryCamera = true;
-
-		
+		//ImGuizmo
+		uint32_t m_GizmoType = -1;
 	};
 }

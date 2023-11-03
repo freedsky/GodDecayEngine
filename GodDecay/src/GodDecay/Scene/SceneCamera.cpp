@@ -38,7 +38,7 @@ namespace GodDecay
 		//这里的更新用if进行判断相机模式更新view and protivation
 		if (m_ProjectionType == ProjectionType::Perspective)
 		{
-			m_Projection = glm::perspective(m_PerspectiveFOV, m_AspectRatio, m_OrthographicNear, m_OrthographicFar);
+			m_Projection = glm::perspective(m_PerspectiveFOV, m_AspectRatio, m_PerspectiveNear, m_PerspectiveFar);
 		}
 		else
 		{

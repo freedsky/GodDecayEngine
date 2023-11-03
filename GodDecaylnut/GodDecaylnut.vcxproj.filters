@@ -18,22 +18,18 @@
     <ClInclude Include="Src\Scripts\CameraContorller.hpp">
       <Filter>Src\Scripts</Filter>
     </ClInclude>
-    <ClInclude Include="src\EditorLayer.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\Panels\SceneHierarchyPanel.h">
       <Filter>src\Panels</Filter>
     </ClInclude>
+    <ClInclude Include="src\EditorLayer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\EditorLayer.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\GodDecaylnut.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Panels\SceneHierarchyPanel.cpp">
       <Filter>src\Panels</Filter>
     </ClCompile>
+    <ClCompile Include="src\EditorLayer.cpp" />
   </ItemGroup>
 </Project>

@@ -2,6 +2,7 @@
 #include <entt.hpp>
 
 #include "GodDecay/Tools/TimeTool.h"
+#include "GodDecay/Renderer/EditorCamera.h"
 
 /// <summary>
 /// 多个GameObject组成场景，
@@ -23,8 +24,12 @@ namespace GodDecay
 		Entity CreateEntity(const std::string& name = std::string());
 		void DestroyEntity(Entity entity);
 
-		void OnUpdata(float deltaTime);
+		void OnUpdateRuntime(float deltaTime);
+		void UpdateEditor(float deltaTime, EditorCamera& camera);
+		
 		void OnViewportResize(uint32_t width, uint32_t height);
+		//返回当前激活相机的引用
+		Entity GetPrimaryCameraEntity();
 	private:
 		//在添加组件时，在这之前对其进行必要的修改[比如相机的viewport的修改]
 		template<typename T>
@@ -36,6 +41,7 @@ namespace GodDecay
 
 		friend class Entity;
 		friend class SceneHierarchyPanel;
+		friend class SceneSerializer;
 	};
 }
 

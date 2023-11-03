@@ -14,7 +14,7 @@ namespace GodDecay
 		return status == GLFW_PRESS || status == GLFW_REPEAT;
 	}
 
-	bool Input::IsMosueButtonPressed(uint32_t button) 
+	bool Input::IsMouseButtonPressed(uint32_t button) 
 	{
 		GLFWwindow* window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 
@@ -22,7 +22,7 @@ namespace GodDecay
 		return status == GLFW_PRESS;
 	}
 
-	std::pair<float, float> Input::GetMosuePosition() 
+	std::pair<float, float> Input::GetMousePosition() 
 	{
 		GLFWwindow* window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		int width, height;
@@ -38,13 +38,13 @@ namespace GodDecay
 
 	float Input::GetMouseX() 
 	{
-		std::pair<float, float> position = GetMosuePosition();
+		std::pair<float, float> position = GetMousePosition();
 		return position.first;
 	}
 
 	float Input::GetMouseY() 
 	{
-		std::pair<float, float> position = GetMosuePosition();
+		std::pair<float, float> position = GetMousePosition();
 		return position.second;
 	}
 
