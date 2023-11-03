@@ -17,7 +17,9 @@ project "GodDecay"
 		"vendor/glm/glm/**.hpp",
 		"vendor/glm/glm/**.inl",
 		"vendor/stb_image/**.h",
-		"vendor/stb_image/**.cpp"
+		"vendor/stb_image/**.cpp",
+		"vendor/ImGuizmo/ImGuizmo.h",
+		"vendor/ImGuizmo/ImGuizmo.cpp"
 	}
 
 	defines
@@ -34,7 +36,9 @@ project "GodDecay"
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb_image}",
-		"%{IncludeDir.entt}"
+		"%{IncludeDir.entt}",
+		"%{IncludeDir.yaml}",
+		"%{IncludeDir.ImGuizmo}"
 	}
 
 	links
@@ -42,8 +46,12 @@ project "GodDecay"
 		"GLFW",
 		"glad",
 		"ImGui",
+		"yaml",
 		"opengl32.lib"
 	}
+
+	filter "files:vendor/ImGuizmo/**.cpp"
+	flags { "NoPCH" }
 
     filter "system:windows"
 		systemversion "latest"
@@ -53,7 +61,8 @@ project "GodDecay"
 			"GD_PLATFORM_WINDOWS",
 			"GD_BUILD_DLL",
 			"GD_ENABLE_ASSERTS",
-			"GLFW_INCLUDE_NONE"
+			"GLFW_INCLUDE_NONE",
+			"IMGUI_DEFINE_MATH_OPERATORS"
 		}
 
 		filter "configurations:Debug"

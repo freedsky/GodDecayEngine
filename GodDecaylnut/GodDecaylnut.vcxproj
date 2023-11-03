@@ -78,8 +78,8 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>GD_ENABLE_ASSERTS;GD_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\GodDecay\src;..\GodDecay\vendor\spdlog\include;..\GodDecay\vendor\ImGui;..\GodDecay\vendor\glm;..\GodDecay\vendor\entt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GD_ENABLE_ASSERTS;GLFW_INCLUDE_NONE;GD_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\GodDecay\src;..\GodDecay\vendor\spdlog\include;..\GodDecay\vendor\ImGui;..\GodDecay\vendor\glm;..\GodDecay\vendor\entt\include;..\GodDecay\vendor\ImGuizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -97,8 +97,8 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>GD_ENABLE_ASSERTS;GD_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\GodDecay\src;..\GodDecay\vendor\spdlog\include;..\GodDecay\vendor\ImGui;..\GodDecay\vendor\glm;..\GodDecay\vendor\entt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GD_ENABLE_ASSERTS;GLFW_INCLUDE_NONE;GD_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\GodDecay\src;..\GodDecay\vendor\spdlog\include;..\GodDecay\vendor\ImGui;..\GodDecay\vendor\glm;..\GodDecay\vendor\entt\include;..\GodDecay\vendor\ImGuizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -119,8 +119,8 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>GD_ENABLE_ASSERTS;GD_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\GodDecay\src;..\GodDecay\vendor\spdlog\include;..\GodDecay\vendor\ImGui;..\GodDecay\vendor\glm;..\GodDecay\vendor\entt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GD_ENABLE_ASSERTS;GLFW_INCLUDE_NONE;GD_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\GodDecay\src;..\GodDecay\vendor\spdlog\include;..\GodDecay\vendor\ImGui;..\GodDecay\vendor\glm;..\GodDecay\vendor\entt\include;..\GodDecay\vendor\ImGuizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>

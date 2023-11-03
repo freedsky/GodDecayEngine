@@ -11,8 +11,8 @@ namespace GodDecay
 	{
 	public:
 		static bool IsKeyPressed(uint32_t keycode);
-		static bool IsMosueButtonPressed(uint32_t button);
-		static std::pair<float, float> GetMosuePosition();
+		static bool IsMouseButtonPressed(uint32_t button);
+		static std::pair<float, float> GetMousePosition();
 		static float GetMouseX();
 		static float GetMouseY();
 	};

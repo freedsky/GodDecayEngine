@@ -20,7 +20,8 @@ project "GodDecaylnut"
 		"%{IncludeDir.spdlog}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.entt}"
+		"%{IncludeDir.entt}",
+		"%{IncludeDir.ImGuizmo}"
 	}
 
     links
@@ -33,7 +34,8 @@ project "GodDecaylnut"
 
 		defines
 		{
-			"GD_ENABLE_ASSERTS"
+			"GD_ENABLE_ASSERTS",
+			"GLFW_INCLUDE_NONE"
 		}
 
         filter "configurations:Debug"

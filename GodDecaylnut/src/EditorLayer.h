@@ -1,7 +1,11 @@
 #pragma once
 #include <GodDecayTop.h>
 
+#include "GodDecay/Events/KeyEvent.h"
+
 #include "Panels/SceneHierarchyPanel.h"
+
+#include "GodDecay/Renderer/EditorCamera.h"
 
 /// <summary>
 /// 测试类
@@ -21,20 +25,25 @@ namespace GodDecay
 		void OnEvents(Event& e) override;
 		void OnImGuiRender() override;
 	private:
+		bool OnKeyPressed(KeyRepetiedEvent& e);
+
+		void NewScene();
+		void OpenScene();
+		void SaveSceneAs();
+	private:
 		Ref<OrthographicCameraController> m_Camera;
+		EditorCamera m_EditorCamera;
+		
 		GodDecay::Ref<GodDecay::Framebuffer> m_Framebuffer;
 		glm::vec2 m_ViewportSize = { 0.0f,0.0f };
 		bool m_ViewportFocused = false, m_ViewportHovered = false;
 		//Panels
 		SceneHierarchyPanel m_SceneHierarchyPanel;
-		//entt test
+		
 		Ref<Scene> m_ActionScene;
-		Entity m_FirstCamera;
-		Entity m_SecondCamera;
-		bool m_PrimaryCamera = true;
 
-		glm::vec4 m_TextureColor;
-		Ref<Texture2D> m_SquareTexture;
+		//用于选择相应的旋转位移模型
+		uint32_t m_GizmoType = -1;
 	};
 }
 

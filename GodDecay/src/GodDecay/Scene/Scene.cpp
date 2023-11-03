@@ -39,8 +39,20 @@ namespace GodDecay
 		m_Registry.destroy(entity);
 	}
 
+	Entity Scene::GetPrimaryCameraEntity()
+	{
+		auto view = m_Registry.view<CameraComponent>();
+		for (auto entity : view)
+		{
+			const auto& camera = view.get<CameraComponent>(entity);
+			if (camera.Primary)
+				return Entity{ entity, this };
+		}
+		return {};
+	}
+
 	//entity渲染
-	void Scene::OnUpdata(float deltaTime)
+	void Scene::OnUpdateRuntime(float deltaTime)
 	{
 		//更新脚本
 		{
@@ -94,6 +106,22 @@ namespace GodDecay
 
 			Renderer2D::EndScene();
 		}
+	}
+
+	void Scene::UpdateEditor(float deltaTime, EditorCamera& camera)
+	{
+		//用场景相机来更新
+		Renderer2D::BeginScene(camera);
+
+		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+		for (auto entity : group)
+		{
+			auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+
+			Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color);
+		}
+
+		Renderer2D::EndScene();
 	}
 
 	void Scene::OnViewportResize(uint32_t width, uint32_t height)

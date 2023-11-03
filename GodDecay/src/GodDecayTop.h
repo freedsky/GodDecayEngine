@@ -10,6 +10,8 @@
 #include "GodDecay/Core/GodDecayKeyCodes.h"
 #include "GodDecay/Core/GodDecayMouseButtonCodes.h"
 
+#include "GodDecay/Events/Event.h"
+
 #include "GodDecay/Renderer/Buffer.h"
 #include "GodDecay/Renderer/VertexArrayBuffer.h"
 #include "GodDecay/Renderer/RenderCommand.h"

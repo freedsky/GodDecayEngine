@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="..">
+      <UniqueIdentifier>{61705900-4DFC-870B-B6AA-880BA255880B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\GodDecay">
+      <UniqueIdentifier>{5004DFD3-BCB9-57C9-45AE-51A0B1624ECD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\GodDecay\vendor">
+      <UniqueIdentifier>{ADA078FB-9984-3951-02E5-33A4EEE723D3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\GodDecay\vendor\GLFW">
+      <UniqueIdentifier>{0CD0E3B6-7807-2C4E-8111-9071EDC75247}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\GodDecay\vendor\ImGui">
+      <UniqueIdentifier>{97239493-8348-E313-AC93-C8A39817E231}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\GodDecay\vendor\glad">
+      <UniqueIdentifier>{D4E7F5B6-401F-3E4E-4929-A271B5DF6447}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\GodDecay\vendor\yaml">
+      <UniqueIdentifier>{6F99FFB6-DBD0-474E-E4DA-AB7150916E47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\GodDecaylnut">
+      <UniqueIdentifier>{B3C8A5F9-1F54-13BE-2865-96B2946F6FBE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\SandBox">
+      <UniqueIdentifier>{1FF36A1D-0BAB-AC6A-74B2-85C66089475B}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\GodDecay\premake5.lua">
+      <Filter>..\GodDecay</Filter>
+    </None>
+    <None Include="..\..\GodDecay\vendor\GLFW\premake5.lua">
+      <Filter>..\GodDecay\vendor\GLFW</Filter>
+    </None>
+    <None Include="..\..\GodDecay\vendor\ImGui\premake5.lua">
+      <Filter>..\GodDecay\vendor\ImGui</Filter>
+    </None>
+    <None Include="..\..\GodDecay\vendor\glad\premake5.lua">
+      <Filter>..\GodDecay\vendor\glad</Filter>
+    </None>
+    <None Include="..\..\GodDecay\vendor\yaml\premake5.lua">
+      <Filter>..\GodDecay\vendor\yaml</Filter>
+    </None>
+    <None Include="..\..\GodDecaylnut\premake5.lua">
+      <Filter>..\GodDecaylnut</Filter>
+    </None>
+    <None Include="..\..\SandBox\premake5.lua">
+      <Filter>..\SandBox</Filter>
+    </None>
+    <None Include="..\..\premake5.lua">
+      <Filter>..</Filter>
+    </None>
+    <None Include="premake5.lua" />
+  </ItemGroup>
+</Project>

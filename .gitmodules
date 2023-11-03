@@ -7,3 +7,9 @@
 [submodule "GodDecay/vendor/glm"]
 	path = GodDecay/vendor/glm
 	url = https://github.com/g-truc/glm.git
+[submodule "GodDecay/vender/ImGuizmo"]
+	path = GodDecay/vender/ImGuizmo
+	url = https://github.com/TheCherno/ImGuizmo.git
+[submodule "GodDecay/vendor/ImGuizmo"]
+	path = GodDecay/vendor/ImGuizmo
+	url = https://github.com/TheCherno/ImGuizmo.git

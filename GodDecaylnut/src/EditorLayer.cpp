@@ -1,9 +1,15 @@
 #include "EditorLayer.h"
 
 #include <imgui.h>
+#include <ImGuizmo.h>
 
+#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "GodDecay/Math/Math.h"
+
+#include "GodDecay/Scene/SceneSerializer.h"
+#include "GodDecay/Utils/PlatformUtils.h"
 
 #include "Scripts/CameraController.hpp"
 
@@ -20,32 +26,14 @@ namespace GodDecay
 
 	void EditorLayer::OnAttach()
 	{
-		m_TextureColor = glm::vec4(1.0f);
-		m_SquareTexture = GodDecay::Texture2D::Create("assets/texture/ChernoLogo.png");
-
 		GodDecay::FramebufferSpecification fbSpec;
 		fbSpec.Width = 1280;
 		fbSpec.Height = 720;
 		m_Framebuffer = GodDecay::Framebuffer::Create(fbSpec);
 
-		//-----------entt---test----------
+		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
+
 		m_ActionScene = CreateRef<Scene>();
-
-		auto bule = m_ActionScene->CreateEntity("Bule Square");
-		bule.AddComponent<SpriteRendererComponent>(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
-
-		auto red = m_ActionScene->CreateEntity("Red Square");
-		red.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
-
-		m_FirstCamera = m_ActionScene->CreateEntity("First");
-		m_FirstCamera.AddComponent<CameraComponent>();
-		m_FirstCamera.AddComponent<NativeScriptComponent>().Bind<CameraContorller>();
-
-
-		m_SecondCamera = m_ActionScene->CreateEntity("Second");
-		auto& c = m_SecondCamera.AddComponent<CameraComponent>();
-		c.Primary = false;
-
 		//在场景创建完成后才添加进面板
 		m_SceneHierarchyPanel.SetContext(m_ActionScene);
 	}
@@ -63,10 +51,13 @@ namespace GodDecay
 		{
 			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 			//m_CameraController->OnResize(m_ViewportSize.x, m_ViewportSize.y);
+			//调整为编辑相机
+			m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
 			//给场景相机调整viewport大小
 			m_ActionScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		}
 
+		m_EditorCamera.OnUpdate(deltaTime);
 		//防止事件在相机和UI之间进行穿透
 		/*if (m_ViewportFocused) 
 		{
@@ -79,14 +70,20 @@ namespace GodDecay
 
 		GodDecay::Renderer2D::ResetStats();
 			
-		m_ActionScene->OnUpdata(deltaTime);
+		//m_ActionScene->OnUpdateRuntime(deltaTime);
+		m_ActionScene->UpdateEditor(deltaTime, m_EditorCamera);
 
 		m_Framebuffer->UnBind();
 	}
 
 	void EditorLayer::OnEvents(GodDecay::Event& e)
 	{
-		m_Camera->OnEvent(e);
+		//m_Camera->OnEvent(e);
+		
+		m_EditorCamera.OnEvent(e);
+
+		EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<KeyRepetiedEvent>(std::bind(&EditorLayer::OnKeyPressed, this, std::placeholders::_1));
 	}
 
 	void EditorLayer::OnImGuiRender()
@@ -134,6 +131,16 @@ namespace GodDecay
 		{
 			if (ImGui::BeginMenu("File"))
 			{
+				//对场景中的数据进行保存和加载
+				if (ImGui::MenuItem("New", "Ctrl+N"))
+					NewScene();
+
+				if (ImGui::MenuItem("Open...", "Ctrl+O"))
+					OpenScene();
+
+				if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
+					SaveSceneAs();
+
 				if (ImGui::MenuItem("Exit")) GodDecay::Application::Get().Close();
 				ImGui::EndMenu();
 			}
@@ -165,9 +172,125 @@ namespace GodDecay
 		//渲染framebuffer
 		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
 		ImGui::Image((void*)textureID, ImVec2{ m_ViewportSize.x,m_ViewportSize.y }, { 0,1 }, { 1,0 });
+		
+		//ImGuizmo
+		Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
+		if (selectedEntity && m_GizmoType != -1) 
+		{
+			//禁用正价的图示
+			ImGuizmo::SetOrthographic(false);
+			ImGuizmo::SetDrawlist();
+
+			float windowWidth = (float)ImGui::GetWindowWidth();
+			float windowHeight = (float)ImGui::GetWindowHeight();
+			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+
+			// Editor Camera
+			const glm::mat4& cameraProjection = m_EditorCamera.GetProjection();
+			glm::mat4 cameraView = m_EditorCamera.GetViewMatrix();
+
+			// Entity transform
+			auto& tc = selectedEntity.GetComponent<TransformComponent>();
+			glm::mat4 transform = tc.GetTransform();
+
+			ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
+				(ImGuizmo::OPERATION)m_GizmoType, ImGuizmo::LOCAL, glm::value_ptr(transform),
+				nullptr, nullptr);
+
+			if (ImGuizmo::IsUsing())
+			{
+				glm::vec3 translation, rotation, scale;
+				Math::DecomposeTransform(transform, translation, rotation, scale);
+
+				glm::vec3 deltaRotation = rotation - tc.Rotation;
+				tc.Translation = translation;
+				tc.Rotation += deltaRotation;
+				tc.Scale = scale;
+			}
+		}
+		
 		ImGui::End();
 		ImGui::PopStyleVar();
 		
 		ImGui::End();
+	}
+
+	//=======================================
+
+	bool EditorLayer::OnKeyPressed(KeyRepetiedEvent& e)
+	{
+		bool control = Input::IsKeyPressed(GODDECAY_KEY_LEFT_CONTROL) || Input::IsKeyPressed(GODDECAY_KEY_RIGHT_CONTROL);
+		bool shift = Input::IsKeyPressed(GODDECAY_KEY_LEFT_SHIFT) || Input::IsKeyPressed(GODDECAY_KEY_RIGHT_SHIFT);
+		switch (e.GetKetCode())
+		{
+			case GODDECAY_KEY_N:
+			{
+				if (control)
+					NewScene();
+
+				break;
+			}
+			case GODDECAY_KEY_O:
+			{
+				if (control)
+					OpenScene();
+
+				break;
+			}
+			case GODDECAY_KEY_S:
+			{
+				if (control && shift)
+					SaveSceneAs();
+
+				break;
+			}
+			//ImGuizmo
+			case GODDECAY_KEY_Q:
+				m_GizmoType = -1;
+				break;
+			case GODDECAY_KEY_W:
+				m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
+				break;
+			case GODDECAY_KEY_E:
+				m_GizmoType = ImGuizmo::OPERATION::ROTATE;
+				break;
+			case GODDECAY_KEY_R:
+				m_GizmoType = ImGuizmo::OPERATION::SCALE;
+				break;
+		}
+
+		return false;
+	}
+
+	void EditorLayer::NewScene()
+	{
+		m_ActionScene = CreateRef<Scene>();
+		m_ActionScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		m_SceneHierarchyPanel.SetContext(m_ActionScene);
+	}
+
+	void EditorLayer::OpenScene()
+	{
+		//每当打开一个文件时，都先创建一个[为新场景重新赋值]，然后在反序列化
+		std::string filepath = FileDialogs::OpenFile("Hazel Scene (*.gd)\0*.gd\0");
+		if (!filepath.empty())
+		{
+			m_ActionScene = CreateRef<Scene>();
+			m_ActionScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			m_SceneHierarchyPanel.SetContext(m_ActionScene);
+
+			SceneSerializer serializer(m_ActionScene);
+			serializer.Deserialize(filepath);
+		}
+	}
+
+	void EditorLayer::SaveSceneAs()
+	{
+		std::string filepath = FileDialogs::SaveFile("Hazel Scene (*.gd)\0*.gd\0");
+		if (!filepath.empty())
+		{
+			SceneSerializer serializer(m_ActionScene);
+			serializer.Serialize(filepath);
+		}
 	}
 }

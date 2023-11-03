@@ -76,8 +76,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>gdpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GD_PLATFORM_WINDOWS;GD_BUILD_DLL;GD_ENABLE_ASSERTS;GLFW_INCLUDE_NONE;GD_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\glad\include;vendor\ImGui;vendor\glm;vendor\stb_image;vendor\entt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GD_PLATFORM_WINDOWS;GD_BUILD_DLL;GD_ENABLE_ASSERTS;GLFW_INCLUDE_NONE;IMGUI_DEFINE_MATH_OPERATORS;GD_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\glad\include;vendor\ImGui;vendor\glm;vendor\stb_image;vendor\entt\include;vendor\yaml\include;vendor\ImGuizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -99,8 +99,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>gdpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GD_PLATFORM_WINDOWS;GD_BUILD_DLL;GD_ENABLE_ASSERTS;GLFW_INCLUDE_NONE;GD_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\glad\include;vendor\ImGui;vendor\glm;vendor\stb_image;vendor\entt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GD_PLATFORM_WINDOWS;GD_BUILD_DLL;GD_ENABLE_ASSERTS;GLFW_INCLUDE_NONE;IMGUI_DEFINE_MATH_OPERATORS;GD_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\glad\include;vendor\ImGui;vendor\glm;vendor\stb_image;vendor\entt\include;vendor\yaml\include;vendor\ImGuizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -125,8 +125,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>gdpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GD_PLATFORM_WINDOWS;GD_BUILD_DLL;GD_ENABLE_ASSERTS;GLFW_INCLUDE_NONE;GD_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\glad\include;vendor\ImGui;vendor\glm;vendor\stb_image;vendor\entt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GD_PLATFORM_WINDOWS;GD_BUILD_DLL;GD_ENABLE_ASSERTS;GLFW_INCLUDE_NONE;IMGUI_DEFINE_MATH_OPERATORS;GD_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\glad\include;vendor\ImGui;vendor\glm;vendor\stb_image;vendor\entt\include;vendor\yaml\include;vendor\ImGuizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -147,6 +147,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\GodDecay\Renderer\EditorCamera.h" />
     <ClInclude Include="src\GodDecay\Controller\OrthographicCameraController.h" />
     <ClInclude Include="src\GodDecay\Controller\PerspectiveCameraController.h" />
     <ClInclude Include="src\GodDecay\Core\Application.h" />
@@ -165,6 +166,7 @@
     <ClInclude Include="src\GodDecay\Events\KeyEvent.h" />
     <ClInclude Include="src\GodDecay\Events\MouseEvent.h" />
     <ClInclude Include="src\GodDecay\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\GodDecay\Math\Math.h" />
     <ClInclude Include="src\GodDecay\Renderer\Buffer.h" />
     <ClInclude Include="src\GodDecay\Renderer\Camera.h" />
     <ClInclude Include="src\GodDecay\Renderer\Framebuffer.h" />
@@ -183,8 +185,10 @@
     <ClInclude Include="src\GodDecay\Scene\Entity.h" />
     <ClInclude Include="src\GodDecay\Scene\Scene.h" />
     <ClInclude Include="src\GodDecay\Scene\SceneCamera.h" />
+    <ClInclude Include="src\GodDecay\Scene\SceneSerializer.h" />
     <ClInclude Include="src\GodDecay\Scene\ScriptableEntity.h" />
     <ClInclude Include="src\GodDecay\Tools\TimeTool.h" />
+    <ClInclude Include="src\GodDecay\Utils\PlatformUtils.h" />
     <ClInclude Include="src\GodDecayTop.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
@@ -196,6 +200,7 @@
     <ClInclude Include="src\Platform\PlatformTools\OpenGLTimeTool.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\gdpch.h" />
+    <ClInclude Include="vendor\ImGuizmo\ImGuizmo.h" />
     <ClInclude Include="vendor\glm\glm\common.hpp" />
     <ClInclude Include="vendor\glm\glm\detail\_features.hpp" />
     <ClInclude Include="vendor\glm\glm\detail\_fixes.hpp" />
@@ -634,6 +639,7 @@
     <ClInclude Include="vendor\stb_image\stb_voxel_render.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\GodDecay\Renderer\EditorCamera.cpp" />
     <ClCompile Include="src\GodDecay\Controller\OrthographicCameraController.cpp" />
     <ClCompile Include="src\GodDecay\Controller\PerspectiveCameraController.cpp" />
     <ClCompile Include="src\GodDecay\Core\Application.cpp" />
@@ -643,6 +649,7 @@
     <ClCompile Include="src\GodDecay\Core\Window.cpp" />
     <ClCompile Include="src\GodDecay\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\GodDecay\ImGui\ImGuiLayer.cpp" />
+    <ClCompile Include="src\GodDecay\Math\Math.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\Buffer.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\Framebuffer.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\OrthographicCamera.cpp" />
@@ -658,6 +665,7 @@
     <ClCompile Include="src\GodDecay\Scene\Entity.cpp" />
     <ClCompile Include="src\GodDecay\Scene\Scene.cpp" />
     <ClCompile Include="src\GodDecay\Scene\SceneCamera.cpp" />
+    <ClCompile Include="src\GodDecay\Scene\SceneSerializer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLFramebuffer.cpp" />
@@ -667,9 +675,13 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArrayBuffer.cpp" />
     <ClCompile Include="src\Platform\PlatformTools\OpenGLTimeTool.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowsPlatformUtils.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\gdpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="vendor\ImGuizmo\ImGuizmo.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="vendor\stb_image\stb_image.cpp" />
   </ItemGroup>
@@ -682,6 +694,9 @@
     </ProjectReference>
     <ProjectReference Include="vendor\ImGui\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
+    </ProjectReference>
+    <ProjectReference Include="vendor\yaml\yaml.vcxproj">
+      <Project>{7814A17C-644B-A20D-0D38-8810F94D1E0F}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
