@@ -7,6 +7,8 @@
 
 #include "Texture.h"
 
+#include "GodDecay/Scene/Components.h"
+
 /// <summary>
 /// 采样立即渲染的方式，创建一个2D渲染对象
 /// </summary>
@@ -41,8 +43,11 @@ namespace GodDecay
 		static void DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, const glm::vec4& texColor = glm::vec4(1.0f), const float tilingFactor = 1.0f);
 
 		//entt---------------------------------
-		static void DrawQuad(const glm::mat4& transform, const glm::vec4& color);
-		static void DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
+		static void DrawQuad(const glm::mat4& transform, const glm::vec4& color, int entityID = -1);
+		static void DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f), int entityID = -1);
+
+		//用于Sprite的渲染
+		static void DrawSprite(const glm::mat4& transform, SpriteRendererComponent& src, int entityID);
 
 		//描述绘制的状态
 		struct Statistics
@@ -56,7 +61,8 @@ namespace GodDecay
 		static void ResetStats();
 		static Statistics GetStats();
 	private:
-		static void FlushAndReset();
+		static void StartBatch();
+		static void NextBatch();
 	};
 }
 

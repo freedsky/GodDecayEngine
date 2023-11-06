@@ -45,5 +45,10 @@ namespace GodDecay
 		Ref<Scene> m_ActionScene;
 		//ImGuizmo
 		uint32_t m_GizmoType = -1;
+
+		//获取屏幕坐标下的xy
+		glm::vec2 m_ViewprotBounds[2];
+		//获取entityID
+		Entity  m_HoveredEntity;
 	};
 }

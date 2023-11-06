@@ -20,6 +20,7 @@ namespace GodDecay
 		glm::vec2 TexCoord;
 		float TexIndex;
 		float TilingFactor;
+		int EntityID;
 	};
 
 	struct Renderer2DStorage 
@@ -59,7 +60,8 @@ namespace GodDecay
 			{ShaderDataType::Float4, "a_Color"},
 			{ShaderDataType::Float2, "a_Texcoords"},
 			{ShaderDataType::Float,	 "a_TexIndex"},
-			{ShaderDataType::Float,  "a_TilingFactor"}
+			{ShaderDataType::Float,  "a_TilingFactor"},
+			{ShaderDataType::Int,    "a_EntityID"    }
 		});
 		s_Data.QuadVertexArray->AddVertexBuffer(s_Data.QuadVertexBuffer);
 
@@ -170,12 +172,29 @@ namespace GodDecay
 		if (s_Data.QuadIndexCount == 0)
 			return;
 
+		uint32_t dataSize = (uint32_t)((uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase);
+		s_Data.QuadVertexBuffer->SetData(s_Data.QuadVertexBufferBase, dataSize);
+
 		for (uint32_t i = 0; i < s_Data.TextureSlotIndex; ++i)
 			s_Data.TextureSlots[i]->Bind(i);
 
 		s_Data.QuadVertexArray->Bind();
 		RenderCommand::DrawIndexed(s_Data.QuadVertexArray, RendererAPI::DrawType::Normal, s_Data.QuadIndexCount);
 		s_Data.Stats.DrawCalls++;
+	}
+
+	void Renderer2D::StartBatch()
+	{
+		s_Data.QuadIndexCount = 0;
+		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
+
+		s_Data.TextureSlotIndex = 1;
+	}
+
+	void Renderer2D::NextBatch()
+	{
+		Flush();
+		StartBatch();
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
@@ -199,7 +218,7 @@ namespace GodDecay
 	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color)
 	{
 		if (s_Data.QuadIndexCount >= Renderer2DStorage::MaxIndices)
-			FlushAndReset();
+			NextBatch();
 
 		constexpr size_t quadVertexCount = 4;
 		const float texIndex = 0.0f;//设置默认纹理
@@ -246,7 +265,7 @@ namespace GodDecay
 	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, const glm::vec4& texColor, const float tilingFactor)
 	{
 		if (s_Data.QuadIndexCount >= Renderer2DStorage::MaxIndices)
-			FlushAndReset();
+			NextBatch();
 
 		glm::vec4 color = texColor;
 
@@ -293,10 +312,10 @@ namespace GodDecay
 
 	//================================================================
 
-	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color)
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color, int entityID)
 	{
 		if (s_Data.QuadIndexCount >= Renderer2DStorage::MaxIndices)
-			FlushAndReset();
+			NextBatch();
 
 		constexpr size_t quadVertexCount = 4;
 		const float texIndex = 0.0f;//设置默认纹理
@@ -310,6 +329,7 @@ namespace GodDecay
 			s_Data.QuadVertexBufferPtr->TexCoord = textureCoords[i];
 			s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
 			s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+			s_Data.QuadVertexBufferPtr->EntityID = entityID;
 			s_Data.QuadVertexBufferPtr++;
 		}
 
@@ -317,10 +337,10 @@ namespace GodDecay
 		s_Data.Stats.QuadCount++;
 	}
 
-	void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor, int entityID)
 	{
 		if (s_Data.QuadIndexCount >= Renderer2DStorage::MaxIndices)
-			FlushAndReset();
+			NextBatch();
 
 		glm::vec4 color = tintColor;
 
@@ -355,11 +375,17 @@ namespace GodDecay
 			s_Data.QuadVertexBufferPtr->TexCoord = textureCoords[i];
 			s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
 			s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+			s_Data.QuadVertexBufferPtr->EntityID = entityID;
 			s_Data.QuadVertexBufferPtr++;
 		}
 
 		s_Data.QuadIndexCount += 6;
 		s_Data.Stats.QuadCount++;
+	}
+
+	void Renderer2D::DrawSprite(const glm::mat4& transform, SpriteRendererComponent& src, int entityID)
+	{
+		DrawQuad(transform, src.Color, entityID);
 	}
 
 	void Renderer2D::ResetStats()
@@ -371,15 +397,4 @@ namespace GodDecay
 	{
 		return s_Data.Stats;
 	}
-
-	void Renderer2D::FlushAndReset()
-	{
-		EndScene();
-
-		s_Data.QuadIndexCount = 0;
-		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
-
-		s_Data.TextureSlotIndex = 1;
-	}
-
 }

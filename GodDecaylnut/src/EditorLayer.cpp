@@ -26,6 +26,7 @@ namespace GodDecay
 	void EditorLayer::OnAttach()
 	{
 		GodDecay::FramebufferSpecification fbSpec;
+		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8,FramebufferTextureFormat::RED_INTEGER,FramebufferTextureFormat::Depth };
 		fbSpec.Width = 1280;
 		fbSpec.Height = 720;
 		m_Framebuffer = GodDecay::Framebuffer::Create(fbSpec);
@@ -57,22 +58,41 @@ namespace GodDecay
 			//给场景相机调整viewport大小
 			m_ActionScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		}
-
+		//场景编辑相机的更新
 		m_EditorCamera.OnUpdate(deltaTime);
 		//防止事件在相机和UI之间进行穿透
-		/*if (m_ViewportFocused) 
+		if (m_ViewportFocused) 
 		{
 			m_Camera->OnUpdate(deltaTime);
-		}*/
+		}
 		m_Framebuffer->Bind();
 
 		GodDecay::RenderCommand::SetClearColor(glm::vec4(0.1, 0.1, 0.1, 1.0));
 		GodDecay::RenderCommand::Clear();
+		//用于清除Red颜色缓冲
+		m_Framebuffer->ClearAttachment(1, -1);
 
 		GodDecay::Renderer2D::ResetStats();
 
 		//m_ActionScene->OnUpdata(deltaTime);
 		m_ActionScene->UpdateEditor(deltaTime, m_EditorCamera);
+
+		//更新鼠标位置在viewprot中的Position
+		auto [mx, my] = ImGui::GetMousePos();
+		mx -= m_ViewprotBounds[0].x;
+		my -= m_ViewprotBounds[0].y;
+		glm::vec2 viewportSize = m_ViewprotBounds[1] - m_ViewprotBounds[0];
+		my = viewportSize.y - my;
+		int mouseX = (int)mx;
+		int mouseY = (int)my;
+
+		//防止在viewport窗口外也进行取值
+		if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
+		{
+			int pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
+			m_HoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, m_ActionScene.get());
+			//GD_ENGINE_WARN("Pixel data {0} ", pixelData);
+		}
 
 		m_Framebuffer->UnBind();
 	}
@@ -151,6 +171,13 @@ namespace GodDecay
 		m_SceneHierarchyPanel.OnImGuiRender();
 		//---------------------Test窗口--------------------------------------------
 		ImGui::Begin("Stats");
+
+		//显示鼠标选择中的那个实体名称
+		std::string name = "None";
+		if (m_HoveredEntity)
+			name = m_HoveredEntity.GetComponent<TagComponent>().Tag;
+		ImGui::Text("Hovered Entity: %s", name.c_str());
+
 		auto stats = GodDecay::Renderer2D::GetStats();
 		ImGui::Text("Renderer2D Stats:");
 		ImGui::Text("Draw Calls: %d", stats.DrawCalls);
@@ -163,6 +190,9 @@ namespace GodDecay
 		//View窗口（把这个窗口移动到最下面好像就不会出现最小化时窗口出现比列不协调的问题）
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });//推送一个风格样式，注意要以ImGui::PopStyleVar();结束
 		ImGui::Begin("Viewpoint");
+		//在这里进行对屏幕空间坐标的获取
+		auto viewportOffset = ImGui::GetCursorPos();
+
 		//判断当前鼠标的聚焦区域是否在该窗口，防止事件穿透
 		m_ViewportFocused = ImGui::IsWindowFocused();
 		m_ViewportHovered = ImGui::IsWindowHovered();
@@ -174,6 +204,15 @@ namespace GodDecay
 		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
 		ImGui::Image((void*)textureID, ImVec2{ m_ViewportSize.x,m_ViewportSize.y }, { 0,1 }, { 1,0 });
 		
+		//获取vewport窗口的大小
+		//auto windowSize = ImGui::GetWindowSize();
+		auto minBound = ImGui::GetWindowPos();
+		minBound.x += viewportOffset.x;
+		minBound.y += viewportOffset.y;
+		ImVec2 maxBound = { minBound.x + m_ViewportSize.x,minBound.y + m_ViewportSize.y };
+		m_ViewprotBounds[0] = { minBound.x, minBound.y };
+		m_ViewprotBounds[1] = { maxBound.x, maxBound.y };
+
 		//ImGuizmo
 		Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
 		if (selectedEntity && m_GizmoType != -1)
@@ -224,7 +263,7 @@ namespace GodDecay
 		bool shift = Input::IsKeyPressed(GODDECAY_KEY_LEFT_SHIFT) || Input::IsKeyPressed(GODDECAY_KEY_RIGHT_SHIFT);
 		switch (e.GetKetCode())
 		{
-		case GODDECAY_KEY_D:
+		case GODDECAY_KEY_N:
 		{
 			if (control)
 				NewScene();

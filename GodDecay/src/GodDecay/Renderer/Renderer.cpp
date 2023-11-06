@@ -15,7 +15,7 @@ namespace GodDecay
 		
 		Renderer2D::Init();
 
-		Renderer3D::Init();
+		//Renderer3D::Init();
 		
 	}
 
