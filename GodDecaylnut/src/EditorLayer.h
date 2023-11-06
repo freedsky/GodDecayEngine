@@ -44,6 +44,12 @@ namespace GodDecay
 
 		//用于选择相应的旋转位移模型
 		uint32_t m_GizmoType = -1;
+
+		//获取屏幕坐标下的xy
+		glm::vec2 m_ViewprotBounds[2];
+
+		//获取到当前的鼠标所指向的entity
+		Entity  m_HoveredEntity;
 	};
 }
 
