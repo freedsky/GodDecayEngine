@@ -20,6 +20,7 @@ namespace GodDecay
 		void OnImGuiRender();
 
 		Entity GetSelectedEntity() const { return m_SelectionContext; }
+		void SetSelectedEntity(Entity entity);
 	private:
 		//绘制场景实体的面板内容
 		void DrawEntityNode(Entity entity);

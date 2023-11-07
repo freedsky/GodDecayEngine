@@ -4,6 +4,7 @@
 #include "GodDecay/Events/KeyEvent.h"
 
 #include "Panels/SceneHierarchyPanel.h"
+#include "Panels/ContentBrowserPanel.h"
 
 #include "GodDecay/Renderer/EditorCamera.h"
 
@@ -26,6 +27,7 @@ namespace GodDecay
 		void OnImGuiRender() override;
 	private:
 		bool OnKeyPressed(KeyRepetiedEvent& e);
+		bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
 
 		void NewScene();
 		void OpenScene();
@@ -38,8 +40,9 @@ namespace GodDecay
 		glm::vec2 m_ViewportSize = { 0.0f,0.0f };
 		bool m_ViewportFocused = false, m_ViewportHovered = false;
 		//Panels
-		SceneHierarchyPanel m_SceneHierarchyPanel;
-		
+		SceneHierarchyPanel m_SceneHierarchyPanel;//实体展示面板
+		ContentBrowserPanel m_ContentBrowserPanel;//文件浏览面板
+
 		Ref<Scene> m_ActionScene;
 
 		//用于选择相应的旋转位移模型

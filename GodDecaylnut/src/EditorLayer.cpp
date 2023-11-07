@@ -105,6 +105,7 @@ namespace GodDecay
 
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<KeyRepetiedEvent>(std::bind(&EditorLayer::OnKeyPressed, this, std::placeholders::_1));
+		dispatcher.Dispatch<MouseButtonPressedEvent>(std::bind(&EditorLayer::OnMouseButtonPressed, this, std::placeholders::_1));
 	}
 
 	void EditorLayer::OnImGuiRender()
@@ -169,6 +170,7 @@ namespace GodDecay
 		}
 		//属性面板更新
 		m_SceneHierarchyPanel.OnImGuiRender();
+		m_ContentBrowserPanel.OnImGuiRender();
 		//状态栏===============================================================
 		ImGui::Begin("Status");
 
@@ -189,8 +191,14 @@ namespace GodDecay
 		//View窗口（把这个窗口移动到最下面好像就不会出现最小化时窗口出现比列不协调的问题）
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });//推送一个风格样式，注意要以ImGui::PopStyleVar();结束
 		ImGui::Begin("Viewpoint");
+		//拿到view区域的窗口的最小值和最大值坐标。
+		auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
+		auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
 		//在这里进行对屏幕空间坐标的获取
-		auto viewportOffset = ImGui::GetCursorPos();
+		auto viewportOffset = ImGui::GetWindowPos();
+		//更新当前的view窗口的最大最小的坐标
+		m_ViewprotBounds[0] = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y };
+		m_ViewprotBounds[1] = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y };
 		
 		//判断当前鼠标的聚焦区域是否在该窗口，防止事件穿透
 		m_ViewportFocused = ImGui::IsWindowFocused();
@@ -202,15 +210,6 @@ namespace GodDecay
 		//渲染framebuffer
 		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
 		ImGui::Image((void*)textureID, ImVec2{ m_ViewportSize.x,m_ViewportSize.y }, { 0,1 }, { 1,0 });
-		
-		//获取vewport窗口的大小
-		//auto windowSize = ImGui::GetWindowSize();
-		auto minBound = ImGui::GetWindowPos();
-		minBound.x += viewportOffset.x;
-		minBound.y += viewportOffset.y;
-		ImVec2 maxBound = { minBound.x + m_ViewportSize.x,minBound.y + m_ViewportSize.y };
-		m_ViewprotBounds[0] = { minBound.x, minBound.y };
-		m_ViewprotBounds[1] = { maxBound.x, maxBound.y };
 
 		//ImGuizmo
 		Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
@@ -220,9 +219,8 @@ namespace GodDecay
 			ImGuizmo::SetOrthographic(false);
 			ImGuizmo::SetDrawlist();
 
-			float windowWidth = (float)ImGui::GetWindowWidth();
-			float windowHeight = (float)ImGui::GetWindowHeight();
-			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+			//更新zom的view窗口的最小和最大坐标
+			ImGuizmo::SetRect(m_ViewprotBounds[0].x, m_ViewprotBounds[0].y, m_ViewprotBounds[1].x - m_ViewprotBounds[0].x, m_ViewprotBounds[1].y - m_ViewprotBounds[0].y);
 
 			// Editor Camera
 			const glm::mat4& cameraProjection = m_EditorCamera.GetProjection();
@@ -311,6 +309,19 @@ namespace GodDecay
 			}
 		}
 
+		return false;
+	}
+
+	bool EditorLayer::OnMouseButtonPressed(MouseButtonPressedEvent& e)
+	{
+		if (e.GetMouseButton() == GODDECAY_MOUSE_BUTTON_LEFT)
+		{
+
+			if (m_ViewportHovered && !ImGuizmo::IsOver() && Input::IsKeyPressed(GODDECAY_KEY_LEFT_ALT))
+			{
+				m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);
+			}
+		}
 		return false;
 	}
 
