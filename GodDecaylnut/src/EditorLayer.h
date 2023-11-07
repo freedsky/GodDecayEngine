@@ -5,6 +5,7 @@
 
 #include "GodDecay/Renderer/EditorCamera.h"
 #include "Panels/SceneHierarchyPanel.h"
+#include "Panels/ContentBrowserPanel.h"
 
 /// <summary>
 /// 引擎编辑层
@@ -25,6 +26,7 @@ namespace GodDecay
 		void OnImGuiRender() override;
 	private:
 		bool OnKeyPressed(KeyRepetiedEvent& e);
+		bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
 
 		void NewScene();
 		void OpenScene();
@@ -40,7 +42,8 @@ namespace GodDecay
 		glm::vec2 m_ViewportSize = { 0.0f, 0.0f };
 
 		//Panels
-		SceneHierarchyPanel m_SceneHierarchyPanel;
+		SceneHierarchyPanel m_SceneHierarchyPanel;//实体展示面板
+		ContentBrowserPanel m_ContentBrowserPanel;//文件浏览面板
 		//entt
 		Ref<Scene> m_ActionScene;
 		//ImGuizmo

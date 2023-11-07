@@ -33,8 +33,9 @@ namespace GodDecay
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
 		//ÉèÖÃ×ÖÌå
-		io.Fonts->AddFontFromFileTTF("assets/fonts/msyh/msyh.ttc", 18.0f);
-		io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/msyh/msyhbd.ttc", 18.0f);
+		float fontSize = 18.0f;
+		io.Fonts->AddFontFromFileTTF("assets/fonts/msyh/msyh.ttc", fontSize);
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/msyh/msyhbd.ttc", fontSize);
 
 		ImGui::StyleColorsDark();
 
