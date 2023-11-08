@@ -15,6 +15,9 @@
 
 namespace GodDecay 
 {
+	//定义一个全局的路径变量
+	extern const std::filesystem::path g_AssetPath;
+
 	EditorLayer::EditorLayer(std::string name)
 		:Layer(name), m_Camera(CreateRef<GodDecay::OrthographicCameraController>(1280.0f / 720.0f))
 	{
@@ -26,6 +29,9 @@ namespace GodDecay
 
 	void EditorLayer::OnAttach()
 	{
+		m_IconPlay = Texture2D::Create("Resources/Icons/PlayButton.png");
+		m_IconStop = Texture2D::Create("Resources/Icons/StopButton.png");
+
 		GodDecay::FramebufferSpecification fbSpec;
 		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8,FramebufferTextureFormat::RED_INTEGER,FramebufferTextureFormat::Depth };
 		fbSpec.Width = 1280;
@@ -57,13 +63,7 @@ namespace GodDecay
 			//给场景相机调整viewport大小
 			m_ActionScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		}
-		//场景编辑相机的更新
-		m_EditorCamera.OnUpdate(deltaTime);
-		//防止事件在相机和UI之间进行穿透
-		if (m_ViewportFocused) 
-		{
-			m_Camera->OnUpdate(deltaTime);
-		}
+		GodDecay::Renderer2D::ResetStats();
 		m_Framebuffer->Bind();
 
 		GodDecay::RenderCommand::SetClearColor(glm::vec4(0.1, 0.1, 0.1, 1.0));
@@ -71,10 +71,25 @@ namespace GodDecay
 		//清除Red颜色缓冲
 		m_Framebuffer->ClearAttachment(1, -1);
 
-		GodDecay::Renderer2D::ResetStats();
-			
-		//m_ActionScene->OnUpdateRuntime(deltaTime);
-		m_ActionScene->UpdateEditor(deltaTime, m_EditorCamera);
+		//编辑器的状态更新
+		switch (m_SceneState)
+		{
+		case SceneState::Edit:
+		{
+			if (m_ViewportFocused)
+				m_Camera->OnUpdate(deltaTime);
+
+			m_EditorCamera.OnUpdate(deltaTime);
+
+			m_ActionScene->UpdateEditor(deltaTime, m_EditorCamera);
+			break;
+		}
+		case SceneState::Play:
+		{
+			m_ActionScene->OnUpdateRuntime(deltaTime);
+			break;
+		}
+		}
 
 		//更新鼠标位置在viewprot中的Position
 		auto [mx, my] = ImGui::GetMousePos();
@@ -211,6 +226,18 @@ namespace GodDecay
 		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
 		ImGui::Image((void*)textureID, ImVec2{ m_ViewportSize.x,m_ViewportSize.y }, { 0,1 }, { 1,0 });
 
+		//增加拖拽区域的目标区域
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+			{
+				const wchar_t* path = (const wchar_t*)payload->Data;
+				OpenScene(std::filesystem::path(g_AssetPath) / path);
+				//GD_ENGINE_INFO("DragDropFilepath = {0}", std::filesystem::path(g_AssetPath) / path);
+			}
+			ImGui::EndDragDropTarget();
+		}
+
 		//ImGuizmo
 		Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
 		if (selectedEntity && m_GizmoType != -1) 
@@ -249,6 +276,8 @@ namespace GodDecay
 		ImGui::End();
 		ImGui::PopStyleVar();
 		
+		UI_Toolbar();
+
 		ImGui::End();
 	}
 
@@ -338,13 +367,25 @@ namespace GodDecay
 		std::string filepath = FileDialogs::OpenFile("Hazel Scene (*.gd)\0*.gd\0");
 		if (!filepath.empty())
 		{
-			m_ActionScene = CreateRef<Scene>();
-			m_ActionScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-			m_SceneHierarchyPanel.SetContext(m_ActionScene);
-
-			SceneSerializer serializer(m_ActionScene);
-			serializer.Deserialize(filepath);
+			OpenScene(filepath);
 		}
+	}
+
+	void EditorLayer::OpenScene(const std::filesystem::path& path)
+	{
+		//检测文件对文件后缀名是否正确
+		if (path.extension().string() != ".gd")
+		{
+			GD_ENGINE_WARN("Could not load {0} - not a scene file", path.filename().string());
+			return;
+		}
+
+		m_ActionScene = CreateRef<Scene>();
+		m_ActionScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		m_SceneHierarchyPanel.SetContext(m_ActionScene);
+
+		SceneSerializer serializer(m_ActionScene);
+		serializer.Deserialize(path.string());
 	}
 
 	void EditorLayer::SaveSceneAs()
@@ -355,5 +396,42 @@ namespace GodDecay
 			SceneSerializer serializer(m_ActionScene);
 			serializer.Serialize(filepath);
 		}
+	}
+	void EditorLayer::OnScenePlay()
+	{
+		m_SceneState = SceneState::Play;
+	}
+
+	void EditorLayer::OnSceneStop()
+	{
+		m_SceneState = SceneState::Edit;
+	}
+
+	void EditorLayer::UI_Toolbar()
+	{
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 2));
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+		auto& colors = ImGui::GetStyle().Colors;
+		const auto& buttonHovered = colors[ImGuiCol_ButtonHovered];
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(buttonHovered.x, buttonHovered.y, buttonHovered.z, 0.5f));
+		const auto& buttonActive = colors[ImGuiCol_ButtonActive];
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(buttonActive.x, buttonActive.y, buttonActive.z, 0.5f));
+
+		ImGui::Begin("##toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+
+		float size = ImGui::GetWindowHeight() - 4.0f;
+		Ref<Texture2D> icon = m_SceneState == SceneState::Edit ? m_IconPlay : m_IconStop;
+		ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
+		if (ImGui::ImageButton((ImTextureID)icon->GetRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), 0))
+		{
+			if (m_SceneState == SceneState::Edit)
+				OnScenePlay();
+			else if (m_SceneState == SceneState::Play)
+				OnSceneStop();
+		}
+		ImGui::PopStyleVar(2);
+		ImGui::PopStyleColor(3);
+		ImGui::End();
 	}
 }

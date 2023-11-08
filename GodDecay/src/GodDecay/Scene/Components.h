@@ -9,6 +9,7 @@
 
 #include "SceneCamera.h"
 #include "ScriptableEntity.h"
+#include "GodDecay/Renderer/Texture.h"
 
 /// <summary>
 /// 组件Components
@@ -49,10 +50,12 @@ namespace GodDecay
 		}
 	};
 
-	//Render渲染组件[3D的话估计要加上Mesh组件]
+	//Render渲染组件[3D的话估计要加上Mesh组件]//增加纹理的支持
 	struct SpriteRendererComponent
 	{
 		glm::vec4 Color{ 1.0f,1.0f,1.0f,1.0f };
+		Ref<Texture2D> Texture;
+		float TilingFactor = 1.0f;
 
 		SpriteRendererComponent() = default;
 		SpriteRendererComponent(const SpriteRendererComponent&) = default;

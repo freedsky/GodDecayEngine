@@ -147,7 +147,6 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\GodDecay\Renderer\EditorCamera.h" />
     <ClInclude Include="src\GodDecay\Controller\OrthographicCameraController.h" />
     <ClInclude Include="src\GodDecay\Controller\PerspectiveCameraController.h" />
     <ClInclude Include="src\GodDecay\Core\Application.h" />
@@ -169,6 +168,7 @@
     <ClInclude Include="src\GodDecay\Math\Math.h" />
     <ClInclude Include="src\GodDecay\Renderer\Buffer.h" />
     <ClInclude Include="src\GodDecay\Renderer\Camera.h" />
+    <ClInclude Include="src\GodDecay\Renderer\EditorCamera.h" />
     <ClInclude Include="src\GodDecay\Renderer\Framebuffer.h" />
     <ClInclude Include="src\GodDecay\Renderer\OrthographicCamera.h" />
     <ClInclude Include="src\GodDecay\Renderer\PerspectiveCamera.h" />
@@ -639,7 +639,6 @@
     <ClInclude Include="vendor\stb_image\stb_voxel_render.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\GodDecay\Renderer\EditorCamera.cpp" />
     <ClCompile Include="src\GodDecay\Controller\OrthographicCameraController.cpp" />
     <ClCompile Include="src\GodDecay\Controller\PerspectiveCameraController.cpp" />
     <ClCompile Include="src\GodDecay\Core\Application.cpp" />
@@ -651,6 +650,7 @@
     <ClCompile Include="src\GodDecay\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\GodDecay\Math\Math.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\GodDecay\Renderer\EditorCamera.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\Framebuffer.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\PerspectiveCamera.cpp" />

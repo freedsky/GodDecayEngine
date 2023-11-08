@@ -3,6 +3,10 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/string_cast.hpp>
+
+
 #include "Base.h"
 /// <summary>
 /// 包装spdlog库，使用宏定义简化开发调用过程

@@ -31,7 +31,15 @@ namespace GodDecay
 
 		void NewScene();
 		void OpenScene();
+		//通过拖拽的方式对场景文件进行加载
+		void OpenScene(const std::filesystem::path& path);
 		void SaveSceneAs();
+
+		//运行组件
+		void OnScenePlay();
+		void OnSceneStop();
+
+		void UI_Toolbar();
 	private:
 		Ref<OrthographicCameraController> m_Camera;
 		EditorCamera m_EditorCamera;
@@ -53,6 +61,17 @@ namespace GodDecay
 
 		//获取到当前的鼠标所指向的entity
 		Entity  m_HoveredEntity;
+
+		//定义编辑运行状态
+		enum SceneState
+		{
+			Edit = 0, Play = 1
+		};
+		//默认状态设置为编辑状态
+		SceneState m_SceneState = SceneState::Edit;
+
+		//运行和暂停是的图标纹理设置
+		Ref<Texture2D> m_IconPlay, m_IconStop;
 	};
 }
 
