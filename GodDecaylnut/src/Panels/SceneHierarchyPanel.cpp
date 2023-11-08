@@ -5,11 +5,15 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+#include <filesystem>
+
 #include "GodDecay/Scene/Components.h"
 #include "GodDecay/Core/Logger.h"
 
 namespace GodDecay
 {
+	extern const std::filesystem::path g_AssetPath;
+
 	SceneHierarchyPanel::SceneHierarchyPanel(const Ref<Scene>& scene)
 	{
 		SetContext(scene);
@@ -322,6 +326,31 @@ namespace GodDecay
 		DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [](auto& component)
 		{
 			ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
+
+			//创建一个目标拖拽区域
+			ImGui::Button("Texture", ImVec2(100.0f, 0.0f));
+			if (ImGui::BeginDragDropTarget())
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+				{
+					const wchar_t* path = (const wchar_t*)payload->Data;
+					std::filesystem::path texturePath = std::filesystem::path(g_AssetPath) / path;
+					//创建一个纹理，并把纹理赋值给组件中的Texture值
+					//在此之前检测纹理是否被加载成功
+					Ref<Texture2D> texture = Texture2D::Create(texturePath.string());
+					if (texture->IsLoaded())
+					{
+						component.Texture = texture;
+					}
+					else
+					{
+						GD_ENGINE_WARN("Could not load texture {0}", texturePath.filename().string());
+					}
+				}
+				ImGui::EndDragDropTarget();
+			}
+
+			ImGui::DragFloat("Tiling Factor", &component.TilingFactor, 0.1f, 0.0f, 100.0f);
 		});
 	}
 }
