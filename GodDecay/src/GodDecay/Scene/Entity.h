@@ -20,6 +20,8 @@ namespace GodDecay
 		Entity(entt::entity handle, Scene * scene);
 		Entity(const Entity & other) = default;
 
+		inline entt::entity& GetEntity() { return m_EntityHandle; }
+
 		template<typename T, typename... Args>
 		T& AddComponent(Args&&... args)
 		{

@@ -9,6 +9,8 @@
 #include "SceneCamera.h"
 #include "ScriptableEntity.h"
 #include "GodDecay/Renderer/Texture.h"
+#include "GodDecay/Renderer/Mesh.h"
+#include "GodDecay/Renderer/MeshRenderer.h"
 
 /// <summary>
 /// 组件Components
@@ -88,5 +90,31 @@ namespace GodDecay
 			InstantiateScript = []() {return static_cast<ScriptableEntity*>(new T()); };
 			DestroyScript = [](NativeScriptComponent* nsc) { delete nsc->Instance; nsc->Instance = nullptr; };
 		}
+	};
+
+	//Mesh组件负责数据的加载和初始化
+	struct MeshComponent 
+	{
+		Mesh m_Mesh;
+
+		MeshComponent() = default;
+		MeshComponent(const MeshComponent&) = default;
+		MeshComponent(const Mesh& mesh) : m_Mesh(mesh) {}
+	};
+
+	//MeshRender组件它负责把mesh组件中的数据组织为绘制所需要的顶点属性数据，并进行绘制
+	struct MeshRenderComponent 
+	{
+		//这里的mesh暂不考虑。
+		MeshRenderer m_Mesh;
+		
+		//glm::vec4 Color{ 1.0f,1.0f,1.0f,1.0f };
+		//Ref<Texture2D> Texture;
+		//float TilingFactor = 1.0f;
+
+		MeshRenderComponent() = default;
+		MeshRenderComponent(const MeshRenderComponent&) = default;
+		//MeshRenderComponent(const glm::vec4& color) : Color(color) {}
+		MeshRenderComponent(const MeshRenderer& mesh) : m_Mesh(mesh) {}
 	};
 }

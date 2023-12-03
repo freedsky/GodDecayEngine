@@ -23,6 +23,8 @@ namespace GodDecay
 
 		Ref<Shader> Get(const std::string& name);
 
+		std::unordered_map<std::string, Ref<Shader>>& GetShaderLibraries() { return m_ShaderLibraries; }
+
 		bool Exists(const std::string& name) const;
 	private:
 		std::unordered_map<std::string, Ref<Shader>> m_ShaderLibraries;

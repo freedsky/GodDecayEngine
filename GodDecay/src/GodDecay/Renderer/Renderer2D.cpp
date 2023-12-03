@@ -46,7 +46,7 @@ namespace GodDecay
 
 		glm::vec4 QuadVertexPositions[4];
 
-		Renderer2D::Statistics Stats;
+		Renderer2D::Statistics2D Stats;
 	};
 	Renderer2DStorage s_Data;
 
@@ -171,9 +171,6 @@ namespace GodDecay
 	{
 		if (s_Data.QuadIndexCount == 0)
 			return;
-
-		uint32_t dataSize = (uint32_t)((uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase);
-		s_Data.QuadVertexBuffer->SetData(s_Data.QuadVertexBufferBase, dataSize);
 
 		for (uint32_t i = 0; i < s_Data.TextureSlotIndex; ++i)
 			s_Data.TextureSlots[i]->Bind(i);
@@ -398,10 +395,10 @@ namespace GodDecay
 
 	void Renderer2D::ResetStats()
 	{
-		memset(&s_Data.Stats, 0, sizeof(Statistics));
+		memset(&s_Data.Stats, 0, sizeof(Statistics2D));
 	}
 
-	Renderer2D::Statistics Renderer2D::GetStats()
+	Renderer2D::Statistics2D Renderer2D::GetStats()
 	{
 		return s_Data.Stats;
 	}

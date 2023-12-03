@@ -42,4 +42,8 @@
       <Filter>src\Panels</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shader\UniversalStand.glsl" />
+    <None Include="assets\shader\TestShader.glsl" />
+  </ItemGroup>
 </Project>

@@ -6,6 +6,7 @@
 #include "Entity.h"
 #include "Components.h"
 #include "GodDecay/Renderer/Renderer2D.h"
+#include "GodDecay/Renderer/Renderer3D.h"
 
 namespace GodDecay
 {
@@ -105,23 +106,53 @@ namespace GodDecay
 			}
 
 			Renderer2D::EndScene();
+
+			auto group3D = m_Registry.view<TransformComponent, MeshRenderComponent>();
+	
+			for (auto entity : group3D)
+			{
+				auto [transfrom, mesh, meshrenderer] = m_Registry.get<TransformComponent, MeshComponent, MeshRenderComponent>(entity);
+				
+				meshrenderer.m_Mesh.BeginDrawMesh(mainCamera->GetProjection(), cameraTransform, mesh.m_Mesh.GetMeshType());
+
+				meshrenderer.m_Mesh.DrawMesh(transfrom.GetTransform());
+
+				meshrenderer.m_Mesh.EndDrawMesh();
+			}
+
 		}
 	}
 
 	void Scene::UpdateEditor(float deltaTime, EditorCamera& camera)
 	{
 		//用场景相机来更新
+		//2D渲染
 		Renderer2D::BeginScene(camera);
 
-		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-		for (auto entity : group)
+		auto group2D = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+		for (auto entity : group2D)
 		{
-			auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-
+			auto [transform, sprite] = group2D.get<TransformComponent, SpriteRendererComponent>(entity);
+			
 			Renderer2D::DrawSprite(transform.GetTransform(), sprite, (int)entity);
 		}
 
 		Renderer2D::EndScene();
+
+		auto group3D = m_Registry.view<TransformComponent,MeshRenderComponent>();
+
+		for (auto entity : group3D) 
+		{
+			auto [transfrom, mesh, meshrenderer] = m_Registry.get<TransformComponent, MeshComponent, MeshRenderComponent>(entity);
+			
+			//Renderer3D::DrawCubeMeshRenderer(transfrom.GetTransform(), mesh, (int)entity);
+			meshrenderer.m_Mesh.BeginDrawMesh(camera, mesh.m_Mesh.GetMeshType(), mesh.m_Mesh.GetModelPath());
+
+			meshrenderer.m_Mesh.DrawMesh(transfrom.GetTransform());
+
+			meshrenderer.m_Mesh.EndDrawMesh();
+		}
+
 	}
 
 	void Scene::OnViewportResize(uint32_t width, uint32_t height)
@@ -172,5 +203,20 @@ namespace GodDecay
 	template<>
 	void Scene::OnComponentAdded<NativeScriptComponent>(Entity entity, NativeScriptComponent& component)
 	{
+	}
+
+	template<>
+	void Scene::OnComponentAdded<MeshComponent>(Entity entity, MeshComponent& component)
+	{
+		//在组件加载时，先进行一次初始化
+		component.m_Mesh.Init(BaseMeshType::CUBE);
+	}
+
+	template<>
+	void Scene::OnComponentAdded<MeshRenderComponent>(Entity entity, MeshRenderComponent& component)
+	{
+		//进行数据的传输
+		auto& mesh = entity.GetComponent<MeshComponent>().m_Mesh;
+		component.m_Mesh.LoadMesh(mesh, (int)entity.GetEntity());
 	}
 }

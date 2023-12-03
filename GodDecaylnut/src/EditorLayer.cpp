@@ -12,13 +12,16 @@
 
 #include "GodDecay/Math/Math.h"
 
+//=========Test===========
+#include "GodDecay/Renderer/Renderer3D.h"
+
 namespace GodDecay
 {
 	//定义一个全局的路径变量
 	extern const std::filesystem::path g_AssetPath;
 
 	EditorLayer::EditorLayer(std::string name)
-		:Layer(name), m_Camera(GodDecay::CreateRef<GodDecay::OrthographicCameraController>(1280.0f / 720.0f))
+		:Layer(name)//, m_Camera(GodDecay::CreateRef<GodDecay::OrthographicCameraController>(1280.0f / 720.0f))
 	{
 	}
 
@@ -49,7 +52,8 @@ namespace GodDecay
 	{
 
 	}
-
+	static int pp = 1;
+	glm::mat4 transform;
 	void EditorLayer::OnUpDate(float deltaTime)
 	{
 		//在Updata中每帧去检测viewport是否进行了改变
@@ -58,16 +62,17 @@ namespace GodDecay
 			(spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
 		{
 			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-			//m_CameraController->OnResize(m_ViewportSize.x, m_ViewportSize.y);
+			//m_Camera->OnResize(m_ViewportSize.x, m_ViewportSize.y);
 			//调整为编辑相机
 			m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
 			//给场景相机调整viewport大小
 			m_ActionScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		}
-		GodDecay::Renderer2D::ResetStats();
+		Renderer2D::ResetStats();
+		Renderer3D::ResetStats();
 		m_Framebuffer->Bind();
 
-		GodDecay::RenderCommand::SetClearColor(glm::vec4(0.1, 0.1, 0.1, 1.0));
+		GodDecay::RenderCommand::SetClearColor(glm::vec4(0.1, 0.1, 0.1, 0.1));
 		GodDecay::RenderCommand::Clear();
 		//用于清除Red颜色缓冲
 		m_Framebuffer->ClearAttachment(1, -1);
@@ -77,8 +82,8 @@ namespace GodDecay
 		{
 		case SceneState::Edit:
 		{
-			if (m_ViewportFocused)
-				m_Camera->OnUpdate(deltaTime);
+			//if (m_ViewportFocused)
+			//	m_Camera->OnUpdate(deltaTime);
 
 			m_EditorCamera.OnUpdate(deltaTime);
 
@@ -107,13 +112,12 @@ namespace GodDecay
 			m_HoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, m_ActionScene.get());
 			//GD_ENGINE_WARN("Pixel data {0} ", pixelData);
 		}
-
 		m_Framebuffer->UnBind();
 	}
 
 	void EditorLayer::OnEvents(GodDecay::Event& e)
 	{
-		m_Camera->OnEvent(e);
+		//m_Camera->OnEvent(e);
 
 		m_EditorCamera.OnEvent(e);
 
@@ -194,13 +198,19 @@ namespace GodDecay
 			name = m_HoveredEntity.GetComponent<TagComponent>().Tag;
 		ImGui::Text("Hovered Entity: %s", name.c_str());
 
-		auto stats = GodDecay::Renderer2D::GetStats();
+		auto stats2D = Renderer2D::GetStats();
 		ImGui::Text("Renderer2D Stats:");
-		ImGui::Text("Draw Calls: %d", stats.DrawCalls);
-		ImGui::Text("Quads: %d", stats.QuadCount);
-		ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
-		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
-		//通过组件获取到物体身上的组件引用
+		ImGui::Text("Draw Calls: %d", stats2D.DrawCalls);
+		ImGui::Text("Quads: %d", stats2D.QuadCount);
+		ImGui::Text("Vertices: %d", stats2D.GetTotalVertexCount());
+		ImGui::Text("Indices: %d", stats2D.GetTotalIndexCount());
+
+		auto states3D = Renderer3D::GetStats();
+		ImGui::Text("Renderer3D Stats:");
+		ImGui::Text("Draw Calls: %d", states3D.DrawCalls);
+		ImGui::Text("Cube: %d", states3D.CubeCount);
+		ImGui::Text("Vertices: %d", states3D.GetTotalVertexCount());
+		ImGui::Text("Indices: %d", states3D.GetTotalIndexCount());
 		ImGui::End();
 
 		//View窗口（把这个窗口移动到最下面好像就不会出现最小化时窗口出现比列不协调的问题）
@@ -333,7 +343,6 @@ namespace GodDecay
 	{
 		if (e.GetMouseButton() == GODDECAY_MOUSE_BUTTON_LEFT)
 		{
-
 			if (m_ViewportHovered && !ImGuizmo::IsOver() && Input::IsKeyPressed(GODDECAY_KEY_LEFT_ALT))
 			{
 				m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);

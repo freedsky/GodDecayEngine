@@ -150,6 +150,9 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\GodDecay\Renderer\Matrial.h" />
+    <ClInclude Include="src\GodDecay\Renderer\Mesh.h" />
+    <ClInclude Include="src\GodDecay\Renderer\MeshRenderer.h" />
     <ClInclude Include="src\GodDecay\Controller\OrthographicCameraController.h" />
     <ClInclude Include="src\GodDecay\Controller\PerspectiveCameraController.h" />
     <ClInclude Include="src\GodDecay\Core\Application.h" />
@@ -173,12 +176,9 @@
     <ClInclude Include="src\GodDecay\Renderer\Camera.h" />
     <ClInclude Include="src\GodDecay\Renderer\EditorCamera.h" />
     <ClInclude Include="src\GodDecay\Renderer\Framebuffer.h" />
-    <ClInclude Include="src\GodDecay\Renderer\Mesh.h" />
-    <ClInclude Include="src\GodDecay\Renderer\Model.h" />
     <ClInclude Include="src\GodDecay\Renderer\OrthographicCamera.h" />
     <ClInclude Include="src\GodDecay\Renderer\PerspectiveCamera.h" />
     <ClInclude Include="src\GodDecay\Renderer\RenderCommand.h" />
-    <ClInclude Include="src\GodDecay\Renderer\RenderMesh.h" />
     <ClInclude Include="src\GodDecay\Renderer\Renderer.h" />
     <ClInclude Include="src\GodDecay\Renderer\Renderer2D.h" />
     <ClInclude Include="src\GodDecay\Renderer\Renderer3D.h" />
@@ -187,6 +187,7 @@
     <ClInclude Include="src\GodDecay\Renderer\Shader.h" />
     <ClInclude Include="src\GodDecay\Renderer\ShaderLibrary.h" />
     <ClInclude Include="src\GodDecay\Renderer\Texture.h" />
+    <ClInclude Include="src\GodDecay\Renderer\UniformProperties.h" />
     <ClInclude Include="src\GodDecay\Renderer\VertexArrayBuffer.h" />
     <ClInclude Include="src\GodDecay\Scene\Components.h" />
     <ClInclude Include="src\GodDecay\Scene\Entity.h" />
@@ -207,6 +208,7 @@
     <ClInclude Include="src\Platform\PlatformTools\OpenGLTimeTool.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\gdpch.h" />
+    <ClInclude Include="src\GodDecay\Renderer\TextureLibrary.h" />
     <ClInclude Include="vendor\ImGuizmo\ImGuizmo.h" />
     <ClInclude Include="vendor\assimp\include\assimp\Base64.hpp" />
     <ClInclude Include="vendor\assimp\include\assimp\BaseImporter.h" />
@@ -728,6 +730,9 @@
     <ClInclude Include="vendor\stb_image\stb_voxel_render.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\GodDecay\Renderer\Matrial.cpp" />
+    <ClCompile Include="src\GodDecay\Renderer\Mesh.cpp" />
+    <ClCompile Include="src\GodDecay\Renderer\MeshRenderer.cpp" />
     <ClCompile Include="src\GodDecay\Controller\OrthographicCameraController.cpp" />
     <ClCompile Include="src\GodDecay\Controller\PerspectiveCameraController.cpp" />
     <ClCompile Include="src\GodDecay\Core\Application.cpp" />
@@ -741,12 +746,9 @@
     <ClCompile Include="src\GodDecay\Renderer\Buffer.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\EditorCamera.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\Framebuffer.cpp" />
-    <ClCompile Include="src\GodDecay\Renderer\Mesh.cpp" />
-    <ClCompile Include="src\GodDecay\Renderer\Model.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\PerspectiveCamera.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\RenderCommand.cpp" />
-    <ClCompile Include="src\GodDecay\Renderer\RenderMesh.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\Renderer.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\Renderer2D.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\Renderer3D.cpp" />
@@ -773,6 +775,7 @@
     <ClCompile Include="src\gdpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\GodDecay\Renderer\TextureLibrary.cpp" />
     <ClCompile Include="vendor\ImGuizmo\ImGuizmo.cpp">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>

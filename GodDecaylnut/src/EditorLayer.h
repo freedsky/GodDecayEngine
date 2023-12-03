@@ -40,7 +40,7 @@ namespace GodDecay
 
 		void UI_Toolbar();
 	private:
-		Ref<OrthographicCameraController> m_Camera;
+		//Ref<OrthographicCameraController> m_Camera;
 		EditorCamera m_EditorCamera;
 		
 		GodDecay::Ref<GodDecay::Framebuffer> m_Framebuffer;

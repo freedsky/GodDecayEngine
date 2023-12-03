@@ -2,11 +2,12 @@
 
 #include "OrthographicCamera.h"
 #include "PerspectiveCamera.h"
-
-#include "Model.h"
+#include "Camera.h"
+#include "EditorCamera.h"
 
 #include "Texture.h"
 
+#include "GodDecay/Scene/Components.h"
 /// <summary>
 /// 增加3D模型渲染
 /// </summary>
@@ -20,26 +21,37 @@ namespace GodDecay
 
 		static void BeginScene(const OrthographicCamera& camera);
 		static void BeginScene(const PerspectiveCamera& camera);
-		static void BeginSceneModel(const PerspectiveCamera& camera, const Ref<Shader>& modelShader);
+		//entity渲染
+		static void BeginScene(const Camera& camera, const glm::mat4& transform);
+		//EditorCamera
+		static void BeginScene(const EditorCamera& camera);
 		static void EndScene();
+		static void Flush();
 
-		//DrawCube---------------------
-		static void DrawCube(const glm::vec3& position, const glm::vec3& size, const glm::vec4& color);
-		static void DrawCube(const glm::vec3& position, const glm::vec3& size, const Ref<Texture2D>& textures, const glm::vec4& texColor = glm::vec4(1.0f));
-		static void DrawRotationCube(const glm::vec3& position, const glm::vec3& size, float rotation, const glm::vec3& axle, const glm::vec4& color);
-		static void DrawRotationCube(const glm::vec3& position, const glm::vec3& size, float rotation, const glm::vec3& axle, const Ref<Texture2D>& texture, const glm::vec4& texColor = glm::vec4(1.0f));
+		//=====================================================
+		//entt---------------------------------
+		static void DrawCubeMesh(const glm::mat4& transform, const glm::vec4& color, int entityID = -1);
+		static void DrawCubeMesh(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f), int entityID = -1);
 
-		//DrawCirle---------------------
-		static void DrawCirle(const glm::vec3& position, const glm::vec3& size, const glm::vec4& color);
-		static void DrawCirle(const glm::vec3& position, const glm::vec3& size, const Ref<Texture2D>& texture, const glm::vec4& texColor = glm::vec4(1.0f));
-		static void DrawRotationCirle(const glm::vec3& position, const glm::vec3& size, float rotation, const glm::vec3& axle, const glm::vec4& color);
-		static void DrawRotationCirle(const glm::vec3& position, const glm::vec3& size, float rotation, const glm::vec3& axle, const Ref<Texture2D>& texture, const glm::vec4& texColor = glm::vec4(1.0f));
+		//用于Sprite的渲染
+		static void DrawCubeMeshRenderer(const glm::mat4& transform, MeshRenderComponent& src, int entityID);
 
-		//DrawModel---------------------
-		static void DrawModel(const Ref<RendererModelStorage> modelData, const glm::vec3& position, const glm::vec3& size, const glm::vec4& color);
-		static void DrawModel(const Ref<RendererModelStorage> modelData, const glm::vec3& position, const glm::vec3& size, const Ref<Texture2D>& texture, const glm::vec4& texColor = glm::vec4(1.0f));
-		static void DrawRotationModel(const Ref<RendererModelStorage> modelData, const glm::vec3& position, const glm::vec3& size, float rotation, const glm::vec3& axle, const glm::vec4& color);
-		static void DrawRotationModel(const Ref<RendererModelStorage> modelData, const glm::vec3& position, const glm::vec3& size, float rotation, const glm::vec3& axle, const Ref<Texture2D>& texture, const glm::vec4& texColor = glm::vec4(1.0f));
+		//描述绘制的状态
+		struct Statistics3D
+		{
+			uint32_t DrawCalls = 0;
+			uint32_t CubeCount = 0;
+
+			uint32_t GetTotalVertexCount() { return CubeCount * 36; }
+			uint32_t GetTotalIndexCount() { return CubeCount * 36; }
+		};
+		static void ResetStats();
+		static Statistics3D GetStats();
+	private:
+		static void StartBatch();
+		static void NextBatch();
+
+		static void LoadMesh();
 	};
 }
 

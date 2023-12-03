@@ -21,6 +21,8 @@ namespace GodDecay
 
 		virtual uint32_t GetRendererID() const override { return m_RendererID; }
 
+		virtual std::string GetTextureName() const override {return m_TextureName;}
+
 		virtual void SetData(void* data, uint32_t size) override;
 
 		virtual void Bind(uint32_t slot = 0) const override;
@@ -33,6 +35,7 @@ namespace GodDecay
 		}
 	private:
 		std::string m_Path;
+		std::string m_TextureName;
 		bool m_IsLoaded = false;
 		uint32_t m_Width, m_Height, m_Channels;
 		uint32_t m_RendererID;

@@ -6,13 +6,16 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <filesystem>
+#include <string>
 
 #include "GodDecay/Scene/Components.h"
 #include "GodDecay/Core/Logger.h"
+#include "GodDecay/Renderer/Renderer3D.h"
 
 namespace GodDecay
 {
 	extern const std::filesystem::path g_AssetPath;
+	int ShaderIndex = 0;
 
 	SceneHierarchyPanel::SceneHierarchyPanel(const Ref<Scene>& scene)
 	{
@@ -32,6 +35,12 @@ namespace GodDecay
 			//此entity没有这个组件我们才去添加
 			if (ImGui::MenuItem(entityName.c_str()))
 			{
+				//检测在添加meshRenderer之前要添加mesh组件
+				if (!m_SelectionContext.HasComponent<MeshComponent>() && !entityName.compare("Mesh Renderer"))
+				{
+					GD_ENGINE_WARN("this entity not have meshcomponent ,you need add meshcomponent before");
+					return;
+				}
 				m_SelectionContext.AddComponent<T>();
 				ImGui::CloseCurrentPopup();
 			}
@@ -162,9 +171,13 @@ namespace GodDecay
 			bool removeComponent = false;
 			if (ImGui::BeginPopup("ComponentSettings"))
 			{
-				if (ImGui::MenuItem("Remove component"))
+				if (ImGui::MenuItem("Remove component")) 
+				{
+					//检查一下删除Mesh前是否存在MeshRenderer【这个问题先留下来待定】
+					
 					removeComponent = true;
-
+				}
+					
 				ImGui::EndPopup();
 			}
 
@@ -238,7 +251,7 @@ namespace GodDecay
 		}
 		ImGui::SameLine();
 		ImGui::PushItemWidth(-1);
-		
+
 		//添加组件
 		if (ImGui::Button("Add Component"))
 			ImGui::OpenPopup("AddComponent");
@@ -248,6 +261,9 @@ namespace GodDecay
 			//采用模板开发
 			DisplayAddComponentEntry<CameraComponent>("Camera");
 			DisplayAddComponentEntry<SpriteRendererComponent>("Sprite Renderer");
+			DisplayAddComponentEntry<MeshComponent>("Mesh");
+			//添加MeshRenderer组件之前一定要先添加Mesh组件，否则会报错
+			DisplayAddComponentEntry<MeshRenderComponent>("Mesh Renderer");
 
 			ImGui::EndPopup();
 		}
@@ -255,102 +271,227 @@ namespace GodDecay
 		ImGui::PopItemWidth();
 		//transform组件的显示
 		DrawComponent<TransformComponent>("Transform", entity, [](auto& component)
-		{
-			DrawVec3Control("Translation", component.Translation);
-			glm::vec3 rotation = glm::degrees(component.Rotation);
-			DrawVec3Control("Rotation", rotation);
-			component.Rotation = glm::radians(rotation);
-			DrawVec3Control("Scale", component.Scale, 1.0f);
-		});
+			{
+				DrawVec3Control("Translation", component.Translation);
+				glm::vec3 rotation = glm::degrees(component.Rotation);
+				DrawVec3Control("Rotation", rotation);
+				component.Rotation = glm::radians(rotation);
+				DrawVec3Control("Scale", component.Scale, 1.0f);
+			});
 		//Camera组件的显示
 		DrawComponent<CameraComponent>("Camera", entity, [](auto& component)
-		{
-			auto& camera = component.Camera;
-
-			ImGui::Checkbox("Primary", &component.Primary);
-
-			const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
-			const char* currentProjectionTypeString = projectionTypeStrings[(int)camera.GetProjectionType()];
-			if (ImGui::BeginCombo("Projection", currentProjectionTypeString))
 			{
-				for (int i = 0; i < 2; i++)
+				auto& camera = component.Camera;
+
+				ImGui::Checkbox("Primary", &component.Primary);
+
+				const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
+				const char* currentProjectionTypeString = projectionTypeStrings[(int)camera.GetProjectionType()];
+				if (ImGui::BeginCombo("Projection", currentProjectionTypeString))
 				{
-					bool isSelected = currentProjectionTypeString == projectionTypeStrings[i];
-					if (ImGui::Selectable(projectionTypeStrings[i], isSelected))
+					for (int i = 0; i < 2; i++)
 					{
-						currentProjectionTypeString = projectionTypeStrings[i];
-						camera.SetProjectionType((SceneCamera::ProjectionType)i);
+						bool isSelected = currentProjectionTypeString == projectionTypeStrings[i];
+						if (ImGui::Selectable(projectionTypeStrings[i], isSelected))
+						{
+							currentProjectionTypeString = projectionTypeStrings[i];
+							camera.SetProjectionType((SceneCamera::ProjectionType)i);
+						}
+
+						if (isSelected)
+							ImGui::SetItemDefaultFocus();
 					}
 
-					if (isSelected)
-						ImGui::SetItemDefaultFocus();
+					ImGui::EndCombo();
 				}
 
-				ImGui::EndCombo();
-			}
+				if (camera.GetProjectionType() == SceneCamera::ProjectionType::Perspective)
+				{
+					float perspectiveVerticalFov = glm::degrees(camera.GetPerspectiveVerticalFOV());
+					if (ImGui::DragFloat("Vertical FOV", &perspectiveVerticalFov))
+						camera.SetPerspectiveVerticalFOV(glm::radians(perspectiveVerticalFov));
 
-			if (camera.GetProjectionType() == SceneCamera::ProjectionType::Perspective)
-			{
-				float perspectiveVerticalFov = glm::degrees(camera.GetPerspectiveVerticalFOV());
-				if (ImGui::DragFloat("Vertical FOV", &perspectiveVerticalFov))
-					camera.SetPerspectiveVerticalFOV(glm::radians(perspectiveVerticalFov));
+					float perspectiveNear = camera.GetPerspectiveNearClip();
+					if (ImGui::DragFloat("Near", &perspectiveNear))
+						camera.SetPerspectiveNearClip(perspectiveNear);
 
-				float perspectiveNear = camera.GetPerspectiveNearClip();
-				if (ImGui::DragFloat("Near", &perspectiveNear))
-					camera.SetPerspectiveNearClip(perspectiveNear);
+					float perspectiveFar = camera.GetPerspectiveFarClip();
+					if (ImGui::DragFloat("Far", &perspectiveFar))
+						camera.SetPerspectiveFarClip(perspectiveFar);
+				}
 
-				float perspectiveFar = camera.GetPerspectiveFarClip();
-				if (ImGui::DragFloat("Far", &perspectiveFar))
-					camera.SetPerspectiveFarClip(perspectiveFar);
-			}
+				if (camera.GetProjectionType() == SceneCamera::ProjectionType::Orthographic)
+				{
+					float orthoSize = camera.GetOrthographicSize();
+					if (ImGui::DragFloat("Size", &orthoSize))
+						camera.SetOrthographicSize(orthoSize);
 
-			if (camera.GetProjectionType() == SceneCamera::ProjectionType::Orthographic)
-			{
-				float orthoSize = camera.GetOrthographicSize();
-				if (ImGui::DragFloat("Size", &orthoSize))
-					camera.SetOrthographicSize(orthoSize);
+					float orthoNear = camera.GetOrthographicNearClip();
+					if (ImGui::DragFloat("Near", &orthoNear))
+						camera.SetOrthographicNearClip(orthoNear);
 
-				float orthoNear = camera.GetOrthographicNearClip();
-				if (ImGui::DragFloat("Near", &orthoNear))
-					camera.SetOrthographicNearClip(orthoNear);
+					float orthoFar = camera.GetOrthographicFarClip();
+					if (ImGui::DragFloat("Far", &orthoFar))
+						camera.SetOrthographicFarClip(orthoFar);
 
-				float orthoFar = camera.GetOrthographicFarClip();
-				if (ImGui::DragFloat("Far", &orthoFar))
-					camera.SetOrthographicFarClip(orthoFar);
-
-				ImGui::Checkbox("Fixed Aspect Ratio", &component.FixedAspectRatio);
-			}
-		});
+					ImGui::Checkbox("Fixed Aspect Ratio", &component.FixedAspectRatio);
+				}
+			});
 
 		//Sprite的UI属性面板
 		DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [](auto& component)
-		{
-			ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
-
-			//创建一个目标拖拽区域
-			ImGui::Button("Texture", ImVec2(100.0f, 0.0f));
-			if (ImGui::BeginDragDropTarget())
 			{
-				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
-				{
-					const wchar_t* path = (const wchar_t*)payload->Data;
-					std::filesystem::path texturePath = std::filesystem::path(g_AssetPath) / path;
-					//创建一个纹理，并把纹理赋值给组件中的Texture值
-					//在此之前检测纹理是否被加载成功
-					Ref<Texture2D> texture = Texture2D::Create(texturePath.string());
-					if (texture->IsLoaded())
-					{
-						component.Texture = texture;
-					}
-					else
-					{
-						GD_ENGINE_WARN("Could not load texture {0}", texturePath.filename().string());
-					}
-				}
-				ImGui::EndDragDropTarget();
-			}
+				ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
 
-			ImGui::DragFloat("Tiling Factor", &component.TilingFactor, 0.1f, 0.0f, 100.0f);
+				//创建一个目标拖拽区域
+				ImGui::Button("Texture", ImVec2(100.0f, 0.0f));
+				if (ImGui::BeginDragDropTarget())
+				{
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+					{
+						const wchar_t* path = (const wchar_t*)payload->Data;
+						std::filesystem::path texturePath = std::filesystem::path(g_AssetPath) / path;
+						//创建一个纹理，并把纹理赋值给组件中的Texture值
+						//在此之前检测纹理是否被加载成功
+						Ref<Texture2D> texture = Texture2D::Create(texturePath.string());
+						if (texture->IsLoaded())
+						{
+							component.Texture = texture;
+						}
+						else
+						{
+							GD_ENGINE_WARN("Could not load texture {0}", texturePath.filename().string());
+						}
+					}
+					ImGui::EndDragDropTarget();
+				}
+
+				ImGui::DragFloat("Tiling Factor", &component.TilingFactor, 0.1f, 0.0f, 100.0f);
+			});
+
+		//Mesh组件
+		DrawComponent<MeshComponent>("Mesh", entity, [](auto& component)
+		{
+			//获取组件
+			auto& mesh = component.m_Mesh;
+			const char* MeshTypeStrings[] = { "CUBE", "CIRLE","MODEL" };
+			const char* currentMeshTypeString = MeshTypeStrings[(int)mesh.GetMeshType()];
+			ImGui::Text("Choose Mesh Type");
+			if (ImGui::BeginCombo("MeshType", currentMeshTypeString))
+			{
+				for (int i = 0; i < 3; i++)
+				{
+					bool isSelected = currentMeshTypeString == MeshTypeStrings[i];
+					if (ImGui::Selectable(MeshTypeStrings[i], isSelected))
+					{
+						currentMeshTypeString = MeshTypeStrings[i];
+						mesh.SetMeshType((BaseMeshType)i);
+					}
+					if (isSelected)
+						ImGui::SetItemDefaultFocus();
+				}
+				ImGui::EndCombo();
+			}
+			if ((int)mesh.GetMeshType() == 2) 
+			{
+				ImGui::Button("load model file");
+				//这里对mesh进行修改，增加path成员变量
+				if (ImGui::BeginDragDropTarget())
+				{
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+					{
+						const wchar_t* path = (const wchar_t*)payload->Data;
+						std::filesystem::path modelPath = std::filesystem::path(g_AssetPath) / path;
+						if (modelPath.extension().string() != ".obj")
+						{
+							GD_ENGINE_WARN("Could not load {0} - not a obj file", modelPath.filename().string());
+							return;
+						}
+						else
+						{
+							mesh.SetModelPath(modelPath.string());
+						}				
+					}
+					ImGui::EndDragDropTarget();
+				}
+				//先把mesh数据进行重置
+			}
+		});
+
+		DrawComponent<MeshRenderComponent>("Mesh Renderer", entity, [](auto& component) 
+		{
+			Ref<MeshRenderData> mesh = component.m_Mesh.GetMeshRendererData();
+			ImGui::ColorEdit4("Color", glm::value_ptr(mesh->MatrialData.GetMeshColor()));
+			
+			ImGui::NewLine();
+
+			//选择Shader[或者可以被拖动修改]
+			int S_size = mesh->MatrialData.GetShaderList().GetShaderLibraries().size();
+			std::vector<std::string> ShaderTypeStrings;
+			
+			for (auto& key : mesh->MatrialData.GetShaderList().GetShaderLibraries())
+			{
+				ShaderTypeStrings.push_back(key.first);
+			}
+			
+			std::string currentShaderTypeString = ShaderTypeStrings[ShaderIndex];
+			ImGui::Text("Choose Shader");
+			if (ImGui::BeginCombo("Shader", currentShaderTypeString.c_str()))
+			{
+				for (int i = 0; i < S_size; i++)
+				{
+					bool isSelected = currentShaderTypeString.compare(ShaderTypeStrings[i]);
+					if (ImGui::Selectable(ShaderTypeStrings[i].c_str(), isSelected))
+					{
+						currentShaderTypeString = ShaderTypeStrings[i];
+						ShaderIndex = i;
+						//这里应该调用meshRenderer组件的变更Shader的方法
+						component.m_Mesh.ChanageShader(currentShaderTypeString);
+					}
+					if (isSelected)
+						ImGui::SetItemDefaultFocus();
+				}
+				ImGui::EndCombo();
+			}
+			ImGui::NewLine();
+			//创建一个纹理列表，显示纹理
+			int T_size = mesh->MatrialData.GetTextureList(ShaderTypeStrings[ShaderIndex]).GetTexture2DLibraries().size();
+			std::vector<std::string> Texname;
+			ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
+			for (auto& e : mesh->MatrialData.GetTextureList(ShaderTypeStrings[ShaderIndex]).GetTexture2DLibraries())
+			{
+				Texname.push_back(e.first);
+			}
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(-1, -1));
+			for (int i = 0; i < T_size; ++i) 
+			{
+				ImGui::Text(Texname[i].c_str());
+				ImGui::ImageButton((void*)mesh->MatrialData.GetTextureList(ShaderTypeStrings[ShaderIndex]).Get(Texname[i])->GetRendererID(), ImVec2(viewportPanelSize.x * 0.6f, 200.0f), { 0,1 }, { 1,0 });
+				
+				//创建一个目标拖拽区域
+				if (ImGui::BeginDragDropTarget())
+				{
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+					{
+						const wchar_t* path = (const wchar_t*)payload->Data;
+						std::filesystem::path texturePath = std::filesystem::path(g_AssetPath) / path;
+						//创建一个纹理，并把纹理赋值给组件中的Texture值
+						//在此之前检测纹理是否被加载成功
+						Ref<Texture2D> texture = Texture2D::Create(texturePath.string());
+						if (texture->IsLoaded())
+						{
+							//可以改变原引用指向新的texture对象
+							component.m_Mesh.GetMeshRendererData()->MatrialData.GetTextureList(ShaderTypeStrings[ShaderIndex]).UpdataTexture2D(Texname[i], texture);
+						}
+						else
+						{
+							GD_ENGINE_WARN("Could not load texture {0}", texturePath.filename().string());
+						}
+					}
+					ImGui::EndDragDropTarget();
+				}
+			}
+			ImGui::PopStyleVar();
 		});
 	}
 }

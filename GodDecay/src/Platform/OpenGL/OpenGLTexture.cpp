@@ -51,12 +51,22 @@ namespace GodDecay
 			glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, dataFormat, GL_UNSIGNED_BYTE, data);
 
 			stbi_image_free(data);
+
+			//截取文件名称
+			auto lastSlash = path.find_last_of("/\\");
+			lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
+			auto lastDot = path.rfind('.');
+			auto count = lastDot == std::string::npos ? path.size() - lastSlash : lastDot - lastSlash;
+			m_TextureName = path.substr(lastSlash, count);
 		}
 	}
 
 	OpenGLTexture::OpenGLTexture(uint32_t width, uint32_t height)
 		:m_Width(width), m_Height(height), m_Channels(4)
 	{
+		//自己创建的Texture是没有文件名称的，这里置为空的标识符
+		m_TextureName = "";
+
 		m_InternalFormat = GL_RGBA8;
 		m_DataFormat = GL_RGBA;
 

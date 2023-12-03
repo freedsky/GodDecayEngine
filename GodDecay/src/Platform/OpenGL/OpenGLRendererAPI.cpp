@@ -7,8 +7,11 @@ namespace GodDecay
 {
 	void OpenGLRendererAPI::Init()
 	{
+		//开启深度测试
 		glEnable(GL_DEPTH_TEST);
+		//开启透明度测试
 		glEnable(GL_BLEND);
+		//设置透明度测试的因子
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 

@@ -12,17 +12,15 @@ namespace GodDecay
 	void Renderer::Init()
 	{
 		RenderCommand::Init();
-		
 		Renderer2D::Init();
-
+		//3D的工作流并不会进行初始化
 		//Renderer3D::Init();
-		
 	}
 
 	void Renderer::Shutdown() 
 	{
 		Renderer2D::Shutdown();
-		Renderer3D::Shutdown();
+		//Renderer3D::Shutdown();
 	}
 
 	void Renderer::BeginScene(const Ref<OrthographicCamera>& camera)
@@ -43,8 +41,8 @@ namespace GodDecay
 	{
 		//传输到shader中的uniform的全局变量中
 		shader->Bind();
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_ViewProjection",m_SceneData->ViewProjectionMatrix);
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_TransForm",transform);
+		shader->SetMat4("u_ViewProjection",m_SceneData->ViewProjectionMatrix);
+		shader->SetMat4("u_TransForm",transform);
 		vertexArray->Bind();
 		RenderCommand::DrawIndexed(vertexArray);
 	}

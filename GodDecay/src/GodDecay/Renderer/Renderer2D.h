@@ -50,7 +50,7 @@ namespace GodDecay
 		static void DrawSprite(const glm::mat4& transform, SpriteRendererComponent& src, int entityID);
 
 		//ÃèÊö»æÖÆµÄ×´Ì¬
-		struct Statistics
+		struct Statistics2D
 		{
 			uint32_t DrawCalls = 0;
 			uint32_t QuadCount = 0;
@@ -59,7 +59,7 @@ namespace GodDecay
 			uint32_t GetTotalIndexCount() { return QuadCount * 6; }
 		};
 		static void ResetStats();
-		static Statistics GetStats();
+		static Statistics2D GetStats();
 	private:
 		static void StartBatch();
 		static void NextBatch();

@@ -50,10 +50,9 @@ namespace GodDecay
 	{
 		GD_ENGINE_ASSERT(vertexBuffer->GetLayout().GetElements().size(), "this Buffer layout is empty");
 
-		this->Bind();
+		glBindVertexArray(m_RendererID);
 		vertexBuffer->Bind();
 
-		uint32_t index = 0;
 		const BufferLayout& layout = vertexBuffer->GetLayout();
 		for (BufferElement element : layout)
 		{
@@ -118,7 +117,7 @@ namespace GodDecay
 
 	void OpenGLVertexArrayBuffer::SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer)
 	{
-		this->Bind();
+		glBindVertexArray(m_RendererID);
 		indexBuffer->Bind();
 
 		m_IndexBuffer = indexBuffer;

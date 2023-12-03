@@ -168,6 +168,11 @@ namespace GodDecay
 		glUseProgram(0);
 	}
 
+	void OpenGLShader::SetBool(const std::string& name, bool value)
+	{
+		UploadUniformBool(name, value);
+	}
+
 	void OpenGLShader::SetInt(const std::string& name, int value)
 	{
 		UploadUniformInt(name, value);

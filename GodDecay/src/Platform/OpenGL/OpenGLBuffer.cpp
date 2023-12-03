@@ -6,10 +6,16 @@
 namespace GodDecay 
 {
 	/*
-* IndexBuffer
-*/
-
+	* IndexBuffer
+	*/
 	OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size)
+	{
+		glCreateBuffers(1, &m_VertexRendererID);
+		glBindBuffer(GL_ARRAY_BUFFER, m_VertexRendererID);
+		glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
+	}
+
+	OpenGLVertexBuffer::OpenGLVertexBuffer(void* vertices, uint32_t size)
 	{
 		glCreateBuffers(1, &m_VertexRendererID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_VertexRendererID);
