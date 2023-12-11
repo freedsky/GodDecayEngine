@@ -1,5 +1,6 @@
 #include "gdpch.h"
 #include "MeshRenderer.h"
+#include "SceneLightController.h"
 
 namespace GodDecay 
 {
@@ -11,7 +12,7 @@ namespace GodDecay
 		s_Mesh->MeshVertexArray = VertexArrayBuffer::Create();
 		//这里可以考虑对matrial进行初始化，比如设置默认的Shader和Texture
 		s_Mesh->ShaderName = "DefaultShader";//对象Shader的默认设置
-		//初始化除默认外的Shader，为切换Shader数据做准备
+		//初始化除默认外的Shader，为切换Shader数据做准备【Test】
 		s_Mesh->MatrialData.LoadShaderToRenderModel("sda");
 	}
 
@@ -53,6 +54,7 @@ namespace GodDecay
 
 		s_Mesh->MatrialData.GetShaderList().Get(s_Mesh->ShaderName)->Bind();
 		s_Mesh->MatrialData.GetShaderList().Get(s_Mesh->ShaderName)->SetMat4("u_ViewProjection", viewProj);
+		//把摄像机的位置向量传递过去[但Camera运行相机没有Position属性需要自己实现后才能进行属性赋值]
 	}
 
 	void MeshRenderer::BeginDrawMesh(const EditorCamera& camera, BaseMeshType type, std::string path)
@@ -80,6 +82,9 @@ namespace GodDecay
 		//暂时先把默认的渲染出来
 		s_Mesh->MatrialData.GetShaderList().Get(s_Mesh->ShaderName)->Bind();
 		s_Mesh->MatrialData.GetShaderList().Get(s_Mesh->ShaderName)->SetMat4("u_ViewProjection", camera.GetViewProjection());
+		//把摄像机的位置向量传递过去
+		s_Mesh->MatrialData.GetShaderList().Get(s_Mesh->ShaderName)->SetFloat3("u_ViewPosition", camera.GetPosition());
+		//GD_ENGINE_TRACE("x = {0}, y = {1}, z = {2} ", camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
 	}
 
 	void MeshRenderer::DrawMesh(const glm::mat4& transform)
@@ -87,7 +92,11 @@ namespace GodDecay
 		s_Mesh->MatrialData.GetShaderList().Get(s_Mesh->ShaderName)->Bind();
 		s_Mesh->MatrialData.GetShaderList().Get(s_Mesh->ShaderName)->SetFloat4("DefaultColor", s_Mesh->MatrialData.GetMeshColor());
 		s_Mesh->MatrialData.GetShaderList().Get(s_Mesh->ShaderName)->SetMat4("u_Model", transform);
-		
+
+		//如果SceneLights集合不为空就进行属性更新
+		if (SceneLightController::GetSceneLights().size() > 0)
+			UpDateUniformPropertices();
+
 		//绑定Uniform变量
 		LoadUniformPropertices();
 
@@ -109,6 +118,7 @@ namespace GodDecay
 				s_Mesh->MatrialData.GetTextureList(s_Mesh->ShaderName).Get(T_name[i])->Bind(i);
 			}
 		}
+
 			
 		s_Mesh->MeshVertexArray->Bind();
 		if(s_Mesh->type == BaseMeshType::CUBE || s_Mesh->type == BaseMeshType::MODEL)
@@ -125,9 +135,8 @@ namespace GodDecay
 	{
 		if (ShaderName.c_str() != nullptr && ShaderName.size() != 0 && s_Mesh->ShaderName.compare(ShaderName)) 
 		{
+			//只是把Shader名称给替换掉即可
 			s_Mesh->ShaderName = ShaderName;
-			//然后又重置该Shader下数据
-
 		}
 			
 	}
@@ -157,6 +166,41 @@ namespace GodDecay
 		for (auto& b : s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).GetMat4())
 		{
 			s_Mesh->MatrialData.GetShaderList().Get(s_Mesh->ShaderName)->SetMat4(b.first, b.second);
+		}
+	}
+	
+
+	void MeshRenderer::UpDateUniformPropertices()
+	{
+		if (SceneLightController::ChangeFlag != 0) 
+		{
+			//更新属性值[只考虑Light情况]
+			auto lights = SceneLightController::GetSceneLights();
+			for (auto light : lights) 
+			{
+				//根据光源类型更新不同的属性值
+				if (light->GetLightType() == LightType::Direction)
+				{
+					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec3("direction_rotatiion", light->GetLightRotatetion());
+					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec3("direction_position", light->GetLightPosition());
+					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("direction_lightcolor", light->GetLightColor());
+					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("direction_ambient", light->GetLightAmbient());
+					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("direction_diffuse", light->GetLightDiffuse());
+					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("direction_specular", light->GetLightSpecular());
+					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("direction_shininess", light->GetLightShininess());
+					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("direction_intensity", SceneLightController::GetEnvironmentLightIntensity());
+				}
+				else if (light->GetLightType() == LightType::Point)
+				{
+
+				}
+				else if (light->GetLightType() == LightType::Spot)
+				{
+
+				}
+			}
+			//更新完后把flag重新置为0
+			SceneLightController::ChangeFlag = 0;
 		}
 	}
 }

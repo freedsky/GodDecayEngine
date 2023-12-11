@@ -150,6 +150,9 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\GodDecay\Renderer\SceneLightController.h" />
+    <ClInclude Include="src\GodDecay\Renderer\Light\DirectionLight.h" />
+    <ClInclude Include="src\GodDecay\Renderer\Light\Light.h" />
     <ClInclude Include="src\GodDecay\Renderer\Matrial.h" />
     <ClInclude Include="src\GodDecay\Renderer\Mesh.h" />
     <ClInclude Include="src\GodDecay\Renderer\MeshRenderer.h" />
@@ -730,6 +733,8 @@
     <ClInclude Include="vendor\stb_image\stb_voxel_render.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\GodDecay\Renderer\SceneLightController.cpp" />
+    <ClCompile Include="src\GodDecay\Renderer\Light\DirectionLight.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\Matrial.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\Mesh.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\MeshRenderer.cpp" />

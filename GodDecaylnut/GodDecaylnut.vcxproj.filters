@@ -45,5 +45,6 @@
   <ItemGroup>
     <None Include="assets\shader\UniversalStand.glsl" />
     <None Include="assets\shader\TestShader.glsl" />
+    <None Include="assets\shader\BlinnPhongShader.glsl" />
   </ItemGroup>
 </Project>

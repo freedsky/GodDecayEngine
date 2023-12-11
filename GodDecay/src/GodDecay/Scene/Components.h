@@ -11,6 +11,8 @@
 #include "GodDecay/Renderer/Texture.h"
 #include "GodDecay/Renderer/Mesh.h"
 #include "GodDecay/Renderer/MeshRenderer.h"
+#include "GodDecay/Renderer/Light/Light.h"
+#include "GodDecay/Renderer/Light/DirectionLight.h"
 
 /// <summary>
 /// 组件Components
@@ -107,14 +109,19 @@ namespace GodDecay
 	{
 		//这里的mesh暂不考虑。
 		MeshRenderer m_Mesh;
-		
-		//glm::vec4 Color{ 1.0f,1.0f,1.0f,1.0f };
-		//Ref<Texture2D> Texture;
-		//float TilingFactor = 1.0f;
 
 		MeshRenderComponent() = default;
 		MeshRenderComponent(const MeshRenderComponent&) = default;
-		//MeshRenderComponent(const glm::vec4& color) : Color(color) {}
 		MeshRenderComponent(const MeshRenderer& mesh) : m_Mesh(mesh) {}
+	};
+	
+	struct LightComponent 
+	{
+		//多态动态决定灯光的类型[默认为点光源，但只创建了定向，后面会修改的]
+		Ref<Light> light = CreateRef<DirectionLight>();
+
+		LightComponent() = default;
+		LightComponent(const LightComponent&) = default;
+		LightComponent(const Ref<Light>& light) : light(light) {}
 	};
 }

@@ -30,11 +30,15 @@ uniform sampler2D DefaultTexture;
 uniform sampler2D Text1;
 uniform vec4 DefaultColor;
 
+uniform vec4 Tcolor1;
+uniform vec4 Tcolor2;
+uniform vec4 Tcolor3;
+
 in vec2 v_TexCoords;
 in flat int v_EntityID;
 
 void main()
 {
-	color = mix(texture(DefaultTexture, v_TexCoords),texture(Text1,v_TexCoords),0.2) * DefaultColor;
+	color = mix(texture(DefaultTexture, v_TexCoords),texture(Text1,v_TexCoords),0.2) * DefaultColor * Tcolor1 * Tcolor2 * Tcolor3;
 	PixelID = v_EntityID;
 }

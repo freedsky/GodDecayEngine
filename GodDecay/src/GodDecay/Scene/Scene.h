@@ -34,6 +34,9 @@ namespace GodDecay
 		//在添加组件时，在这之前对其进行必要的修改[比如相机的viewport的修改]
 		template<typename T>
 		void OnComponentAdded(Entity entity, T& component);
+		//在删除组件时，在这之前对其进行执行
+		template<typename T>
+		void OnComponentRemove(Entity entity, T& component);
 	private:
 		//注册表，它的作用相当于存储了entity[实际上就只有一个ID]以及component组件数据
 		entt::registry m_Registry;

@@ -41,6 +41,7 @@ namespace GodDecay
 	void Matrial::LoadShaderToRenderModel(std::string shaderName)
 	{
 		LoadTest();
+		BlinnPhongLight();
 	}
 	//往后扩展不同的渲染方式(默认渲染方式在构造时初始化这里就不定义了)---------------------------------------
 	
@@ -51,13 +52,12 @@ namespace GodDecay
 		m_ShaderList.Load("TextShader", "assets/shader/TestShader.glsl");
 
 		//默认的texture
-		Ref<Texture2D> WhiteTexture1 = Texture2D::Create(1, 1);
 		uint32_t whiteTextureData1 = 0xffffffff;
+		Ref<Texture2D> WhiteTexture1 = Texture2D::Create(1, 1);
 		WhiteTexture1->SetData(&whiteTextureData1, sizeof(uint32_t));
 
 		Ref<Texture2D> WhiteTexture2 = Texture2D::Create(1, 1);
-		uint32_t whiteTextureData2 = 0xffffffff;
-		WhiteTexture2->SetData(&whiteTextureData2, sizeof(uint32_t));
+		WhiteTexture2->SetData(&whiteTextureData1, sizeof(uint32_t));
 
 		TextureLibrary defaultT;
 		defaultT.AddTexture2D("DefaultTexture", WhiteTexture1);
@@ -69,5 +69,47 @@ namespace GodDecay
 		m_ShaderList.Get("TextShader")->Bind();
 		m_ShaderList.Get("TextShader")->SetInt("DefaultTexture", 0);
 		m_ShaderList.Get("TextShader")->SetInt("Text1", 1);
+
+		//uniform属性值添加
+		UniformProperties textP;
+		textP.AddProperties("Tcolor1", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+		textP.AddProperties("Tcolor2", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+		textP.AddProperties("Tcolor3", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+		m_UniformProperties["TextShader"] = textP;
+	}
+
+	void Matrial::BlinnPhongLight()
+	{
+		//Shader的加载
+		m_ShaderList.Load("BlinnPhongShader", "assets/shader/BlinnPhongShader.glsl");
+		//BlinnPhong有两张贴图一个是漫反射贴图和高光反射贴图
+		uint32_t white = 0xffffffff;
+		Ref<Texture2D> diffuseTexture = Texture2D::Create(1, 1);
+		diffuseTexture->SetData(&white, sizeof(uint32_t));
+
+		Ref<Texture2D> specularTexture = Texture2D::Create(1, 1);
+		specularTexture->SetData(&white, sizeof(uint32_t));
+
+		TextureLibrary blinnPhongT;
+		blinnPhongT.AddTexture2D("DiffuseTexture", diffuseTexture);
+		blinnPhongT.AddTexture2D("SpecularTexture", specularTexture);
+		LoadTexture("BlinnPhongShader", blinnPhongT);
+
+		m_ShaderList.Get("BlinnPhongShader")->Bind();
+		m_ShaderList.Get("BlinnPhongShader")->SetInt("DiffuseTexture", 0);
+		m_ShaderList.Get("BlinnPhongShader")->SetInt("SpecularTexture", 1);
+
+		//添加属性,先去创建相应的属性，在后续绘制才去更新
+		UniformProperties lightProerties;
+		lightProerties.AddProperties("direction_rotatiion", glm::vec3(1.0f));
+		lightProerties.AddProperties("direction_position", glm::vec3(1.0f));
+		lightProerties.AddProperties("direction_lightcolor", glm::vec4(1.0f));
+		lightProerties.AddProperties("direction_ambient", glm::vec4(1.0f));
+		lightProerties.AddProperties("direction_diffuse", glm::vec4(1.0f));
+		lightProerties.AddProperties("direction_specular", glm::vec4(1.0f));
+		lightProerties.AddProperties("direction_shininess", 32.0f);
+		lightProerties.AddProperties("direction_intensity", 0.2f);
+
+		m_UniformProperties["BlinnPhongShader"] = lightProerties;
 	}
 }

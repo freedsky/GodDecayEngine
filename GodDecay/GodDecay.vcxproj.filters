@@ -1820,6 +1820,9 @@
     <ClInclude Include="src\GodDecay\Renderer\Matrial.h" />
     <ClInclude Include="src\GodDecay\Renderer\TextureLibrary.h" />
     <ClInclude Include="src\GodDecay\Renderer\UniformProperties.h" />
+    <ClInclude Include="src\GodDecay\Renderer\Light\Light.h" />
+    <ClInclude Include="src\GodDecay\Renderer\Light\DirectionLight.h" />
+    <ClInclude Include="src\GodDecay\Renderer\SceneLightController.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GodDecay\Controller\OrthographicCameraController.cpp">
@@ -1952,5 +1955,7 @@
     <ClCompile Include="src\GodDecay\Renderer\Mesh.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\Matrial.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\TextureLibrary.cpp" />
+    <ClCompile Include="src\GodDecay\Renderer\Light\DirectionLight.cpp" />
+    <ClCompile Include="src\GodDecay\Renderer\SceneLightController.cpp" />
   </ItemGroup>
 </Project>

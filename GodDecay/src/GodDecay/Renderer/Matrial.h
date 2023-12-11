@@ -27,6 +27,8 @@ namespace GodDecay
 		void LoadShaderToRenderModel(std::string shaderName);
 		//====================================
 		void LoadTest();
+		//BlinnPhongπ‚’’ƒ£–Õ
+		void BlinnPhongLight();
 
 		//=====================================
 	private:

@@ -11,11 +11,13 @@
 #include "GodDecay/Scene/Components.h"
 #include "GodDecay/Core/Logger.h"
 #include "GodDecay/Renderer/Renderer3D.h"
+#include "GodDecay/Renderer/SceneLightController.h"
 
 namespace GodDecay
 {
 	extern const std::filesystem::path g_AssetPath;
 	int ShaderIndex = 0;
+	std::vector<std::string> ShaderTypeStrings;
 
 	SceneHierarchyPanel::SceneHierarchyPanel(const Ref<Scene>& scene)
 	{
@@ -187,8 +189,11 @@ namespace GodDecay
 				ImGui::TreePop();
 			}
 
-			if (removeComponent)
+			if (removeComponent) 
+			{
 				entity.RemoveComponent<T>();
+			}
+				
 		}
 	}
 
@@ -264,6 +269,7 @@ namespace GodDecay
 			DisplayAddComponentEntry<MeshComponent>("Mesh");
 			//添加MeshRenderer组件之前一定要先添加Mesh组件，否则会报错
 			DisplayAddComponentEntry<MeshRenderComponent>("Mesh Renderer");
+			DisplayAddComponentEntry<LightComponent>("Light");
 
 			ImGui::EndPopup();
 		}
@@ -427,7 +433,6 @@ namespace GodDecay
 
 			//选择Shader[或者可以被拖动修改]
 			int S_size = mesh->MatrialData.GetShaderList().GetShaderLibraries().size();
-			std::vector<std::string> ShaderTypeStrings;
 			
 			for (auto& key : mesh->MatrialData.GetShaderList().GetShaderLibraries())
 			{
@@ -493,5 +498,60 @@ namespace GodDecay
 			}
 			ImGui::PopStyleVar();
 		});
+
+		//灯光组件的显示
+		DrawComponent<LightComponent>("Light", entity, [](auto& component) 
+			{
+				//光源位置属性的赋值
+				//在scene绘制时去更新
+				//component
+
+				//灯的颜色和环境光是由全局光照设置类中统一管理的
+				ImGui::PushID("1");
+				ImGui::Text("Light Color[Global Light]");
+				if (ImGui::ColorEdit4("", glm::value_ptr(component.light->GetLightColor()))) 
+				{
+					SceneLightController::ChangeFlag = 1;
+				}
+				ImGui::PopID();
+				//设置强度
+				ImGui::Text("EnvironmentIntensity");
+				if (ImGui::SliderFloat("Intensity", &SceneLightController::GetEnvironmentLightIntensity(), 0.0f, 1.0f)) 
+				{
+					SceneLightController::ChangeFlag = 1;
+				}
+				//每次改变环境光颜色和强度时才去修改真实的环境光值
+				//ImGui::PushID("test");
+				//ImGui::Text("Direction Ambient Color");
+				//ImGui::ColorEdit4("sdasd", glm::value_ptr(component.light->GetLightAmbient()));
+				//ImGui::PopID();
+				ImGui::PushStyleColor(1, ImVec4(0.7f, 0.7f, 0.7f, 1.0f));
+				ImGui::NewLine();
+				ImGui::PopStyleColor();
+				//漫反射
+				ImGui::PushID("2");
+				ImGui::Text("Light Diffuse Color");
+				if (ImGui::ColorEdit4("", glm::value_ptr(component.light->GetLightDiffuse()))) 
+				{
+					SceneLightController::ChangeFlag = 1;
+				}
+				ImGui::PopID();
+
+				//高光颜色
+				ImGui::PushID("3");
+				ImGui::Text("Light Specular Color");
+				if (ImGui::ColorEdit4("", glm::value_ptr(component.light->GetLightSpecular()))) 
+				{
+					SceneLightController::ChangeFlag = 1;
+				}
+				ImGui::PopID();
+
+				//高光强度
+				ImGui::Text("Light Specular Shininess");
+				if (ImGui::SliderInt("Shininess", &(int)component.light->GetLightShininess(), 32, 1000)) 
+				{
+					SceneLightController::ChangeFlag = 1;
+				}
+			});
 	}
 }

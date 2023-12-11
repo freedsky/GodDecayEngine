@@ -7,6 +7,7 @@
 #include "Components.h"
 #include "GodDecay/Renderer/Renderer2D.h"
 #include "GodDecay/Renderer/Renderer3D.h"
+#include "GodDecay/Renderer/SceneLightController.h"
 
 namespace GodDecay
 {
@@ -112,7 +113,7 @@ namespace GodDecay
 			for (auto entity : group3D)
 			{
 				auto [transfrom, mesh, meshrenderer] = m_Registry.get<TransformComponent, MeshComponent, MeshRenderComponent>(entity);
-				
+
 				meshrenderer.m_Mesh.BeginDrawMesh(mainCamera->GetProjection(), cameraTransform, mesh.m_Mesh.GetMeshType());
 
 				meshrenderer.m_Mesh.DrawMesh(transfrom.GetTransform());
@@ -141,6 +142,17 @@ namespace GodDecay
 
 		auto group3D = m_Registry.view<TransformComponent,MeshRenderComponent>();
 
+		//每次遍历光照集合，通过组件中light引用找到集合中对于的light对象然后进行更新
+		auto groupLight = m_Registry.view<LightComponent>();
+		for (auto ob : groupLight) 
+		{
+			auto [light, transfrom] = m_Registry.get<LightComponent, TransformComponent>(ob);
+			auto lightObject = SceneLightController::FindLightFormSceneLights(light.light);
+			lightObject->SetLightPosition(transfrom.Translation);
+			lightObject->SetLightRotatetion(transfrom.Rotation);
+			//GD_ENGINE_INFO("POSITION = {0} , ROTATION = {1}", lightObject->GetLightPosition().x, lightObject->GetLightRotatetion().x);
+		}
+		//----------------------------------------------------------------
 		for (auto entity : group3D) 
 		{
 			auto [transfrom, mesh, meshrenderer] = m_Registry.get<TransformComponent, MeshComponent, MeshRenderComponent>(entity);
@@ -152,7 +164,7 @@ namespace GodDecay
 
 			meshrenderer.m_Mesh.EndDrawMesh();
 		}
-
+		//GD_ENGINE_INFO(SceneLightController::GetSceneLights().size());
 	}
 
 	void Scene::OnViewportResize(uint32_t width, uint32_t height)
@@ -175,6 +187,12 @@ namespace GodDecay
 
 	template<typename T>
 	void Scene::OnComponentAdded(Entity entity, T& component)
+	{
+		static_assert(false);
+	}
+
+	template<typename T>
+	void Scene::OnComponentRemove(Entity entity, T& component)
 	{
 		static_assert(false);
 	}
@@ -218,5 +236,53 @@ namespace GodDecay
 		//进行数据的传输
 		auto& mesh = entity.GetComponent<MeshComponent>().m_Mesh;
 		component.m_Mesh.LoadMesh(mesh, (int)entity.GetEntity());
+	}
+
+	template<>
+	void Scene::OnComponentAdded<LightComponent>(Entity entity, LightComponent& component)
+	{
+		//在创建灯光组件时把它加入到全局的灯光集合中
+		SceneLightController::AddLightToSceneLights(component.light);
+	}
+
+	//删除组件时==========================================================================================
+	template<>
+	void Scene::OnComponentRemove<TransformComponent>(Entity entity, TransformComponent& component)
+	{
+	}
+	template<>
+	void Scene::OnComponentRemove<CameraComponent>(Entity entity, CameraComponent& component)
+	{
+	}
+
+	template<>
+	void Scene::OnComponentRemove<SpriteRendererComponent>(Entity entity, SpriteRendererComponent& component)
+	{
+	}
+
+	template<>
+	void Scene::OnComponentRemove<TagComponent>(Entity entity, TagComponent& component)
+	{
+	}
+
+	template<>
+	void Scene::OnComponentRemove<NativeScriptComponent>(Entity entity, NativeScriptComponent& component)
+	{
+	}
+
+	template<>
+	void Scene::OnComponentRemove<MeshComponent>(Entity entity, MeshComponent& component)
+	{
+	}
+
+	template<>
+	void Scene::OnComponentRemove<MeshRenderComponent>(Entity entity, MeshRenderComponent& component)
+	{
+	}
+
+	template<>
+	void Scene::OnComponentRemove<LightComponent>(Entity entity, LightComponent& component)
+	{
+		SceneLightController::RemoveLightFormSceneLights(component.light);
 	}
 }

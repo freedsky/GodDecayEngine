@@ -155,6 +155,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="assets\shader\BlinnPhongShader.glsl" />
     <None Include="assets\shader\TestShader.glsl" />
     <None Include="assets\shader\UniversalStand.glsl" />
   </ItemGroup>

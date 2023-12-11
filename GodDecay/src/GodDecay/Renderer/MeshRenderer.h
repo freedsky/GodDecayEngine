@@ -55,6 +55,8 @@ namespace GodDecay
 
 		//¼ÓÔØUniform
 		void LoadUniformPropertices();
+		//¸üÐÂUniftom
+		void UpDateUniformPropertices();
 	};
 }
 

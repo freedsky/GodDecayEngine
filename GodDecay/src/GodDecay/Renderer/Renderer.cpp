@@ -2,6 +2,7 @@
 #include "Renderer.h"
 #include "Renderer2D.h"
 #include "Renderer3D.h"
+#include "SceneLightController.h"
 
 #include "Platform/OpenGL/OpenGLShader.h"
 
@@ -13,14 +14,13 @@ namespace GodDecay
 	{
 		RenderCommand::Init();
 		Renderer2D::Init();
-		//3D的工作流并不会进行初始化
-		//Renderer3D::Init();
+		//灯的全局设置
+		SceneLightController::Init();
 	}
 
 	void Renderer::Shutdown() 
 	{
 		Renderer2D::Shutdown();
-		//Renderer3D::Shutdown();
 	}
 
 	void Renderer::BeginScene(const Ref<OrthographicCamera>& camera)
