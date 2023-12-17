@@ -13,6 +13,9 @@
 #include "GodDecay/Renderer/MeshRenderer.h"
 #include "GodDecay/Renderer/Light/Light.h"
 #include "GodDecay/Renderer/Light/DirectionLight.h"
+#include "GodDecay/Renderer/Light/PointLight.h"
+#include "GodDecay/Renderer/Light/SpotLight.h"
+#include "GodDecay/Renderer/SceneLightController.h"
 
 /// <summary>
 /// 组件Components
@@ -118,10 +121,35 @@ namespace GodDecay
 	struct LightComponent 
 	{
 		//多态动态决定灯光的类型[默认为点光源，但只创建了定向，后面会修改的]
-		Ref<Light> light = CreateRef<DirectionLight>();
+		Ref<Light> light = CreateRef<PointLight>();
+		LightType type = LightType::Point;//默认为点光源
 
 		LightComponent() = default;
 		LightComponent(const LightComponent&) = default;
 		LightComponent(const Ref<Light>& light) : light(light) {}
+
+		//改变灯源类型
+		void ChanageLightType(LightType type) 
+		{
+			//先把原先的引用数据删除，然后再创建并添加到集合中
+			if (type == LightType::Direction) 
+			{
+				SceneLightController::RemoveLightFormSceneLights(light);
+				light = CreateRef<DirectionLight>();
+				SceneLightController::AddLightToSceneLights(light);
+			}
+			else if (type == LightType::Point) 
+			{
+				SceneLightController::RemoveLightFormSceneLights(light);
+				light = CreateRef<PointLight>();
+				SceneLightController::AddLightToSceneLights(light);
+			}
+			else if (type == LightType::Spot) 
+			{
+				SceneLightController::RemoveLightFormSceneLights(light);
+				light = CreateRef<SpotLight>();
+				SceneLightController::AddLightToSceneLights(light);
+			}
+		}
 	};
 }

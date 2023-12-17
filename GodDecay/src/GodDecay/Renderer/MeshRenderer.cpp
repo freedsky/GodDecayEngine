@@ -1,6 +1,8 @@
 #include "gdpch.h"
 #include "MeshRenderer.h"
 #include "SceneLightController.h"
+#include "GodDecay/Renderer/Light/PointLight.h"
+#include "GodDecay/Renderer/Light/SpotLight.h"
 
 namespace GodDecay 
 {
@@ -100,6 +102,8 @@ namespace GodDecay
 		//绑定Uniform变量
 		LoadUniformPropertices();
 
+		//GD_ENGINE_TRACE("Diection = {0}, Point = {1}, Spot = {2} ", SceneLightController::DirectionNum, SceneLightController::PointNum, SceneLightController::SpotNum);
+
 		//绑定TextureUniform下标
 		int T_size = s_Mesh->MatrialData.GetTextureList(s_Mesh->ShaderName).GetTexture2DLibraries().size();
 		if (T_size == 1) 
@@ -143,6 +147,11 @@ namespace GodDecay
 
 	void MeshRenderer::LoadUniformPropertices()
 	{
+		//先把集合中的光源数量进行更新
+		s_Mesh->MatrialData.GetShaderList().Get(s_Mesh->ShaderName)->SetInt("DirectionNumber", SceneLightController::DirectionNum);
+		s_Mesh->MatrialData.GetShaderList().Get(s_Mesh->ShaderName)->SetInt("PointNumber", SceneLightController::PointNum);
+		s_Mesh->MatrialData.GetShaderList().Get(s_Mesh->ShaderName)->SetInt("SpotNumber", SceneLightController::SpotNum);
+		//因为除开光源之外还有其他属性值要进行更新，要么把这些属性值进行分散更新，要么就在统一更新中进行分门别类地进行更新
 		for (auto& b : s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).GetBool())
 		{
 			s_Mesh->MatrialData.GetShaderList().Get(s_Mesh->ShaderName)->SetBool(b.first, b.second);
@@ -168,7 +177,6 @@ namespace GodDecay
 			s_Mesh->MatrialData.GetShaderList().Get(s_Mesh->ShaderName)->SetMat4(b.first, b.second);
 		}
 	}
-	
 
 	void MeshRenderer::UpDateUniformPropertices()
 	{
@@ -176,6 +184,9 @@ namespace GodDecay
 		{
 			//更新属性值[只考虑Light情况]
 			auto lights = SceneLightController::GetSceneLights();
+			//记录 点和聚 光源的数组下标
+			uint32_t pointIndex = 0;
+			uint32_t spotIndex = 0;
 			for (auto light : lights) 
 			{
 				//根据光源类型更新不同的属性值
@@ -192,11 +203,32 @@ namespace GodDecay
 				}
 				else if (light->GetLightType() == LightType::Point)
 				{
-
+					//同样可以进行强转
+					//但怎么保证集合中的光源顺序和Shader中的光源顺序是对应的？[设置临时下标变量去保证和集合中的下标顺序一致]
+					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec3("Point[" + std::to_string(pointIndex) + "].Position", light->GetLightPosition());
+					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("Point[" + std::to_string(pointIndex) + "].LightColor", light->GetLightColor());
+					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("Point[" + std::to_string(pointIndex) + "].DiffuseColor", light->GetLightDiffuse());
+					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("Point[" + std::to_string(pointIndex) + "].SpecularColor", light->GetLightSpecular());
+					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Point[" + std::to_string(pointIndex) + "].Shininess", light->GetLightShininess());
+					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Point[" + std::to_string(pointIndex) + "].Constant", dynamic_cast<PointLight*>(light.get())->GetLightConstant());
+					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Point[" + std::to_string(pointIndex) + "].Linear", dynamic_cast<PointLight*>(light.get())->GetLightLinear());
+					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Point[" + std::to_string(pointIndex) + "].Quadratic", dynamic_cast<PointLight*>(light.get())->GetLightQuadratic());
+					pointIndex++;
 				}
 				else if (light->GetLightType() == LightType::Spot)
 				{
-
+					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec3("Spot[" + std::to_string(spotIndex) + "].Position", light->GetLightPosition());
+					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec3("Spot[" + std::to_string(spotIndex) + "].Rotation", light->GetLightRotatetion());
+					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("Spot[" + std::to_string(spotIndex) + "].LightColor", light->GetLightColor());
+					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("Spot[" + std::to_string(spotIndex) + "].DiffuseColor", light->GetLightDiffuse());
+					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("Spot[" + std::to_string(spotIndex) + "].SpecularColor", light->GetLightSpecular());
+					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Spot[" + std::to_string(spotIndex) + "].Shininess", light->GetLightShininess());
+					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Spot[" + std::to_string(spotIndex) + "].Constant", dynamic_cast<SpotLight*>(light.get())->GetLightConstant());
+					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Spot[" + std::to_string(spotIndex) + "].Linear", dynamic_cast<SpotLight*>(light.get())->GetLightLinear());
+					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Spot[" + std::to_string(spotIndex) + "].Quadratic", dynamic_cast<SpotLight*>(light.get())->GetLightQuadratic());
+					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Spot[" + std::to_string(spotIndex) + "].CutOff", glm::cos(glm::radians(dynamic_cast<SpotLight*>(light.get())->GetLightCutOff())));
+					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Spot[" + std::to_string(spotIndex) + "].OuterCutOff", glm::cos(glm::radians(dynamic_cast<SpotLight*>(light.get())->GetLightOuterCutOff())));
+					spotIndex++;
 				}
 			}
 			//更新完后把flag重新置为0

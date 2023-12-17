@@ -502,56 +502,225 @@ namespace GodDecay
 		//灯光组件的显示
 		DrawComponent<LightComponent>("Light", entity, [](auto& component) 
 			{
-				//光源位置属性的赋值
-				//在scene绘制时去更新
-				//component
+				//根据光源的类型进行显示
+				const char* MeshTypeStrings[] = { "DIRECTION", "POINT","SPOT" };
+				const char* currentMeshTypeString = MeshTypeStrings[(int)component.type];
+				ImGui::Text("Choose Light Type");
+				if (ImGui::BeginCombo("LightType", currentMeshTypeString))
+				{
+					for (int i = 0; i < 3; i++)
+					{
+						bool isSelected = currentMeshTypeString == MeshTypeStrings[i];
+						if (ImGui::Selectable(MeshTypeStrings[i], isSelected))
+						{
+							bool isChanage = true;
+							//光源的数量
+							if (SceneLightController::LightCount >= 4) 
+							{
+								GD_ENGINE_WARN("LightNumber Out Index Now Already Remove");
+								isChanage = false;
+							}
+							//唯一性定向光源
+							if ((LightType)i == LightType::Direction) 
+							{
+								for (auto l : SceneLightController::GetSceneLights()) 
+								{
+									if (l->GetLightType() == LightType::Direction) 
+									{
+										GD_ENGINE_WARN("DirectionLight Already Exist Not Can Create");
+										isChanage = false;
+										break;
+									}
+								}
+							}
+							if (isChanage) 
+							{
+								currentMeshTypeString = MeshTypeStrings[i];
+								component.type = (LightType)i;
+								component.ChanageLightType(component.type);
+							}
+						}
+						if (isSelected)
+							ImGui::SetItemDefaultFocus();
+					}
+					ImGui::EndCombo();
+				}
 
-				//灯的颜色和环境光是由全局光照设置类中统一管理的
-				ImGui::PushID("1");
-				ImGui::Text("Light Color[Global Light]");
-				if (ImGui::ColorEdit4("", glm::value_ptr(component.light->GetLightColor()))) 
+				if (component.type == LightType::Direction)
 				{
-					SceneLightController::ChangeFlag = 1;
-				}
-				ImGui::PopID();
-				//设置强度
-				ImGui::Text("EnvironmentIntensity");
-				if (ImGui::SliderFloat("Intensity", &SceneLightController::GetEnvironmentLightIntensity(), 0.0f, 1.0f)) 
-				{
-					SceneLightController::ChangeFlag = 1;
-				}
-				//每次改变环境光颜色和强度时才去修改真实的环境光值
-				//ImGui::PushID("test");
-				//ImGui::Text("Direction Ambient Color");
-				//ImGui::ColorEdit4("sdasd", glm::value_ptr(component.light->GetLightAmbient()));
-				//ImGui::PopID();
-				ImGui::PushStyleColor(1, ImVec4(0.7f, 0.7f, 0.7f, 1.0f));
-				ImGui::NewLine();
-				ImGui::PopStyleColor();
-				//漫反射
-				ImGui::PushID("2");
-				ImGui::Text("Light Diffuse Color");
-				if (ImGui::ColorEdit4("", glm::value_ptr(component.light->GetLightDiffuse()))) 
-				{
-					SceneLightController::ChangeFlag = 1;
-				}
-				ImGui::PopID();
+					//灯的颜色和环境光是由全局光照设置类中统一管理的
+					ImGui::PushID("1");
+					ImGui::Text("Light Color[Global Light]");
+					if (ImGui::ColorEdit4("", glm::value_ptr(component.light->GetLightColor())))
+					{
+						SceneLightController::ChangeFlag = 1;
+					}
+					ImGui::PopID();
+					//设置强度
+					ImGui::Text("EnvironmentIntensity");
+					if (ImGui::SliderFloat("Intensity", &SceneLightController::GetEnvironmentLightIntensity(), 0.0f, 1.0f))
+					{
+						SceneLightController::ChangeFlag = 1;
+					}
 
-				//高光颜色
-				ImGui::PushID("3");
-				ImGui::Text("Light Specular Color");
-				if (ImGui::ColorEdit4("", glm::value_ptr(component.light->GetLightSpecular()))) 
-				{
-					SceneLightController::ChangeFlag = 1;
-				}
-				ImGui::PopID();
+					ImGui::PushStyleColor(1, ImVec4(0.7f, 0.7f, 0.7f, 1.0f));
+					ImGui::NewLine();
+					ImGui::PopStyleColor();
+					//漫反射
+					ImGui::PushID("2");
+					ImGui::Text("Light Diffuse Color");
+					if (ImGui::ColorEdit4("", glm::value_ptr(component.light->GetLightDiffuse())))
+					{
+						SceneLightController::ChangeFlag = 1;
+					}
+					ImGui::PopID();
 
-				//高光强度
-				ImGui::Text("Light Specular Shininess");
-				if (ImGui::SliderInt("Shininess", &(int)component.light->GetLightShininess(), 32, 1000)) 
-				{
-					SceneLightController::ChangeFlag = 1;
+					//高光颜色
+					ImGui::PushID("3");
+					ImGui::Text("Light Specular Color");
+					if (ImGui::ColorEdit4("", glm::value_ptr(component.light->GetLightSpecular())))
+					{
+						SceneLightController::ChangeFlag = 1;
+					}
+					ImGui::PopID();
+
+					//高光强度
+					ImGui::Text("Light Specular Shininess");
+					if (ImGui::SliderInt("Shininess", &(int)component.light->GetLightShininess(), 8, 1000))
+					{
+						SceneLightController::ChangeFlag = 1;
+					}
 				}
+				else if (component.type == LightType::Point) 
+				{
+					//点光源是没有环境光这一项的，它被定向光源控制着
+					ImGui::PushID("1");
+					ImGui::Text("Light Color");
+					if (ImGui::ColorEdit4("", glm::value_ptr(component.light->GetLightColor())))
+					{
+						SceneLightController::ChangeFlag = 1;
+					}
+					ImGui::PopID();
+
+					ImGui::PushStyleColor(1, ImVec4(0.7f, 0.7f, 0.7f, 1.0f));
+					ImGui::NewLine();
+					ImGui::PopStyleColor();
+					//漫反射
+					ImGui::PushID("2");
+					ImGui::Text("Light Diffuse Color");
+					if (ImGui::ColorEdit4("", glm::value_ptr(component.light->GetLightDiffuse())))
+					{
+						SceneLightController::ChangeFlag = 1;
+					}
+					ImGui::PopID();
+
+					//高光颜色
+					ImGui::PushID("3");
+					ImGui::Text("Light Specular Color");
+					if (ImGui::ColorEdit4("", glm::value_ptr(component.light->GetLightSpecular())))
+					{
+						SceneLightController::ChangeFlag = 1;
+					}
+					ImGui::PopID();
+
+					//高光强度
+					ImGui::Text("Light Specular Shininess");
+					if (ImGui::SliderInt("Shininess", &(int)component.light->GetLightShininess(), 8, 1000))
+					{
+						SceneLightController::ChangeFlag = 1;
+					}
+					//光照衰减以及强度变量[局部变量出了作用域就消失了所有会空引用]
+
+					ImGui::Text("Light Constant");
+					if (ImGui::SliderFloat("Constant", &(float)dynamic_cast<PointLight*>(component.light.get())->GetLightConstant(), 0.0, 1.0f))
+					{
+						SceneLightController::ChangeFlag = 1;
+					}
+
+					ImGui::Text("Light Linear");
+					if (ImGui::SliderFloat("Linear", &(float)dynamic_cast<PointLight*>(component.light.get())->GetLightLinear(), 0.0, 1.0f))
+					{
+						SceneLightController::ChangeFlag = 1;
+					}
+
+					ImGui::Text("Light Quadratic");
+					if (ImGui::SliderFloat("Quadratic", &(float)dynamic_cast<PointLight*>(component.light.get())->GetLightQuadratic(), 0.0, 1.0f))
+					{
+						SceneLightController::ChangeFlag = 1;
+					}
+				}
+				else if (component.type == LightType::Spot) 
+				{
+					//点光源是没有环境光这一项的，它被定向光源控制着
+					ImGui::PushID("1");
+					ImGui::Text("Light Color");
+					if (ImGui::ColorEdit4("", glm::value_ptr(component.light->GetLightColor())))
+					{
+						SceneLightController::ChangeFlag = 1;
+					}
+					ImGui::PopID();
+
+					ImGui::PushStyleColor(1, ImVec4(0.7f, 0.7f, 0.7f, 1.0f));
+					ImGui::NewLine();
+					ImGui::PopStyleColor();
+					//漫反射
+					ImGui::PushID("2");
+					ImGui::Text("Light Diffuse Color");
+					if (ImGui::ColorEdit4("", glm::value_ptr(component.light->GetLightDiffuse())))
+					{
+						SceneLightController::ChangeFlag = 1;
+					}
+					ImGui::PopID();
+
+					//高光颜色
+					ImGui::PushID("3");
+					ImGui::Text("Light Specular Color");
+					if (ImGui::ColorEdit4("", glm::value_ptr(component.light->GetLightSpecular())))
+					{
+						SceneLightController::ChangeFlag = 1;
+					}
+					ImGui::PopID();
+
+					//高光强度
+					ImGui::Text("Light Specular Shininess");
+					if (ImGui::SliderInt("Shininess", &(int)component.light->GetLightShininess(), 8, 1000))
+					{
+						SceneLightController::ChangeFlag = 1;
+					}
+
+					//但是没法进行内外圈设置[可以设置变量，但不能显示因为是局部变量，所有ImGui会出现空引用]
+					ImGui::Text("Light Constant");
+					if (ImGui::SliderFloat("Constant", &(float)dynamic_cast<SpotLight*>(component.light.get())->GetLightConstant(), 0.0, 1.0f))
+					{
+						SceneLightController::ChangeFlag = 1;
+					}
+
+					ImGui::Text("Light Linear");
+					if (ImGui::SliderFloat("Linear", &(float)dynamic_cast<SpotLight*>(component.light.get())->GetLightLinear(), 0.0, 1.0f))
+					{
+						SceneLightController::ChangeFlag = 1;
+					}
+
+					ImGui::Text("Light Quadratic");
+					if (ImGui::SliderFloat("Quadratic", &(float)dynamic_cast<SpotLight*>(component.light.get())->GetLightQuadratic(), 0.0, 1.0f))
+					{
+						SceneLightController::ChangeFlag = 1;
+					}
+
+					ImGui::Text("Light CutOff");
+					if (ImGui::SliderFloat("CutOff", &(float)dynamic_cast<SpotLight*>(component.light.get())->GetLightCutOff(), 10.0, 180.0f))
+					{
+						SceneLightController::ChangeFlag = 1;
+					}
+
+					ImGui::Text("Light OuterCutOff");
+					if (ImGui::SliderFloat("OuterCutOff", &(float)dynamic_cast<SpotLight*>(component.light.get())->GetLightOuterCutOff(), 10.0, 180.0f))
+					{
+						SceneLightController::ChangeFlag = 1;
+					}
+				}
+				
 			});
+			
 	}
 }

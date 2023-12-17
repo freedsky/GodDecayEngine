@@ -38,6 +38,18 @@ namespace GodDecay
 
 	void Scene::DestroyEntity(Entity entity)
 	{
+		//里面应该是把相关的组件对象给释放掉的，但一些自己定义的全局变量还得自己操作
+		if (entity.HasComponent<LightComponent>()) 
+		{
+			auto light = entity.GetComponent<LightComponent>();
+			if (light.light->GetLightType() == LightType::Direction)
+				SceneLightController::DirectionNum--;
+			else if (light.light->GetLightType() == LightType::Point)
+				SceneLightController::PointNum--;
+			else if (light.light->GetLightType() == LightType::Spot)
+				SceneLightController::SpotNum--;
+		}
+
 		m_Registry.destroy(entity);
 	}
 
@@ -142,7 +154,7 @@ namespace GodDecay
 
 		auto group3D = m_Registry.view<TransformComponent,MeshRenderComponent>();
 
-		//每次遍历光照集合，通过组件中light引用找到集合中对于的light对象然后进行更新
+		//每次遍历光照集合，通过组件中light引用找到集合中对于的light对象然后进行更新【在遍历集合时因为集合中没有添加超出而组件又生成了，所以在遍历时会遇到超出集合的情况】
 		auto groupLight = m_Registry.view<LightComponent>();
 		for (auto ob : groupLight) 
 		{
@@ -241,6 +253,19 @@ namespace GodDecay
 	template<>
 	void Scene::OnComponentAdded<LightComponent>(Entity entity, LightComponent& component)
 	{
+		/*
+		* 要分两种情况
+		* 一是以组件形式添加的
+		* 二是以改变状态形式
+		* 因为默认是点光源所以仅在第一种下去判断
+		*/
+
+		//麻烦一点，创建完后立即检测，如果超出了限制就马上删除掉
+		if (SceneLightController::LightCount >= 4) 
+		{
+			entity.RemoveComponent<LightComponent>();
+			GD_ENGINE_WARN("LightNumber Out Index Now Already Remove");
+		}
 		//在创建灯光组件时把它加入到全局的灯光集合中
 		SceneLightController::AddLightToSceneLights(component.light);
 	}

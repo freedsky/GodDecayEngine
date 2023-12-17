@@ -43,22 +43,6 @@ namespace GodDecay
 		inline void SetLightType(LightType type) { m_LightType = type; }
 		inline LightType GetLightType() { return m_LightType; }
 
-		//计算颜色亮度
-		glm::vec4& LightColorLuminance(glm::vec4& lightcolor, float lum)
-		{
-			GD_ENGINE_INFO(lum);
-			glm::vec3 finalColor = glm::vec3(lightcolor.r,lightcolor.g,lightcolor.b) * lum;
-
-			float luminance = 0.2125 * lightcolor.r + 0.7154 * lightcolor.g + 0.0721 * lightcolor.b;
-			glm::vec3 luminanceColor = glm::vec3(luminance, luminance, luminance);
-			finalColor = luminanceColor * finalColor;
-
-			//调整对比度
-			glm::vec3 avgColor = glm::vec3(0.5f, 0.5f, 0.5f);
-			finalColor = avgColor * finalColor;
-			return glm::vec4(finalColor, lightcolor.a);
-		}
-
 	private:
 		glm::vec3 m_LightPosition;
 		glm::vec3 m_LightRotatetion;

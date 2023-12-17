@@ -19,7 +19,7 @@ namespace GodDecay
 		UniformProperties() = default;
 		~UniformProperties() = default;
 
-		void AddProperties(std::string& properties, int value) { Int[properties] = value; }
+		void AddProperties(std::string properties, int value) { Int[properties] = value; }
 		void AddProperties(std::string properties, float value) { Float[properties] = value; }
 		void AddProperties(std::string properties, bool value) { Bool[properties] = value; }
 		void AddProperties(std::string properties, glm::vec2 value) { Vec2[properties] = value; }

@@ -11,6 +11,13 @@ namespace GodDecay
 	class SceneLightController
 	{
 	public:
+		//设置光源计数器
+		static int DirectionNum;
+		static int PointNum;
+		static int SpotNum;
+		//光源计数器
+		static uint32_t LightCount;
+
 		//设置状态更改开关
 		static uint32_t ChangeFlag;
 
@@ -28,7 +35,6 @@ namespace GodDecay
 		static bool RemoveLightFormSceneLights(Ref<Light> light);
 		//查找对象
 		static Ref<Light> FindLightFormSceneLights(Ref<Light> light);
-
 	private:
 		static glm::vec4 m_EnvironmentLight;
 		static float m_EnvironmentLightIntensity;

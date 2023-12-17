@@ -98,17 +98,51 @@ namespace GodDecay
 		m_ShaderList.Get("BlinnPhongShader")->Bind();
 		m_ShaderList.Get("BlinnPhongShader")->SetInt("DiffuseTexture", 0);
 		m_ShaderList.Get("BlinnPhongShader")->SetInt("SpecularTexture", 1);
+		//初始化光源的数量
+		m_ShaderList.Get("BlinnPhongShader")->SetInt("DirectionNumber",0);
+		m_ShaderList.Get("BlinnPhongShader")->SetInt("PointNumber",0);
+		m_ShaderList.Get("BlinnPhongShader")->SetInt("SpotNumber",0);
 
 		//添加属性,先去创建相应的属性，在后续绘制才去更新
 		UniformProperties lightProerties;
-		lightProerties.AddProperties("direction_rotatiion", glm::vec3(1.0f));
-		lightProerties.AddProperties("direction_position", glm::vec3(1.0f));
-		lightProerties.AddProperties("direction_lightcolor", glm::vec4(1.0f));
-		lightProerties.AddProperties("direction_ambient", glm::vec4(1.0f));
-		lightProerties.AddProperties("direction_diffuse", glm::vec4(1.0f));
-		lightProerties.AddProperties("direction_specular", glm::vec4(1.0f));
+		//direction
+		lightProerties.AddProperties("direction_rotatiion", glm::vec3(0.0f));
+		lightProerties.AddProperties("direction_position", glm::vec3(0.0f));
+		lightProerties.AddProperties("direction_lightcolor", glm::vec4(0.0f));
+		lightProerties.AddProperties("direction_ambient", glm::vec4(0.0f));
+		lightProerties.AddProperties("direction_diffuse", glm::vec4(0.0f));
+		lightProerties.AddProperties("direction_specular", glm::vec4(0.0f));
 		lightProerties.AddProperties("direction_shininess", 32.0f);
 		lightProerties.AddProperties("direction_intensity", 0.2f);
+		//point
+		//预先把这些属性先创建起来，到时候根据集合和光源计数器来进行更新
+		for (uint32_t i = 0; i < 4; ++i) 
+		{
+			lightProerties.AddProperties("Point[" + std::to_string(i) + "].Position", glm::vec3(0.0f));
+			lightProerties.AddProperties("Point[" + std::to_string(i) + "].LightColor", glm::vec4(0.0f));
+			lightProerties.AddProperties("Point[" + std::to_string(i) + "].DiffuseColor", glm::vec4(0.0f));
+			lightProerties.AddProperties("Point[" + std::to_string(i) + "].SpecularColor", glm::vec4(0.0f));
+			lightProerties.AddProperties("Point[" + std::to_string(i) + "].Shininess", 32.0f);
+			lightProerties.AddProperties("Point[" + std::to_string(i) + "].Constant", 1.0f);
+			lightProerties.AddProperties("Point[" + std::to_string(i) + "].Linear", 0.09f);
+			lightProerties.AddProperties("Point[" + std::to_string(i) + "].Quadratic", 0.032f);
+		}
+		//spot原因同上
+		for (uint32_t k = 0; k < 4; ++k) 
+		{
+			lightProerties.AddProperties("Spot[" + std::to_string(k) + "].Position", glm::vec3(0.0f));
+			lightProerties.AddProperties("Spot[" + std::to_string(k) + "].Rotation", glm::vec3(0.0f));
+			lightProerties.AddProperties("Spot[" + std::to_string(k) + "].LightColor", glm::vec4(0.0f));
+			lightProerties.AddProperties("Spot[" + std::to_string(k) + "].DiffuseColor", glm::vec4(0.0f));
+			lightProerties.AddProperties("Spot[" + std::to_string(k) + "].SpecularColor", glm::vec4(0.0f));
+			lightProerties.AddProperties("Spot[" + std::to_string(k) + "].Shininess", 32.0f);
+			lightProerties.AddProperties("Spot[" + std::to_string(k) + "].Constant", 1.0f);
+			lightProerties.AddProperties("Spot[" + std::to_string(k) + "].Linear", 0.09f);
+			lightProerties.AddProperties("Spot[" + std::to_string(k) + "].Quadratic", 0.032f);
+			lightProerties.AddProperties("Spot[" + std::to_string(k) + "].CutOff", 12.5f);
+			lightProerties.AddProperties("Spot[" + std::to_string(k) + "].OuterCutOff", 17.5f);
+
+		}
 
 		m_UniformProperties["BlinnPhongShader"] = lightProerties;
 	}
