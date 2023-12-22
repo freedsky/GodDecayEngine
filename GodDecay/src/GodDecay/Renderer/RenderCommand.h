@@ -31,6 +31,16 @@ namespace GodDecay
 			m_RendererAPI->Clear();
 		}
 
+		inline static void SetDepthMask(bool flag) 
+		{
+			m_RendererAPI->SetDepthMask(flag);
+		}
+
+		inline static void SetDepthFunc(RendererAPI::DepthFunType type)
+		{
+			m_RendererAPI->SetDepthFunc(type);
+		}
+
 		inline static void DrawIndexed(const Ref<VertexArrayBuffer>& vertexArray, RendererAPI::DrawType type = RendererAPI::DrawType::Normal, uint32_t indexCount = 0)
 		{
 			m_RendererAPI->DrawIndexed(vertexArray, type, indexCount);

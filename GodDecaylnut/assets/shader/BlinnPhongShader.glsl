@@ -41,6 +41,7 @@ uniform int SpotNumber;
 
 uniform sampler2D DiffuseTexture;
 uniform sampler2D SpecularTexture;
+
 uniform vec4 DefaultColor;//在bulin Phong中保留但不使用
 
 in flat int v_EntityID;
@@ -184,18 +185,18 @@ void main()
 	//计算Buling-Phong模型
 	vec3 viewDir = normalize(u_ViewPosition - v_WorldPos);//指向观察者
 	vec3 normal = normalize(v_Normal);//单位化法线方便计算
-	vec3 directionColor;
+	vec3 FinalColor;
 	//计算direction光
 	if(DirectionNumber != 0)
 	{
-		directionColor = DirectionLightColor(viewDir,normal);
+		FinalColor = DirectionLightColor(viewDir,normal);
 	}
 	if(PointNumber != 0)
 	{
 		//根据number的数量决定要循环的次数，并进行结果的累计
 		for(int i = 0;i < PointNumber;i++)
 		{
-			directionColor += PointLightColor(viewDir,normal,i);
+			FinalColor += PointLightColor(viewDir,normal,i);
 		}
 	}
 	if(SpotNumber != 0)
@@ -203,16 +204,18 @@ void main()
 		//根据number的数量决定要循环的次数，并进行结果的累计
 		for(int i = 0;i < SpotNumber;i++)
 		{
-			directionColor += SpotLightColor(viewDir,normal,i);
+			FinalColor += SpotLightColor(viewDir,normal,i);
 		}
 	}
 	
 	//如果什么光源都没有就返回全黑就行
 	if(DirectionNumber == 0 && PointNumber == 0 && SpotNumber == 0)
 	{
-		directionColor = vec3(0.0,0.0,0.0);
-	}
+		FinalColor = vec3(0.0,0.0,0.0);
+	}	
+	
+	//看来关于环境光部分只有单独写个Shader来应对[应该是受限于采样方式的影响]
 
-	color = vec4(directionColor,1.0f);
+	color = vec4(FinalColor,1.0f);
 	PixelID = v_EntityID;
 }

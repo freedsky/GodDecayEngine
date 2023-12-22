@@ -1,6 +1,8 @@
 #include "gdpch.h"
 #include "Matrial.h"
 
+#include "SkyBox.h"
+
 namespace GodDecay 
 {
 	//在构造时先给一个默认的texture和shader
@@ -42,6 +44,7 @@ namespace GodDecay
 	{
 		LoadTest();
 		BlinnPhongLight();
+		RefectOrRefract();
 	}
 	//往后扩展不同的渲染方式(默认渲染方式在构造时初始化这里就不定义了)---------------------------------------
 	
@@ -93,6 +96,7 @@ namespace GodDecay
 		TextureLibrary blinnPhongT;
 		blinnPhongT.AddTexture2D("DiffuseTexture", diffuseTexture);
 		blinnPhongT.AddTexture2D("SpecularTexture", specularTexture);
+		blinnPhongT.AddTextureCube("AmbientLightTexture", SkyBox::GetInstance()->GetCurrentSkyBoxTexture());
 		LoadTexture("BlinnPhongShader", blinnPhongT);
 
 		m_ShaderList.Get("BlinnPhongShader")->Bind();
@@ -145,5 +149,19 @@ namespace GodDecay
 		}
 
 		m_UniformProperties["BlinnPhongShader"] = lightProerties;
+	}
+	void Matrial::RefectOrRefract()
+	{
+		//Shader的加载
+		m_ShaderList.Load("FlectOrFractShader", "assets/shader/FlectOrFractShader.glsl");
+
+		TextureLibrary flectOrFractT;
+		flectOrFractT.AddTextureCube("AmbientLightTexture", SkyBox::GetInstance()->GetCurrentSkyBoxTexture());
+		LoadTexture("FlectOrFractShader", flectOrFractT);
+
+		UniformProperties flectOrFractProerties;
+		flectOrFractProerties.AddProperties("flag", 0);
+
+		m_UniformProperties["FlectOrFractShader"] = flectOrFractProerties;
 	}
 }

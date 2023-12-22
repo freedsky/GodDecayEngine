@@ -14,6 +14,8 @@ namespace GodDecay
 		s_Mesh->MeshVertexArray = VertexArrayBuffer::Create();
 		//这里可以考虑对matrial进行初始化，比如设置默认的Shader和Texture
 		s_Mesh->ShaderName = "DefaultShader";//对象Shader的默认设置
+		//一些其他变量的赋值
+		s_Mesh->ReflectFlag = 1;
 		//初始化除默认外的Shader，为切换Shader数据做准备【Test】
 		s_Mesh->MatrialData.LoadShaderToRenderModel("sda");
 	}
@@ -94,6 +96,8 @@ namespace GodDecay
 		s_Mesh->MatrialData.GetShaderList().Get(s_Mesh->ShaderName)->Bind();
 		s_Mesh->MatrialData.GetShaderList().Get(s_Mesh->ShaderName)->SetFloat4("DefaultColor", s_Mesh->MatrialData.GetMeshColor());
 		s_Mesh->MatrialData.GetShaderList().Get(s_Mesh->ShaderName)->SetMat4("u_Model", transform);
+		//反射折射着色器更新
+		s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateInt("flag", s_Mesh->ReflectFlag);
 
 		//如果SceneLights集合不为空就进行属性更新
 		if (SceneLightController::GetSceneLights().size() > 0)
@@ -105,10 +109,11 @@ namespace GodDecay
 		//GD_ENGINE_TRACE("Diection = {0}, Point = {1}, Spot = {2} ", SceneLightController::DirectionNum, SceneLightController::PointNum, SceneLightController::SpotNum);
 
 		//绑定TextureUniform下标
-		int T_size = s_Mesh->MatrialData.GetTextureList(s_Mesh->ShaderName).GetTexture2DLibraries().size();
-		if (T_size == 1) 
+		int T2D_size = s_Mesh->MatrialData.GetTextureList(s_Mesh->ShaderName).GetTexture2DLibraries().size();
+		int TCube_size = s_Mesh->MatrialData.GetTextureList(s_Mesh->ShaderName).GetTextureCubeLibraries().size();
+		if (T2D_size == 1)
 		{
-			s_Mesh->MatrialData.GetTextureList(s_Mesh->ShaderName).Get("DefaultTexture")->Bind();
+			s_Mesh->MatrialData.GetTextureList(s_Mesh->ShaderName).GetTexture2D("DefaultTexture")->Bind();
 		}
 		else
 		{
@@ -117,9 +122,19 @@ namespace GodDecay
 			{
 				T_name.push_back(t.first);
 			}
-			for (int i = 0; i < T_size; ++i)
+			for (int i = 0; i < T2D_size; ++i)
 			{
-				s_Mesh->MatrialData.GetTextureList(s_Mesh->ShaderName).Get(T_name[i])->Bind(i);
+				s_Mesh->MatrialData.GetTextureList(s_Mesh->ShaderName).GetTexture2D(T_name[i])->Bind(i);
+			}
+			T_name.clear();
+			//对Cube进行更新
+			for (auto& t : s_Mesh->MatrialData.GetTextureList(s_Mesh->ShaderName).GetTextureCubeLibraries())
+			{
+				T_name.push_back(t.first);
+			}
+			for (int i = 0; i < TCube_size; ++i)
+			{
+				s_Mesh->MatrialData.GetTextureList(s_Mesh->ShaderName).GetTextureCube(T_name[i])->Bind(i);
 			}
 		}
 

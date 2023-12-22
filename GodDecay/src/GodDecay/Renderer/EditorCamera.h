@@ -25,9 +25,11 @@ namespace GodDecay
 		inline void SetDistance(float distacne) { m_Distance = distacne; }
 		//调整相机的视口大小
 		inline void SetViewportSize(float width, float height) { m_ViewportWidth = width; m_ViewportHeight = height; UpdateProjection(); }
-		//set and get ViewMatrix
+		
 		const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
 		glm::mat4 GetViewProjection() const { return m_Projection * m_ViewMatrix; }
+		//天空盒视图投影矩阵
+		glm::mat4& GetSkyBoxViewProjection() const;
 
 		glm::vec3 GetUpDirection() const;
 		glm::vec3 GetRightDirection() const;

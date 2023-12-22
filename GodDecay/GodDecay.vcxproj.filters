@@ -1825,6 +1825,8 @@
     <ClInclude Include="src\GodDecay\Renderer\SceneLightController.h" />
     <ClInclude Include="src\GodDecay\Renderer\Light\PointLight.h" />
     <ClInclude Include="src\GodDecay\Renderer\Light\SpotLight.h" />
+    <ClInclude Include="src\GodDecay\Renderer\SkyBox.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLTextureCube.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GodDecay\Controller\OrthographicCameraController.cpp">
@@ -1961,5 +1963,7 @@
     <ClCompile Include="src\GodDecay\Renderer\SceneLightController.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\Light\PointLight.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\Light\SpotLight.cpp" />
+    <ClCompile Include="src\GodDecay\Renderer\SkyBox.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLTextureCube.cpp" />
   </ItemGroup>
 </Project>

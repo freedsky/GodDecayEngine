@@ -29,7 +29,8 @@ namespace GodDecay
 		void LoadTest();
 		//BlinnPhong光照模型
 		void BlinnPhongLight();
-
+		//用于反射和折射的材质模型
+		void RefectOrRefract();
 		//=====================================
 	private:
 		ShaderLibrary m_ShaderList;

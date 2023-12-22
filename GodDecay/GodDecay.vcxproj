@@ -150,6 +150,8 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLTextureCube.h" />
+    <ClInclude Include="src\GodDecay\Renderer\SkyBox.h" />
     <ClInclude Include="src\GodDecay\Renderer\Light\SpotLight.h" />
     <ClInclude Include="src\GodDecay\Renderer\Light\PointLight.h" />
     <ClInclude Include="src\GodDecay\Renderer\SceneLightController.h" />
@@ -735,6 +737,8 @@
     <ClInclude Include="vendor\stb_image\stb_voxel_render.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLTextureCube.cpp" />
+    <ClCompile Include="src\GodDecay\Renderer\SkyBox.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\Light\SpotLight.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\Light\PointLight.cpp" />
     <ClCompile Include="src\GodDecay\Renderer\SceneLightController.cpp" />

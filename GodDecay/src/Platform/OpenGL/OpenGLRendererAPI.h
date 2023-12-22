@@ -14,6 +14,8 @@ namespace GodDecay
 		virtual void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) override;
 		virtual void SetClearColor(const glm::vec4& color) override;
 		virtual void Clear() override;
+		virtual void SetDepthMask(bool flag);
+		virtual void SetDepthFunc(DepthFunType type);
 
 		virtual void DrawIndexed(const Ref<VertexArrayBuffer>& vertexArray, DrawType type = DrawType::Normal, uint32_t indexCount = 0) override;
 	};

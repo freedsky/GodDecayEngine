@@ -8,6 +8,7 @@
 #include "GodDecay/Renderer/Renderer2D.h"
 #include "GodDecay/Renderer/Renderer3D.h"
 #include "GodDecay/Renderer/SceneLightController.h"
+#include "GodDecay//Renderer/SkyBox.h"
 
 namespace GodDecay
 {
@@ -133,6 +134,8 @@ namespace GodDecay
 				meshrenderer.m_Mesh.EndDrawMesh();
 			}
 
+			SkyBox::GetInstance()->Update(*mainCamera, cameraTransform);
+
 		}
 	}
 
@@ -177,6 +180,13 @@ namespace GodDecay
 			meshrenderer.m_Mesh.EndDrawMesh();
 		}
 		//GD_ENGINE_INFO(SceneLightController::GetSceneLights().size());
+
+		//考虑到深度读写问题，最后绘制天空盒
+			/*
+			* Bug：因为在farmebuffer中鼠标会指向绘制体并读取其中的像数，因此天空盒也要添加ID以供读取数值
+			* 因为读取的实体ID，而天空盒不属于实体[实体ID从0开始递增]，因此天空盒的ID为特殊的为-1；
+			*/
+		SkyBox::GetInstance()->Update(camera);
 	}
 
 	void Scene::OnViewportResize(uint32_t width, uint32_t height)

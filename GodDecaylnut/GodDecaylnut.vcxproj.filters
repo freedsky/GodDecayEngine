@@ -27,6 +27,7 @@
     <ClInclude Include="src\Panels\SceneHierarchyPanel.h">
       <Filter>src\Panels</Filter>
     </ClInclude>
+    <ClInclude Include="src\Panels\ExtensionPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\EditorLayer.cpp">
@@ -41,10 +42,13 @@
     <ClCompile Include="src\Panels\SceneHierarchyPanel.cpp">
       <Filter>src\Panels</Filter>
     </ClCompile>
+    <ClCompile Include="src\Panels\ExtensionPanel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shader\UniversalStand.glsl" />
     <None Include="assets\shader\TestShader.glsl" />
     <None Include="assets\shader\BlinnPhongShader.glsl" />
+    <None Include="assets\shader\SkyBoxShader.glsl" />
+    <None Include="assets\shader\FlectOrFractShader.glsl" />
   </ItemGroup>
 </Project>

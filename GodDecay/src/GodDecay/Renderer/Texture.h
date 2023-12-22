@@ -27,6 +27,8 @@ namespace GodDecay
 
 		virtual void Bind(uint32_t slot = 0) const = 0;
 
+		virtual void DeleteTextureMemory() const = 0;
+
 		virtual bool IsLoaded() const = 0;
 
 		virtual bool operator==(const Texture& other) const = 0;
@@ -37,6 +39,13 @@ namespace GodDecay
 	public:
 		static Ref<Texture2D> Create(const std::string& path);
 		static Ref<Texture2D> Create(uint32_t width, uint32_t height);
+	};
+
+	class TextureCube : public Texture 
+	{
+	public:
+		static Ref<TextureCube> Create(std::vector<std::string> faces);
+		static Ref<TextureCube> Create(uint32_t width, uint32_t height);
 	};
 }
 

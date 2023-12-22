@@ -28,6 +28,8 @@ namespace GodDecay
 
 		BaseMeshType type;
 		std::string path;
+		//用于环境光的反射和折射混系数控制
+		int ReflectFlag;
 	};
 
 	class MeshRenderer

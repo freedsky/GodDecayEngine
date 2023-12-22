@@ -30,6 +30,48 @@ namespace GodDecay
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
+	void OpenGLRendererAPI::SetDepthMask(bool flag)
+	{
+		if (flag)
+			glDepthMask(GL_TRUE);
+		else
+			glDepthMask(GL_FALSE);
+	}
+
+	void OpenGLRendererAPI::SetDepthFunc(DepthFunType type)
+	{
+		switch (type) 
+		{
+		case DepthFunType::ALWAYS:
+			glDepthFunc(GL_ALWAYS);
+			break;
+		case DepthFunType::NEVER:
+			glDepthFunc(GL_NEVER);
+			break;
+		case DepthFunType::LESS:
+			glDepthFunc(GL_LESS);
+			break;
+		case DepthFunType::EQUAL:
+			glDepthFunc(GL_EQUAL);
+			break;
+		case DepthFunType::LEQUAL:
+			glDepthFunc(GL_LEQUAL);
+			break;
+		case DepthFunType::GREATER:
+			glDepthFunc(GL_GREATER);
+			break;
+		case DepthFunType::NOTEQUAL:
+			glDepthFunc(GL_NOTEQUAL);
+			break;
+		case DepthFunType::GEQUAL:
+			glDepthFunc(GL_GEQUAL);
+			break;
+		default:
+			GD_ENGINE_WARN("Sorry Not this DepthFuncType.");
+			break;
+		}
+	}
+
 	void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArrayBuffer>& vertexArray, DrawType type, uint32_t indexCount)
 	{
 		uint32_t count = indexCount ? indexCount : vertexArray->GetIndexBuffer()->GetCount();

@@ -7,13 +7,14 @@
 
 #include "GodDecay/Scene/SceneSerializer.h"
 #include "GodDecay/Utils/PlatformUtils.h"
+#include "GodDecay/Renderer/SkyBox.h"
+#include "Panels/ExtensionPanel.h"
 
 #include "Scripts/CameraContorller.hpp"
 
 #include "GodDecay/Math/Math.h"
 
 //=========Test===========
-#include "GodDecay/Renderer/Renderer3D.h"
 
 namespace GodDecay
 {
@@ -41,6 +42,23 @@ namespace GodDecay
 		m_Framebuffer = GodDecay::Framebuffer::Create(fbSpec);
 
 		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
+
+		//设置天空盒【默认天空盒设置】
+		std::vector<std::string> skyPaths =
+		{
+			"assets/texture/SkyBox/s1/right.jpg",
+			"assets/texture/SkyBox/s1/left.jpg",
+			"assets/texture/SkyBox/s1/bottom.jpg",
+			"assets/texture/SkyBox/s1/top.jpg",
+			"assets/texture/SkyBox/s1/front.jpg",
+			"assets/texture/SkyBox/s1/back.jpg"
+		};
+		
+		//先全部初始化一遍
+		SkyBox::GetInstance()->Init(skyPaths);
+		SkyBox::GetInstance()->Init(1,1);
+		//在去选择一个天空盒类型
+		SkyBox::GetInstance()->ChangeSkyBoxType(SkyBox::SkyType::Normal);
 
 		//-----------entt
 		m_ActionScene = CreateRef<Scene>();
@@ -72,6 +90,8 @@ namespace GodDecay
 		Renderer3D::ResetStats();
 		m_Framebuffer->Bind();
 
+		//天空盒应该是独立存在
+
 		GodDecay::RenderCommand::SetClearColor(glm::vec4(0.1, 0.1, 0.1, 0.1));
 		GodDecay::RenderCommand::Clear();
 		//用于清除Red颜色缓冲
@@ -88,6 +108,7 @@ namespace GodDecay
 			m_EditorCamera.OnUpdate(deltaTime);
 
 			m_ActionScene->UpdateEditor(deltaTime, m_EditorCamera);
+
 			break;
 		}
 		case SceneState::Play:
@@ -184,6 +205,17 @@ namespace GodDecay
 				if (ImGui::MenuItem("Exit")) GodDecay::Application::Get().Close();
 				ImGui::EndMenu();
 			}
+			
+			if (ImGui::BeginMenu("Setting")) 
+			{
+				if (ImGui::MenuItem("SkyBoxSet..")) 
+				{
+					//设置窗口显示状态
+					ExtensionPanel::IsOpenSkyBox = true;
+				}
+				ImGui::EndMenu();
+			}
+
 			ImGui::EndMenuBar();
 		}
 		//更新面板
@@ -248,6 +280,9 @@ namespace GodDecay
 			ImGui::EndDragDropTarget();
 		}
 
+		//展示扩展窗口
+		//设置天空盒
+		ExtensionPanel::GetInstance()->DisPlayExtensionWindow(ExtensionPanel::ExtensionWidnowType::SkyBox);
 
 		//ImGuizmo
 		Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();

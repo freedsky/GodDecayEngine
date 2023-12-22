@@ -119,6 +119,14 @@ namespace GodDecay
 			m_Distance = 1.0f;
 		}
 	}
+
+	glm::mat4& EditorCamera::GetSkyBoxViewProjection() const
+	{
+		//先把view矩阵中的平移部分去掉
+		glm::mat4 view = glm::mat4(glm::mat3(m_ViewMatrix));
+		return m_Projection * view;
+	}
+
 	//以下变量均和lookat矩阵中各变量有关
 	glm::vec3 EditorCamera::GetUpDirection() const
 	{

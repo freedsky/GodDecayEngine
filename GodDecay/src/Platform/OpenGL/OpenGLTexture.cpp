@@ -96,6 +96,11 @@ namespace GodDecay
 	{
 		glBindTextureUnit(slot, m_RendererID);
 	}
+
+	void OpenGLTexture::DeleteTextureMemory() const
+	{
+		glDeleteBuffers(1, &m_RendererID);
+	}
 }
 
 

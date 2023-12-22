@@ -431,6 +431,11 @@ namespace GodDecay
 			
 			ImGui::NewLine();
 
+			//更新环境光反射和折射比例
+			ImGui::SliderInt("Ambient MixRate", &(int)component.m_Mesh.GetMeshRendererData()->ReflectFlag, 0, 1);
+
+			ImGui::NewLine();
+
 			//选择Shader[或者可以被拖动修改]
 			int S_size = mesh->MatrialData.GetShaderList().GetShaderLibraries().size();
 			
@@ -471,7 +476,7 @@ namespace GodDecay
 			for (int i = 0; i < T_size; ++i) 
 			{
 				ImGui::Text(Texname[i].c_str());
-				ImGui::ImageButton((void*)mesh->MatrialData.GetTextureList(ShaderTypeStrings[ShaderIndex]).Get(Texname[i])->GetRendererID(), ImVec2(viewportPanelSize.x * 0.6f, 200.0f), { 0,1 }, { 1,0 });
+				ImGui::ImageButton((void*)mesh->MatrialData.GetTextureList(ShaderTypeStrings[ShaderIndex]).GetTexture2D(Texname[i])->GetRendererID(), ImVec2(viewportPanelSize.x * 0.6f, 200.0f), { 0,1 }, { 1,0 });
 				
 				//创建一个目标拖拽区域
 				if (ImGui::BeginDragDropTarget())
