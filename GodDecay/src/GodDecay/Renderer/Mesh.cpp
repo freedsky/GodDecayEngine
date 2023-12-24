@@ -138,7 +138,6 @@ namespace GodDecay
                 m_MeshData[i + j].Tangent = t;
             }
         }
-        GD_ENGINE_INFO("CUBE LOAD");
     }
 
     void Mesh::LoadCircleMesh()
@@ -193,7 +192,6 @@ namespace GodDecay
                 m_MeshData[i + j].Tangent = t;
             }
         }
-        GD_ENGINE_INFO("CIRCLE LOAD");
     }
 
     glm::vec3 Mesh::Tangent(glm::vec3 pos1, glm::vec3 pos2, glm::vec3 pos3, glm::vec2 uv1, glm::vec2 uv2, glm::vec2 uv3)
@@ -236,7 +234,6 @@ namespace GodDecay
         }
         //开始处理每个节点下的mesh数据
         ProcessNode(scene->mRootNode, scene);
-        GD_ENGINE_INFO("MODEL LOAD");
     }
 
     //对于模型文件mesh以及节点的处理

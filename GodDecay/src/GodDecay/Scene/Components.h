@@ -1,5 +1,7 @@
 #pragma once
 
+#include <unordered_map>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -112,6 +114,10 @@ namespace GodDecay
 	{
 		//这里的mesh暂不考虑。
 		MeshRenderer m_Mesh;
+		//做一个映射表map
+		std::unordered_map<int, std::string> m_ShaderMap;
+		int currentIndex = 0;
+		bool m_IsLoad = false;
 
 		MeshRenderComponent() = default;
 		MeshRenderComponent(const MeshRenderComponent&) = default;

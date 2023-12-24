@@ -16,8 +16,6 @@
 namespace GodDecay
 {
 	extern const std::filesystem::path g_AssetPath;
-	int ShaderIndex = 0;
-	std::vector<std::string> ShaderTypeStrings;
 
 	SceneHierarchyPanel::SceneHierarchyPanel(const Ref<Scene>& scene)
 	{
@@ -379,6 +377,7 @@ namespace GodDecay
 		DrawComponent<MeshComponent>("Mesh", entity, [](auto& component)
 		{
 			//获取组件
+			
 			auto& mesh = component.m_Mesh;
 			const char* MeshTypeStrings[] = { "CUBE", "CIRLE","MODEL" };
 			const char* currentMeshTypeString = MeshTypeStrings[(int)mesh.GetMeshType()];
@@ -425,36 +424,39 @@ namespace GodDecay
 		});
 
 		DrawComponent<MeshRenderComponent>("Mesh Renderer", entity, [](auto& component) 
-		{
+		{	
 			Ref<MeshRenderData> mesh = component.m_Mesh.GetMeshRendererData();
 			ImGui::ColorEdit4("Color", glm::value_ptr(mesh->MatrialData.GetMeshColor()));
 			
 			ImGui::NewLine();
-
-			//更新环境光反射和折射比例
-			ImGui::SliderInt("Ambient MixRate", &(int)component.m_Mesh.GetMeshRendererData()->ReflectFlag, 0, 1);
-
-			ImGui::NewLine();
-
-			//选择Shader[或者可以被拖动修改]
-			int S_size = mesh->MatrialData.GetShaderList().GetShaderLibraries().size();
 			
-			for (auto& key : mesh->MatrialData.GetShaderList().GetShaderLibraries())
+			//这里考虑仅加载一次
+			if (!component.m_IsLoad) 
 			{
-				ShaderTypeStrings.push_back(key.first);
+				int index = 0;
+				for (auto& key : mesh->MatrialData.GetShaderList().GetShaderLibraries())
+				{
+					component.m_ShaderMap[index++] = key.first;
+				}
+
+				component.m_IsLoad = true;
 			}
 			
-			std::string currentShaderTypeString = ShaderTypeStrings[ShaderIndex];
+			//index应该在内部去获取，每个对象都保持有一份，而不是全局
+			std::string currentShaderTypeString = component.m_ShaderMap[component.currentIndex];
+
 			ImGui::Text("Choose Shader");
 			if (ImGui::BeginCombo("Shader", currentShaderTypeString.c_str()))
 			{
-				for (int i = 0; i < S_size; i++)
+				for (int i = 0; i < component.m_ShaderMap.size(); i++)
 				{
-					bool isSelected = currentShaderTypeString.compare(ShaderTypeStrings[i]);
-					if (ImGui::Selectable(ShaderTypeStrings[i].c_str(), isSelected))
+					bool isSelected = currentShaderTypeString.compare(component.m_ShaderMap[i]);
+					if (ImGui::Selectable(component.m_ShaderMap[i].c_str(), isSelected))
 					{
-						currentShaderTypeString = ShaderTypeStrings[i];
-						ShaderIndex = i;
+						currentShaderTypeString = component.m_ShaderMap[i];
+
+						component.currentIndex = i;
+
 						//这里应该调用meshRenderer组件的变更Shader的方法
 						component.m_Mesh.ChanageShader(currentShaderTypeString);
 					}
@@ -464,11 +466,58 @@ namespace GodDecay
 				ImGui::EndCombo();
 			}
 			ImGui::NewLine();
+			//根据不同的Shader显示不同的属性值[一般显示IntFloat值等等]
+			//根据不同shader的名称来显示，并且要判断该值是否存在
+			if (mesh->MatrialData.GetUniformProperties(currentShaderTypeString).GetInt().size() > 0)
+			{
+				if (ImGui::TreeNode("Properties Int##1")) 
+				{
+					//用文本显示属性
+					for (auto& item : mesh->MatrialData.GetUniformProperties(currentShaderTypeString).GetInt())
+					{
+						//更新环境光反射和折射比例[只有在显示时才在上面写判断去修改和更新]
+						if (!item.first.compare("flag"))
+							ImGui::SliderInt("Refract - Reflect", &(int)component.m_Mesh.GetMeshRendererData()->ReflectFlag, 0, 1);
+						ImGui::InputInt(item.first.c_str(), &item.second, 0, 0, ImGuiInputTextFlags_ReadOnly);
+
+					}
+					ImGui::TreePop();
+				}
+			}
+			//对于float和bool也一样只是bool要修改一下表示形式
+			if (mesh->MatrialData.GetUniformProperties(currentShaderTypeString).GetFloat().size() > 0)
+			{
+				if (ImGui::TreeNode("Properties Float##2")) 
+				{
+					//用文本显示属性
+					for (auto& item : mesh->MatrialData.GetUniformProperties(currentShaderTypeString).GetFloat())
+					{
+						ImGui::InputFloat(item.first.c_str(), &item.second, 0, 0, "%.3f", ImGuiInputTextFlags_ReadOnly);
+
+					}
+					ImGui::TreePop();
+				}
+			}
+			if (mesh->MatrialData.GetUniformProperties(currentShaderTypeString).GetBool().size() > 0)
+			{
+				if (ImGui::TreeNode("Properties Bool##3")) 
+				{
+					//用文本显示属性
+					for (auto& item : mesh->MatrialData.GetUniformProperties(currentShaderTypeString).GetBool())
+					{
+						ImGui::RadioButton(item.first.c_str(), &item.second);
+						//ImGui::Checkbox(item.first.c_str(), &item.second);
+					}
+				}
+				ImGui::TreePop();
+			}
+
+			ImGui::NewLine();
 			//创建一个纹理列表，显示纹理
-			int T_size = mesh->MatrialData.GetTextureList(ShaderTypeStrings[ShaderIndex]).GetTexture2DLibraries().size();
+			int T_size = mesh->MatrialData.GetTextureList(currentShaderTypeString).GetTexture2DLibraries().size();
 			std::vector<std::string> Texname;
 			ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-			for (auto& e : mesh->MatrialData.GetTextureList(ShaderTypeStrings[ShaderIndex]).GetTexture2DLibraries())
+			for (auto& e : mesh->MatrialData.GetTextureList(currentShaderTypeString).GetTexture2DLibraries())
 			{
 				Texname.push_back(e.first);
 			}
@@ -476,7 +525,7 @@ namespace GodDecay
 			for (int i = 0; i < T_size; ++i) 
 			{
 				ImGui::Text(Texname[i].c_str());
-				ImGui::ImageButton((void*)mesh->MatrialData.GetTextureList(ShaderTypeStrings[ShaderIndex]).GetTexture2D(Texname[i])->GetRendererID(), ImVec2(viewportPanelSize.x * 0.6f, 200.0f), { 0,1 }, { 1,0 });
+				ImGui::ImageButton((void*)mesh->MatrialData.GetTextureList(currentShaderTypeString).GetTexture2D(Texname[i])->GetRendererID(), ImVec2(viewportPanelSize.x * 0.6f, 200.0f), { 0,1 }, { 1,0 });
 				
 				//创建一个目标拖拽区域
 				if (ImGui::BeginDragDropTarget())
@@ -491,7 +540,7 @@ namespace GodDecay
 						if (texture->IsLoaded())
 						{
 							//可以改变原引用指向新的texture对象
-							component.m_Mesh.GetMeshRendererData()->MatrialData.GetTextureList(ShaderTypeStrings[ShaderIndex]).UpdataTexture2D(Texname[i], texture);
+							component.m_Mesh.GetMeshRendererData()->MatrialData.GetTextureList(currentShaderTypeString).UpdataTexture2D(Texname[i], texture);
 						}
 						else
 						{

@@ -37,6 +37,7 @@ namespace GodDecay
 			s_Mesh->MeshData.GetMeshData()[i].EntityID = entityId;
 		}
 
+		//顶点属性大多相同，顶多是有多余的顶点属性不使用会占用一部分带宽，所以这一部分暂时不做处理
 		Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(s_Mesh->MeshData.GetMeshData().data(), s_Mesh->MeshData.GetMeshData().size() * sizeof(MeshProperty));
 		vertexBuffer->Setlayout({
 			{ShaderDataType::Float3, "a_Position" },
@@ -96,12 +97,20 @@ namespace GodDecay
 		s_Mesh->MatrialData.GetShaderList().Get(s_Mesh->ShaderName)->Bind();
 		s_Mesh->MatrialData.GetShaderList().Get(s_Mesh->ShaderName)->SetFloat4("DefaultColor", s_Mesh->MatrialData.GetMeshColor());
 		s_Mesh->MatrialData.GetShaderList().Get(s_Mesh->ShaderName)->SetMat4("u_Model", transform);
-		//反射折射着色器更新
-		s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateInt("flag", s_Mesh->ReflectFlag);
 
 		//如果SceneLights集合不为空就进行属性更新
-		if (SceneLightController::GetSceneLights().size() > 0)
-			UpDateUniformPropertices();
+		if (!s_Mesh->ShaderName.compare("BlinnPhongShader")) 
+		{
+			if (SceneLightController::GetSceneLights().size() > 0)
+				UpDateUniformPropertices();
+		}
+		//那么就利用方法的模式进行不同Shader之间的属性更新  //根据当前的Shader来更新[自己在内部维护好吧,在架构没想好之前只有这样]
+		if (!s_Mesh->ShaderName.compare("FlectOrFractShader"))
+		{
+			//反射折射着色器更新
+			s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateInt("flag", s_Mesh->ReflectFlag);
+
+		}
 
 		//绑定Uniform变量
 		LoadUniformPropertices();
@@ -160,6 +169,7 @@ namespace GodDecay
 			
 	}
 
+	//更新问题？
 	void MeshRenderer::LoadUniformPropertices()
 	{
 		//先把集合中的光源数量进行更新
@@ -195,8 +205,8 @@ namespace GodDecay
 
 	void MeshRenderer::UpDateUniformPropertices()
 	{
-		if (SceneLightController::ChangeFlag != 0) 
-		{
+		//if (SceneLightController::ChangeFlag != 0) 
+		//{
 			//更新属性值[只考虑Light情况]
 			auto lights = SceneLightController::GetSceneLights();
 			//记录 点和聚 光源的数组下标
@@ -246,8 +256,12 @@ namespace GodDecay
 					spotIndex++;
 				}
 			}
-			//更新完后把flag重新置为0
-			SceneLightController::ChangeFlag = 0;
-		}
+			//更新完后把flag重新置为0//
+			/*
+			* BUG:因为它是个全局变量，只要有一个更新，它就会关闭这个更新通道，从而无法进行下一次实体的更新
+			* 修改:让它无条件一直更新，或者修改标志值为对象局部
+			*/
+			//SceneLightController::ChangeFlag = 0;
+		//}
 	}
 }
