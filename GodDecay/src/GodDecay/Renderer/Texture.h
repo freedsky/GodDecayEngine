@@ -37,15 +37,17 @@ namespace GodDecay
 	class Texture2D : public Texture
 	{
 	public:
-		static Ref<Texture2D> Create(const std::string& path);
+		static Ref<Texture2D> Create(const std::string& path, bool HDR = false);
 		static Ref<Texture2D> Create(uint32_t width, uint32_t height);
+		//创建一个空纹理，它为外部创建的纹理进行封装[此创建方式仅仅记录在外部创建好的纹理ID以及一些基本纹理属性值的记录]
+		static Ref<Texture2D> Create(std::string name, uint32_t textureID, uint32_t width, uint32_t height);
 	};
 
 	class TextureCube : public Texture 
 	{
 	public:
 		static Ref<TextureCube> Create(std::vector<std::string> faces);
-		static Ref<TextureCube> Create(uint32_t width, uint32_t height);
+		static Ref<TextureCube> Create(uint32_t width, uint32_t height, bool HDR);
 	};
 }
 

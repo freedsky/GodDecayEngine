@@ -3,6 +3,7 @@
 
 #include "GodDecay/Tools/TimeTool.h"
 #include "GodDecay/Renderer/EditorCamera.h"
+#include "GodDecay/Renderer/Shader.h"
 
 /// <summary>
 /// 多个GameObject组成场景，
@@ -27,6 +28,9 @@ namespace GodDecay
 		void OnUpdateRuntime(float deltaTime);
 		void UpdateEditor(float deltaTime, EditorCamera& camera);
 		
+		//渲染实体的深度图
+		void OnUpdateDepth(const Ref<Shader>& shadowShader);
+
 		void OnViewportResize(uint32_t width, uint32_t height);
 		//返回当前激活相机的引用
 		Entity GetPrimaryCameraEntity();

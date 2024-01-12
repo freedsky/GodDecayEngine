@@ -16,7 +16,7 @@ namespace GodDecay
 	void SceneLightController::Init()
 	{
 		m_EnvironmentLight = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-		m_EnvironmentLightIntensity = 1.0f;
+		m_EnvironmentLightIntensity = 0.3f;
 	}
 
 	bool SceneLightController::AddLightToSceneLights(Ref<Light> light)

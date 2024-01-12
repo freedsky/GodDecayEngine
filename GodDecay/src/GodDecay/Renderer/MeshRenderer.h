@@ -48,6 +48,10 @@ namespace GodDecay
 		void BeginDrawMesh(const Camera& camera, const glm::mat4& transform, BaseMeshType type);
 		//编辑相机
 		void BeginDrawMesh(const EditorCamera& camera, BaseMeshType type, std::string path);
+		
+		//专门提供Shadow的外部接口，用于在光视角空间下的深度图纹理
+		void DrawShadow(const Ref<Shader>& shadowShader, const glm::mat4& transform);
+		
 		void DrawMesh(const glm::mat4& transform);
 		void EndDrawMesh();
 		//变更Shader的引用
@@ -55,10 +59,19 @@ namespace GodDecay
 	private:
 		Ref<MeshRenderData> s_Mesh;
 
-		//加载Uniform
+		//绑定Uniform
 		void LoadUniformPropertices();
-		//更新Uniftom
+		//绑定纹理
+		void LoadTexture2DOrCube();
+		//通用属性更新
+		void UpdateUniversalUniformPropertices(const glm::mat4& transform);
+		//更新Uniftom数据
 		void UpDateUniformPropertices();
+
+		//blinnPhong模型数据更新
+		void UpDateBlinnPhongUniformPropertices();
+		//PBR模型数据更新
+		void UpDatePhysicalBaseRenderUniformPropertices();
 	};
 }
 

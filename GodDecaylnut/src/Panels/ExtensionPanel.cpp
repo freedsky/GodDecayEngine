@@ -57,13 +57,13 @@ namespace GodDecay
 		//这里编写和SkyBox有关的逻辑
 
 		//选择天空盒模式
-		std::string SkyBoxTypeStrings[] = { "Normal","PureColor" };
+		std::string SkyBoxTypeStrings[] = { "Normal","PureColor","HDR"};
 		//设置默认模式
 		std::string currentShaderTypeString = SkyBoxTypeStrings[(int)SkyBox::GetInstance()->GetSkyBoxType()];
 		ImGui::Text("Choose SkyBox Type");
 		if (ImGui::BeginCombo("SkyBox Type", currentShaderTypeString.c_str()))
 		{
-			for (int i = 0; i < 2; i++)
+			for (int i = 0; i < 3; i++)
 			{
 				bool isSelected = currentShaderTypeString.compare(SkyBoxTypeStrings[i]);
 				if (ImGui::Selectable(SkyBoxTypeStrings[i].c_str(), isSelected))
@@ -153,6 +153,36 @@ namespace GodDecay
 			ImGui::PopStyleVar();
 		}
 		ImGui::NewLine();
+		//展示HDR图片
+		ImGui::ImageButton((void*)SkyBox::GetInstance()->GetDisplayHDRSkyTexture()->GetRendererID(), ImVec2(300.0f, 300.0f), {0,1}, {1,0});
+		//创建一个目标拖拽区域
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+			{
+				const wchar_t* path = (const wchar_t*)payload->Data;
+				std::filesystem::path texturePath = std::filesystem::path(g_AssetPath) / path;
+				//创建一个纹理，并把纹理赋值给组件中的Texture值
+				//在此之前检测纹理是否被加载成功
+				Ref<Texture2D> texture = Texture2D::Create(texturePath.string());
+				if (texture->IsLoaded())
+				{
+					//可以改变原引用指向新的texture对象
+					//第一步先把用于显示的纹理进行替换，并对路径集合进行替换
+					SkyBox::GetInstance()->GetDisplayHDRSkyTexture() = texture;
+					//HDR文件路径替换
+					SkyBox::GetInstance()->GetHDRPath() = texturePath.string();
+					//然后点击应用按钮
+					GD_ENGINE_INFO(texturePath.string());
+				}
+				else
+				{
+					GD_ENGINE_WARN("Could not load texture {0}", texturePath.filename().string());
+				}
+			}
+			ImGui::EndDragDropTarget();
+		}
+		ImGui::NewLine();
 		//应用按钮和关闭按钮
 		if (ImGui::Button("Apply", ImVec2(100, 50))) 
 		{
@@ -161,8 +191,16 @@ namespace GodDecay
 			* 解决方法：规定加载纹理像数大小，当加载时与规定不一致，强制将图片缩放到规定大小
 			* 或者加载时自己规定自己，加载相同大小的图片
 			*/
-			SkyBox::GetInstance()->Init(SkyBox::GetInstance()->GetPaths());
-			SkyBox::GetInstance()->ChangeSkyBoxType(SkyBox::SkyType::Normal);
+			if (SkyBox::GetInstance()->GetCurrentIsHDR()) 
+			{
+				SkyBox::GetInstance()->Init(SkyBox::GetInstance()->GetHDRPath());
+				SkyBox::GetInstance()->ChangeSkyBoxType(SkyBox::SkyType::HDR);
+			}
+			else
+			{
+				SkyBox::GetInstance()->Init(SkyBox::GetInstance()->GetPaths());
+				SkyBox::GetInstance()->ChangeSkyBoxType(SkyBox::SkyType::Normal);
+			}
 		}
 		ImGui::SameLine(1,400);
 		if (ImGui::Button("Close", ImVec2(100, 50))) 

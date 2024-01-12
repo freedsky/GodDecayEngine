@@ -30,6 +30,19 @@ namespace GodDecay
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
+	void OpenGLRendererAPI::ClearDepth()
+	{
+		glClear(GL_DEPTH_BUFFER_BIT);
+	}
+
+	void OpenGLRendererAPI::SetDepthTest(bool flag)
+	{
+		if (flag)
+			glEnable(GL_DEPTH_TEST);
+		else
+			glDisable(GL_DEPTH_TEST);
+	}
+
 	void OpenGLRendererAPI::SetDepthMask(bool flag)
 	{
 		if (flag)

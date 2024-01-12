@@ -29,10 +29,22 @@ in flat int v_EntityID;
 
 uniform samplerCube skybox;
 uniform vec4 skyColor;
+//如果为HDR图像，要对其进行伽马校正
+uniform bool IsHDR;
 
 void main()
 {
 	//先初始纯色天空
-	color = texture(skybox, v_TexCoords) * skyColor;
+	vec3 TColor = texture(skybox, v_TexCoords).rgb * skyColor.rgb;
+
+	//诺为HDR要对其进行HDR转换
+	if(IsHDR)
+	{
+		TColor = TColor / (TColor + vec3(1.0));
+		TColor = pow(TColor, vec3(1.0/2.2)); 
+	}
+
+	color = vec4(TColor,1.0f);
+
 	PixelID = v_EntityID;
 }

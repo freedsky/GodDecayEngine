@@ -7,7 +7,7 @@
 /// </summary>
 namespace GodDecay 
 {
-	//设置texture缓冲所需要的数据类型
+	//设置texture缓冲所需要的数据类型[对于旧代码不给予修改]
 	enum class FramebufferTextureFormat
 	{
 		None = 0,
@@ -17,9 +17,19 @@ namespace GodDecay
 		RED_INTEGER,
 		//Depth
 		DEPTH24STENCIL8,
+		//Depth值
+		Depth
+	};
 
-		//设置默认值
-		Depth = DEPTH24STENCIL8
+	//Renderbuffer的格式
+	enum class FramebufferRenderbufferFormat
+	{
+		None = 0,
+		DEPTH24STENCIL8,
+		Depth,
+		Depth16,
+		Depth24,
+		Depth32
 	};
 
 	//此结构体针对纹理附件
@@ -33,17 +43,37 @@ namespace GodDecay
 
 		FramebufferTextureFormat TextureFormat = FramebufferTextureFormat::None;
 	};
+	//渲染缓冲对象附件
+	struct FramebufferRenderbufferSpecification 
+	{
+		FramebufferRenderbufferSpecification() = default;
+		FramebufferRenderbufferSpecification(FramebufferRenderbufferFormat format)
+			:RenderFormat(format)
+		{}
+
+		FramebufferRenderbufferFormat RenderFormat = FramebufferRenderbufferFormat::None;
+	};
 
 	//这个是设置帧缓冲对象，往帧缓冲对象绑定纹理附件，这里应该加上可以绑定渲染缓冲
 
 	struct FramebufferAttachmentSpecification
 	{
 		FramebufferAttachmentSpecification() = default;
+		//颜色附件
 		FramebufferAttachmentSpecification(std::initializer_list<FramebufferTextureSpecification> attachments)
 			: Attachments(attachments)
 		{}
-
+		//深度模板附件
+		FramebufferAttachmentSpecification(std::initializer_list<FramebufferRenderbufferSpecification> renderbuffers)
+			: Renderbuffers(renderbuffers)
+		{}
+		//双附件
+		FramebufferAttachmentSpecification(std::initializer_list<FramebufferTextureSpecification> attachments, std::initializer_list<FramebufferRenderbufferSpecification> renderbuffers)
+			: Attachments(attachments), Renderbuffers(renderbuffers)
+		{}
+		//此后，Attachments集合仅存储与颜色相关的附件；而Renderbuffers集合则存储与深度模板相关数据的附件。
 		std::vector<FramebufferTextureSpecification> Attachments;
+		std::vector<FramebufferRenderbufferSpecification> Renderbuffers;
 
 	};
 
@@ -62,6 +92,9 @@ namespace GodDecay
 		virtual void Bind() = 0;
 		virtual void UnBind() = 0;
 
+		//为帧缓冲附加纹理
+		virtual void AppendCubeTextureAttachment(uint32_t id, uint32_t index) = 0;
+
 		virtual void Resize(uint32_t width, uint32_t height) = 0;
 		//读取屏幕的像素所选中的entityID，并返回
 		virtual int ReadPixel(uint32_t attachmentIndex, int x, int y) = 0;
@@ -70,6 +103,10 @@ namespace GodDecay
 
 		//通过下标来获取，不同创建的帧缓冲对象，因为在后期渲染中，不可以只渲染一个帧缓冲对象来存储渲染缓冲的数据
 		virtual uint32_t GetColorAttachmentRendererID(uint32_t index = 0) const = 0;
+		//返回深度缓冲纹理
+		virtual uint32_t GetDepthTextureAttachmentRendererID() const = 0;
+		//同样根据下标来去取对于的渲染附件
+		virtual uint32_t GetDepthRenderbufferAttachmentRendererID(uint32_t index = 0) const = 0;
 
 		virtual const FramebufferSpecification& GetSpecification() const = 0;
 

@@ -2,6 +2,7 @@
 #include "Matrial.h"
 
 #include "SkyBox.h"
+#include "Shadow.h"
 
 namespace GodDecay 
 {
@@ -24,6 +25,11 @@ namespace GodDecay
 		//默认纹理下下标为0，其余想进行加载请从1开始
 		m_ShaderList.Get("DefaultShader")->Bind();
 		m_ShaderList.Get("DefaultShader")->SetInt("DefaultTexture", 0);
+
+		//基本材质信息
+		m_Metallic = 1.0f;
+		m_Roughness = 0.0f;
+		m_Ao = 1.0f;//AO不应该是均匀，但这里假设物体绝对光滑
 	}
 	//加载Shader
 	void Matrial::LoadShader(std::string shaderName, std::string path)
@@ -45,6 +51,7 @@ namespace GodDecay
 		LoadTest();
 		BlinnPhongLight();
 		RefectOrRefract();
+		PhysicalBaseRenderLight();
 	}
 	//往后扩展不同的渲染方式(默认渲染方式在构造时初始化这里就不定义了)---------------------------------------
 	
@@ -75,6 +82,7 @@ namespace GodDecay
 
 		//uniform属性值添加
 		UniformProperties textP;
+		textP.AddProperties("DefaultColor", m_MeshColor);
 		textP.AddProperties("Tcolor1", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 		textP.AddProperties("Tcolor2", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 		textP.AddProperties("Tcolor3", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
@@ -96,12 +104,13 @@ namespace GodDecay
 		TextureLibrary blinnPhongT;
 		blinnPhongT.AddTexture2D("DiffuseTexture", diffuseTexture);
 		blinnPhongT.AddTexture2D("SpecularTexture", specularTexture);
-		blinnPhongT.AddTextureCube("AmbientLightTexture", SkyBox::GetInstance()->GetCurrentSkyBoxTexture());
+		blinnPhongT.AddTexture2D("DepthShadowTexture", Shadow::GetInstance()->GetShadowTexture());
 		LoadTexture("BlinnPhongShader", blinnPhongT);
 
 		m_ShaderList.Get("BlinnPhongShader")->Bind();
 		m_ShaderList.Get("BlinnPhongShader")->SetInt("DiffuseTexture", 0);
 		m_ShaderList.Get("BlinnPhongShader")->SetInt("SpecularTexture", 1);
+		m_ShaderList.Get("BlinnPhongShader")->SetInt("DepthShadowTexture", 2);
 		//初始化光源的数量
 		m_ShaderList.Get("BlinnPhongShader")->SetInt("DirectionNumber",0);
 		m_ShaderList.Get("BlinnPhongShader")->SetInt("PointNumber",0);
@@ -109,6 +118,8 @@ namespace GodDecay
 
 		//添加属性,先去创建相应的属性，在后续绘制才去更新
 		UniformProperties lightProerties;
+		lightProerties.AddProperties("DefaultColor", m_MeshColor);
+		lightProerties.AddProperties("u_LightProjection", Shadow::GetInstance()->GetLightSpaceMatrix());
 		//direction
 		lightProerties.AddProperties("direction_rotatiion", glm::vec3(0.0f));
 		lightProerties.AddProperties("direction_position", glm::vec3(0.0f));
@@ -117,7 +128,7 @@ namespace GodDecay
 		lightProerties.AddProperties("direction_diffuse", glm::vec4(0.0f));
 		lightProerties.AddProperties("direction_specular", glm::vec4(0.0f));
 		lightProerties.AddProperties("direction_shininess", 32.0f);
-		lightProerties.AddProperties("direction_intensity", 0.2f);
+		lightProerties.AddProperties("direction_intensity", 0.3f);
 		//point
 		//预先把这些属性先创建起来，到时候根据集合和光源计数器来进行更新
 		for (uint32_t i = 0; i < 4; ++i) 
@@ -163,5 +174,72 @@ namespace GodDecay
 		flectOrFractProerties.AddProperties("flag", 0);
 
 		m_UniformProperties["FlectOrFractShader"] = flectOrFractProerties;
+	}
+	//基于物理的渲染[暂时没有贴图信息，后面会进行添加]
+	void Matrial::PhysicalBaseRenderLight()
+	{
+		//Shader的加载
+		m_ShaderList.Load("PhysicalBaseRenderShader", "assets/shader/PhysicalBaseRenderShader.glsl");
+		//BlinnPhong有两张贴图一个是漫反射贴图和高光反射贴图
+		uint32_t white = 0xffffffff;
+		Ref<Texture2D> diffuseTexture = Texture2D::Create(1, 1);
+		diffuseTexture->SetData(&white, sizeof(uint32_t));
+
+		Ref<Texture2D> specularTexture = Texture2D::Create(1, 1);
+		specularTexture->SetData(&white, sizeof(uint32_t));
+
+		TextureLibrary blinnPhongT;
+		blinnPhongT.AddTexture2D("DiffuseTexture", diffuseTexture);
+		blinnPhongT.AddTexture2D("SpecularTexture", specularTexture);
+		blinnPhongT.AddTexture2D("DepthShadowTexture", Shadow::GetInstance()->GetShadowTexture());
+		blinnPhongT.AddTextureCube("IrradianceTexture", SkyBox::GetInstance()->GetIrradianceTexture());
+		LoadTexture("PhysicalBaseRenderShader", blinnPhongT);
+
+		m_ShaderList.Get("PhysicalBaseRenderShader")->Bind();
+		m_ShaderList.Get("PhysicalBaseRenderShader")->SetInt("DiffuseTexture", 0);
+		m_ShaderList.Get("PhysicalBaseRenderShader")->SetInt("SpecularTexture", 1);
+		m_ShaderList.Get("PhysicalBaseRenderShader")->SetInt("DepthShadowTexture", 2);
+		m_ShaderList.Get("PhysicalBaseRenderShader")->SetInt("IrradianceTexture", 3);
+		//初始化光源的数量
+		m_ShaderList.Get("PhysicalBaseRenderShader")->SetInt("DirectionNumber", 0);
+		m_ShaderList.Get("PhysicalBaseRenderShader")->SetInt("PointNumber", 0);
+		m_ShaderList.Get("PhysicalBaseRenderShader")->SetInt("SpotNumber", 0);
+
+		//添加属性,先去创建相应的属性，在后续绘制才去更新
+		UniformProperties lightProerties;
+		lightProerties.AddProperties("DefaultColor", m_MeshColor);
+		lightProerties.AddProperties("u_LightProjection", Shadow::GetInstance()->GetLightSpaceMatrix());
+		//PBR特有的金属度、粗超度、AO[会在后面实现这里假定它为1，不可修改]
+		lightProerties.AddProperties("u_Metallic", 0.5f);
+		lightProerties.AddProperties("u_Roughness", 0.5f);
+		lightProerties.AddProperties("u_Ao", 1.0f);
+		//direction
+		lightProerties.AddProperties("Direction.Rotatiion", glm::vec3(0.0f));
+		lightProerties.AddProperties("Direction.Position", glm::vec3(0.0f));
+		lightProerties.AddProperties("Direction.LightColor", glm::vec4(0.0f));
+		lightProerties.AddProperties("Direction.Ambient", glm::vec4(0.0f));
+		lightProerties.AddProperties("Direction.Diffuse", glm::vec4(0.0f));
+		lightProerties.AddProperties("Direction.Intensity", 0.3f);
+		//point
+		//预先把这些属性先创建起来，到时候根据集合和光源计数器来进行更新
+		for (uint32_t i = 0; i < 4; ++i)
+		{
+			lightProerties.AddProperties("Point[" + std::to_string(i) + "].Position", glm::vec3(0.0f));
+			lightProerties.AddProperties("Point[" + std::to_string(i) + "].LightColor", glm::vec4(0.0f));
+			lightProerties.AddProperties("Point[" + std::to_string(i) + "].DiffuseColor", glm::vec4(0.0f));
+		}
+		//spot原因同上
+		for (uint32_t k = 0; k < 4; ++k)
+		{
+			lightProerties.AddProperties("Spot[" + std::to_string(k) + "].Position", glm::vec3(0.0f));
+			lightProerties.AddProperties("Spot[" + std::to_string(k) + "].Rotation", glm::vec3(0.0f));
+			lightProerties.AddProperties("Spot[" + std::to_string(k) + "].LightColor", glm::vec4(0.0f));
+			lightProerties.AddProperties("Spot[" + std::to_string(k) + "].DiffuseColor", glm::vec4(0.0f));
+			lightProerties.AddProperties("Spot[" + std::to_string(k) + "].CutOff", 12.5f);
+			lightProerties.AddProperties("Spot[" + std::to_string(k) + "].OuterCutOff", 17.5f);
+
+		}
+
+		m_UniformProperties["PhysicalBaseRenderShader"] = lightProerties;
 	}
 }

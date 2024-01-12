@@ -7,15 +7,19 @@
 
 namespace GodDecay 
 {
-	OpenGLTexture::OpenGLTexture(const std::string& path)
+	OpenGLTexture::OpenGLTexture(const std::string& path, bool HDR)
 		: m_Path(path)
 	{
 		int width, height, channels;
-		stbi_set_flip_vertically_on_load(1);
+		stbi_set_flip_vertically_on_load(true);
+		float* dataHDR = nullptr;
 		stbi_uc* data = nullptr;
-		data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+		if (HDR)
+			dataHDR = stbi_loadf(path.c_str(), &width, &height, &channels, 0);
+		else
+			data = stbi_load(path.c_str(), &width, &height, &channels, 0);
 
-		if (data)
+		if (data || dataHDR)
 		{
 			m_IsLoaded = true;
 
@@ -25,13 +29,29 @@ namespace GodDecay
 			GLenum internalFormat = 0, dataFormat = 0;
 			if (channels == 4)
 			{
-				internalFormat = GL_RGBA8;
-				dataFormat = GL_RGBA;
+				if (HDR) 
+				{
+					internalFormat = GL_RGBA16F;
+					dataFormat = GL_RGBA;
+				}
+				else
+				{
+					internalFormat = GL_RGBA8;
+					dataFormat = GL_RGBA;
+				}
 			}
 			else if (channels == 3)
 			{
-				internalFormat = GL_RGB8;
-				dataFormat = GL_RGB;
+				if (HDR)
+				{
+					internalFormat = GL_RGB16F;
+					dataFormat = GL_RGB;
+				}
+				else
+				{
+					internalFormat = GL_RGB8;
+					dataFormat = GL_RGB;
+				}
 			}
 
 			m_InternalFormat = internalFormat;
@@ -42,15 +62,34 @@ namespace GodDecay
 			glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
 			glTextureStorage2D(m_RendererID, 1, internalFormat, m_Width, m_Height);
 
-			glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			if (HDR) 
+			{
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			}
+			else
+			{
+				glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+				glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			}
 
-			glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-			glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, dataFormat, GL_UNSIGNED_BYTE, data);
-
-			stbi_image_free(data);
+			if (HDR)
+			{
+				glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, dataFormat, GL_FLOAT, dataHDR);
+			}
+			else
+			{
+				glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, dataFormat, GL_UNSIGNED_BYTE, data);
+			}
+			
+			if (HDR)
+				stbi_image_free(dataHDR);
+			else
+				stbi_image_free(data);
 
 			//截取文件名称
 			auto lastSlash = path.find_last_of("/\\");
@@ -78,6 +117,20 @@ namespace GodDecay
 
 		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	}
+
+	OpenGLTexture::OpenGLTexture(std::string name, uint32_t textureID, uint32_t width, uint32_t height)
+	{
+		m_RendererID = textureID;
+		m_Width = width;
+		m_Height = height;
+		//0表示没有数据
+		m_Channels = 0;
+		m_DataFormat = 0;
+		m_InternalFormat = 0;
+		m_IsLoaded = true;
+		m_Path = "";
+		m_TextureName = name;
 	}
 
 	OpenGLTexture::~OpenGLTexture()

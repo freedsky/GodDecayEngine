@@ -168,6 +168,7 @@ namespace GodDecay
 			//GD_ENGINE_INFO("POSITION = {0} , ROTATION = {1}", lightObject->GetLightPosition().x, lightObject->GetLightRotatetion().x);
 		}
 		//----------------------------------------------------------------
+
 		for (auto entity : group3D) 
 		{
 			auto [transfrom, mesh, meshrenderer] = m_Registry.get<TransformComponent, MeshComponent, MeshRenderComponent>(entity);
@@ -187,6 +188,20 @@ namespace GodDecay
 			* 因为读取的实体ID，而天空盒不属于实体[实体ID从0开始递增]，因此天空盒的ID是特殊的为-1；
 			*/
 		SkyBox::GetInstance()->Update(camera);
+	}
+
+	void Scene::OnUpdateDepth(const Ref<Shader>& shadowShader)
+	{
+		//先渲染实体的阴影==============================================================================================
+		auto group3D = m_Registry.view<TransformComponent, MeshRenderComponent>();
+
+		for (auto entity : group3D)
+		{
+			auto [transfrom, mesh, meshrenderer] = m_Registry.get<TransformComponent, MeshComponent, MeshRenderComponent>(entity);
+
+			meshrenderer.m_Mesh.DrawShadow(shadowShader, transfrom.GetTransform());
+		}
+		
 	}
 
 	void Scene::OnViewportResize(uint32_t width, uint32_t height)

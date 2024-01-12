@@ -11,8 +11,9 @@ namespace GodDecay
 	class OpenGLTexture : public Texture2D
 	{
 	public:
-		OpenGLTexture(const std::string& path);
+		OpenGLTexture(const std::string& path, bool HDR);
 		OpenGLTexture(uint32_t width, uint32_t height);
+		OpenGLTexture(std::string name, uint32_t textureID, uint32_t width, uint32_t height);
 		virtual ~OpenGLTexture();
 
 		virtual uint32_t GetWidth() const override { return m_Width; }

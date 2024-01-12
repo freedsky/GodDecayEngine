@@ -50,5 +50,9 @@
     <None Include="assets\shader\BlinnPhongShader.glsl" />
     <None Include="assets\shader\SkyBoxShader.glsl" />
     <None Include="assets\shader\FlectOrFractShader.glsl" />
+    <None Include="assets\shader\ShadowShader.glsl" />
+    <None Include="assets\shader\PhysicalBaseRenderShader.glsl" />
+    <None Include="assets\shader\HDRMapCube.glsl" />
+    <None Include="assets\shader\EnvironmentIrradiance.glsl" />
   </ItemGroup>
 </Project>

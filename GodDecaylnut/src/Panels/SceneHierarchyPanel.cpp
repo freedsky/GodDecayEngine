@@ -492,8 +492,16 @@ namespace GodDecay
 					//用文本显示属性
 					for (auto& item : mesh->MatrialData.GetUniformProperties(currentShaderTypeString).GetFloat())
 					{
+						//显示要修改的值
+						if (!item.first.compare("u_Metallic")) 
+						{
+							ImGui::SliderFloat("Metallic", &(float)component.m_Mesh.GetMeshRendererData()->MatrialData.GetMetallic(), 0.0f, 1.0f);
+						}
+						if (!item.first.compare("u_Roughness"))
+						{
+							ImGui::SliderFloat("Roughness", &(float)component.m_Mesh.GetMeshRendererData()->MatrialData.GetRoughness(), 0.0f, 1.0f);
+						}
 						ImGui::InputFloat(item.first.c_str(), &item.second, 0, 0, "%.3f", ImGuiInputTextFlags_ReadOnly);
-
 					}
 					ImGui::TreePop();
 				}
@@ -511,7 +519,7 @@ namespace GodDecay
 				}
 				ImGui::TreePop();
 			}
-
+			
 			ImGui::NewLine();
 			//创建一个纹理列表，显示纹理
 			int T_size = mesh->MatrialData.GetTextureList(currentShaderTypeString).GetTexture2DLibraries().size();
@@ -519,6 +527,13 @@ namespace GodDecay
 			ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 			for (auto& e : mesh->MatrialData.GetTextureList(currentShaderTypeString).GetTexture2DLibraries())
 			{
+				//不显示阴影贴图
+				//if (!e.second->GetTextureName().compare("ShadowTexture")) 
+				//{
+				//	T_size--;
+				//	continue;
+				//}
+				
 				Texname.push_back(e.first);
 			}
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(-1, -1));

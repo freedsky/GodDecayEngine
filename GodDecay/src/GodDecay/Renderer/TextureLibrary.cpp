@@ -75,7 +75,7 @@ namespace GodDecay
 
 	Ref<TextureCube> TextureLibrary::LoadTextureCube(const std::string& name, uint32_t width, uint32_t height)
 	{
-		Ref<TextureCube> texture = TextureCube::Create(width, height);
+		Ref<TextureCube> texture = TextureCube::Create(width, height, false);
 		AddTextureCube(name, texture);
 		return texture;
 	}

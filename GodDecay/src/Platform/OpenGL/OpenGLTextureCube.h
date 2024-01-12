@@ -15,7 +15,7 @@ namespace GodDecay
 	public:
 		OpenGLTextureCube(std::vector<std::string> paths);
 		//ÉèÖÃ´¿É«Ìì¿ÕºĞ
-		OpenGLTextureCube(uint32_t width, uint32_t height);
+		OpenGLTextureCube(uint32_t width, uint32_t height, bool HDR);
 		~OpenGLTextureCube();
 
 		virtual uint32_t GetWidth() const override { return m_Width; };

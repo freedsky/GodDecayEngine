@@ -8,6 +8,7 @@
 #include "GodDecay/Scene/SceneSerializer.h"
 #include "GodDecay/Utils/PlatformUtils.h"
 #include "GodDecay/Renderer/SkyBox.h"
+#include "GodDecay/Renderer/Shadow.h"
 #include "Panels/ExtensionPanel.h"
 
 #include "Scripts/CameraContorller.hpp"
@@ -36,7 +37,7 @@ namespace GodDecay
 		m_IconStop = Texture2D::Create("Resources/Icons/StopButton.png");
 
 		GodDecay::FramebufferSpecification fbSpec;
-		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8,FramebufferTextureFormat::RED_INTEGER,FramebufferTextureFormat::Depth };
+		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8,FramebufferTextureFormat::RED_INTEGER,FramebufferTextureFormat::DEPTH24STENCIL8 };
 		fbSpec.Width = 1280;
 		fbSpec.Height = 720;
 		m_Framebuffer = GodDecay::Framebuffer::Create(fbSpec);
@@ -57,8 +58,12 @@ namespace GodDecay
 		//先全部初始化一遍
 		SkyBox::GetInstance()->Init(skyPaths);
 		SkyBox::GetInstance()->Init(1,1);
+		SkyBox::GetInstance()->Init("assets/texture/SkyBox/HDR/thatch_chapel_1k.hdr");
 		//在去选择一个天空盒类型
 		SkyBox::GetInstance()->ChangeSkyBoxType(SkyBox::SkyType::Normal);
+
+		//初始化阴影Framebuffer
+		Shadow::GetInstance()->Init();
 
 		//-----------entt
 		m_ActionScene = CreateRef<Scene>();
@@ -86,6 +91,17 @@ namespace GodDecay
 			//给场景相机调整viewport大小
 			m_ActionScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		}
+
+		//先去渲染阴影贴图
+		//要在这里判断一下光源类型
+		for (auto& light : SceneLightController::GetSceneLights())
+		{
+			if (light->GetLightType() == LightType::Direction)
+			{
+				Shadow::GetInstance()->DrawShadow(light->GetLightRotatetion(), m_ActionScene);
+			}
+		}
+
 		Renderer2D::ResetStats();
 		Renderer3D::ResetStats();
 		m_Framebuffer->Bind();
@@ -267,7 +283,6 @@ namespace GodDecay
 		//渲染framebuffer
 		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
 		ImGui::Image((void*)textureID, ImVec2{ m_ViewportSize.x,m_ViewportSize.y }, { 0,1 }, { 1,0 });
-
 		//增加拖拽区域的目标区域
 		if (ImGui::BeginDragDropTarget())
 		{

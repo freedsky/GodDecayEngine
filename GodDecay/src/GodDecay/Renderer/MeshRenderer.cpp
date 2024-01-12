@@ -4,6 +4,8 @@
 #include "GodDecay/Renderer/Light/PointLight.h"
 #include "GodDecay/Renderer/Light/SpotLight.h"
 
+#include "Shadow.h"
+
 namespace GodDecay 
 {
 	uint32_t typeCount = 0;
@@ -92,61 +94,35 @@ namespace GodDecay
 		//GD_ENGINE_TRACE("x = {0}, y = {1}, z = {2} ", camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
 	}
 
+	void MeshRenderer::DrawShadow(const Ref<Shader>& shadowShader, const glm::mat4& transform)
+	{
+		shadowShader->Bind();
+		shadowShader->SetMat4("u_LightModel", transform);
+
+		//因为是深度图，所以不需要任何其他变量或者属性直接绘制[生成深度图]
+		s_Mesh->MeshVertexArray->Bind();
+		if (s_Mesh->type == BaseMeshType::CUBE || s_Mesh->type == BaseMeshType::MODEL)
+			RenderCommand::DrawIndexed(s_Mesh->MeshVertexArray, RendererAPI::DrawType::Normal);
+		else if (s_Mesh->type == BaseMeshType::CIRLE)
+			RenderCommand::DrawIndexed(s_Mesh->MeshVertexArray, RendererAPI::DrawType::STRIP);
+
+	}
+
 	void MeshRenderer::DrawMesh(const glm::mat4& transform)
 	{
-		s_Mesh->MatrialData.GetShaderList().Get(s_Mesh->ShaderName)->Bind();
-		s_Mesh->MatrialData.GetShaderList().Get(s_Mesh->ShaderName)->SetFloat4("DefaultColor", s_Mesh->MatrialData.GetMeshColor());
-		s_Mesh->MatrialData.GetShaderList().Get(s_Mesh->ShaderName)->SetMat4("u_Model", transform);
+		//通用属性值更新[基本上所有Shader都会拥有该属性]
+		UpdateUniversalUniformPropertices(transform);
 
-		//如果SceneLights集合不为空就进行属性更新
-		if (!s_Mesh->ShaderName.compare("BlinnPhongShader")) 
-		{
-			if (SceneLightController::GetSceneLights().size() > 0)
-				UpDateUniformPropertices();
-		}
-		//那么就利用方法的模式进行不同Shader之间的属性更新  //根据当前的Shader来更新[自己在内部维护好吧,在架构没想好之前只有这样]
-		if (!s_Mesh->ShaderName.compare("FlectOrFractShader"))
-		{
-			//反射折射着色器更新
-			s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateInt("flag", s_Mesh->ReflectFlag);
-
-		}
+		//Shader特性属性值更新
+		UpDateUniformPropertices();
 
 		//绑定Uniform变量
 		LoadUniformPropertices();
 
 		//GD_ENGINE_TRACE("Diection = {0}, Point = {1}, Spot = {2} ", SceneLightController::DirectionNum, SceneLightController::PointNum, SceneLightController::SpotNum);
 
-		//绑定TextureUniform下标
-		int T2D_size = s_Mesh->MatrialData.GetTextureList(s_Mesh->ShaderName).GetTexture2DLibraries().size();
-		int TCube_size = s_Mesh->MatrialData.GetTextureList(s_Mesh->ShaderName).GetTextureCubeLibraries().size();
-		if (T2D_size == 1)
-		{
-			s_Mesh->MatrialData.GetTextureList(s_Mesh->ShaderName).GetTexture2D("DefaultTexture")->Bind();
-		}
-		else
-		{
-			std::vector<std::string> T_name;
-			for (auto& t : s_Mesh->MatrialData.GetTextureList(s_Mesh->ShaderName).GetTexture2DLibraries())
-			{
-				T_name.push_back(t.first);
-			}
-			for (int i = 0; i < T2D_size; ++i)
-			{
-				s_Mesh->MatrialData.GetTextureList(s_Mesh->ShaderName).GetTexture2D(T_name[i])->Bind(i);
-			}
-			T_name.clear();
-			//对Cube进行更新
-			for (auto& t : s_Mesh->MatrialData.GetTextureList(s_Mesh->ShaderName).GetTextureCubeLibraries())
-			{
-				T_name.push_back(t.first);
-			}
-			for (int i = 0; i < TCube_size; ++i)
-			{
-				s_Mesh->MatrialData.GetTextureList(s_Mesh->ShaderName).GetTextureCube(T_name[i])->Bind(i);
-			}
-		}
-
+		//绑定纹理下标
+		LoadTexture2DOrCube();
 			
 		s_Mesh->MeshVertexArray->Bind();
 		if(s_Mesh->type == BaseMeshType::CUBE || s_Mesh->type == BaseMeshType::MODEL)
@@ -157,7 +133,6 @@ namespace GodDecay
 
 	void MeshRenderer::EndDrawMesh()
 	{
-
 	}
 	void MeshRenderer::ChanageShader(std::string ShaderName)
 	{
@@ -205,63 +180,183 @@ namespace GodDecay
 
 	void MeshRenderer::UpDateUniformPropertices()
 	{
-		//if (SceneLightController::ChangeFlag != 0) 
-		//{
-			//更新属性值[只考虑Light情况]
-			auto lights = SceneLightController::GetSceneLights();
-			//记录 点和聚 光源的数组下标
-			uint32_t pointIndex = 0;
-			uint32_t spotIndex = 0;
-			for (auto light : lights) 
+		if (!s_Mesh->ShaderName.compare("TextShader"))
+		{
+			s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("DefaultColor", s_Mesh->MatrialData.GetMeshColor());
+		}
+
+		//如果SceneLights集合不为空就进行属性更新
+		if (!s_Mesh->ShaderName.compare("BlinnPhongShader"))
+		{
+			//只能是在有定向光源的基础上才能进行更新
+			if (SceneLightController::GetSceneLights().size() > 0)
 			{
-				//根据光源类型更新不同的属性值
-				if (light->GetLightType() == LightType::Direction)
-				{
-					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec3("direction_rotatiion", light->GetLightRotatetion());
-					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec3("direction_position", light->GetLightPosition());
-					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("direction_lightcolor", light->GetLightColor());
-					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("direction_ambient", light->GetLightAmbient());
-					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("direction_diffuse", light->GetLightDiffuse());
-					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("direction_specular", light->GetLightSpecular());
-					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("direction_shininess", light->GetLightShininess());
-					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("direction_intensity", SceneLightController::GetEnvironmentLightIntensity());
-				}
-				else if (light->GetLightType() == LightType::Point)
-				{
-					//同样可以进行强转
-					//但怎么保证集合中的光源顺序和Shader中的光源顺序是对应的？[设置临时下标变量去保证和集合中的下标顺序一致]
-					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec3("Point[" + std::to_string(pointIndex) + "].Position", light->GetLightPosition());
-					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("Point[" + std::to_string(pointIndex) + "].LightColor", light->GetLightColor());
-					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("Point[" + std::to_string(pointIndex) + "].DiffuseColor", light->GetLightDiffuse());
-					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("Point[" + std::to_string(pointIndex) + "].SpecularColor", light->GetLightSpecular());
-					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Point[" + std::to_string(pointIndex) + "].Shininess", light->GetLightShininess());
-					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Point[" + std::to_string(pointIndex) + "].Constant", dynamic_cast<PointLight*>(light.get())->GetLightConstant());
-					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Point[" + std::to_string(pointIndex) + "].Linear", dynamic_cast<PointLight*>(light.get())->GetLightLinear());
-					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Point[" + std::to_string(pointIndex) + "].Quadratic", dynamic_cast<PointLight*>(light.get())->GetLightQuadratic());
-					pointIndex++;
-				}
-				else if (light->GetLightType() == LightType::Spot)
-				{
-					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec3("Spot[" + std::to_string(spotIndex) + "].Position", light->GetLightPosition());
-					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec3("Spot[" + std::to_string(spotIndex) + "].Rotation", light->GetLightRotatetion());
-					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("Spot[" + std::to_string(spotIndex) + "].LightColor", light->GetLightColor());
-					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("Spot[" + std::to_string(spotIndex) + "].DiffuseColor", light->GetLightDiffuse());
-					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("Spot[" + std::to_string(spotIndex) + "].SpecularColor", light->GetLightSpecular());
-					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Spot[" + std::to_string(spotIndex) + "].Shininess", light->GetLightShininess());
-					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Spot[" + std::to_string(spotIndex) + "].Constant", dynamic_cast<SpotLight*>(light.get())->GetLightConstant());
-					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Spot[" + std::to_string(spotIndex) + "].Linear", dynamic_cast<SpotLight*>(light.get())->GetLightLinear());
-					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Spot[" + std::to_string(spotIndex) + "].Quadratic", dynamic_cast<SpotLight*>(light.get())->GetLightQuadratic());
-					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Spot[" + std::to_string(spotIndex) + "].CutOff", glm::cos(glm::radians(dynamic_cast<SpotLight*>(light.get())->GetLightCutOff())));
-					s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Spot[" + std::to_string(spotIndex) + "].OuterCutOff", glm::cos(glm::radians(dynamic_cast<SpotLight*>(light.get())->GetLightOuterCutOff())));
-					spotIndex++;
-				}
+				UpDateBlinnPhongUniformPropertices();
+
 			}
-			//更新完后把flag重新置为0//
-			/*
-			* BUG:因为它是个全局变量，只要有一个更新，它就会关闭这个更新通道，从而无法进行下一次实体的更新
-			* 修改:让它无条件一直更新，或者修改标志值为对象局部
-			*/
-			//SceneLightController::ChangeFlag = 0;
-		//}
+		}
+		if (!s_Mesh->ShaderName.compare("PhysicalBaseRenderShader")) 
+		{
+			if (SceneLightController::GetSceneLights().size() > 0) 
+			{
+				UpDatePhysicalBaseRenderUniformPropertices();
+			}
+		}
+
+		//那么就利用方法的模式进行不同Shader之间的属性更新  //根据当前的Shader来更新[自己在内部维护好吧,在架构没想好之前只有这样]
+		if (!s_Mesh->ShaderName.compare("FlectOrFractShader"))
+		{
+			//反射折射着色器更新
+			s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateInt("flag", s_Mesh->ReflectFlag);
+		}
+	}
+
+	void MeshRenderer::LoadTexture2DOrCube()
+	{
+		//绑定TextureUniform下标
+		int T2D_size = s_Mesh->MatrialData.GetTextureList(s_Mesh->ShaderName).GetTexture2DLibraries().size();
+		int TCube_size = s_Mesh->MatrialData.GetTextureList(s_Mesh->ShaderName).GetTextureCubeLibraries().size();
+		if (T2D_size == 1)
+		{
+			s_Mesh->MatrialData.GetTextureList(s_Mesh->ShaderName).GetTexture2D("DefaultTexture")->Bind();
+		}
+		else
+		{
+			std::vector<std::string> T_name;
+			for (auto& t : s_Mesh->MatrialData.GetTextureList(s_Mesh->ShaderName).GetTexture2DLibraries())
+			{
+				T_name.push_back(t.first);
+			}
+			uint32_t textureIndex = 0;
+			for (int i = 0; i < T2D_size; ++i)
+			{
+				s_Mesh->MatrialData.GetTextureList(s_Mesh->ShaderName).GetTexture2D(T_name[i])->Bind(textureIndex++);
+			}
+
+			T_name.clear();
+			//对Cube进行更新
+			for (auto& t : s_Mesh->MatrialData.GetTextureList(s_Mesh->ShaderName).GetTextureCubeLibraries())
+			{
+				T_name.push_back(t.first);
+			}
+			for (int i = 0; i < TCube_size; ++i)
+			{
+				s_Mesh->MatrialData.GetTextureList(s_Mesh->ShaderName).GetTextureCube(T_name[i])->Bind(textureIndex++);
+			}
+			textureIndex = 0;
+		}
+	}
+
+	void MeshRenderer::UpdateUniversalUniformPropertices(const glm::mat4& transform)
+	{
+		s_Mesh->MatrialData.GetShaderList().Get(s_Mesh->ShaderName)->Bind();
+
+		s_Mesh->MatrialData.GetShaderList().Get(s_Mesh->ShaderName)->SetMat4("u_Model", transform);
+	}
+
+	void MeshRenderer::UpDateBlinnPhongUniformPropertices()
+	{
+		s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("DefaultColor", s_Mesh->MatrialData.GetMeshColor());
+		s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateMat4("u_LightProjection", Shadow::GetInstance()->GetLightSpaceMatrix());
+		//更新属性值[只考虑Light情况]
+		auto lights = SceneLightController::GetSceneLights();
+		//记录 点和聚 光源的数组下标
+		uint32_t pointIndex = 0;
+		uint32_t spotIndex = 0;
+		for (auto light : lights) 
+		{
+			//根据光源类型更新不同的属性值
+			if (light->GetLightType() == LightType::Direction)
+			{
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec3("direction_rotatiion", light->GetLightRotatetion());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec3("direction_position", light->GetLightPosition());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("direction_lightcolor", light->GetLightColor());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("direction_ambient", light->GetLightAmbient());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("direction_diffuse", light->GetLightDiffuse());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("direction_specular", light->GetLightSpecular());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("direction_shininess", light->GetLightShininess());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("direction_intensity", SceneLightController::GetEnvironmentLightIntensity());
+			}
+			else if (light->GetLightType() == LightType::Point)
+			{
+				//同样可以进行强转
+				//但怎么保证集合中的光源顺序和Shader中的光源顺序是对应的？[设置临时下标变量去保证和集合中的下标顺序一致]
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec3("Point[" + std::to_string(pointIndex) + "].Position", light->GetLightPosition());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("Point[" + std::to_string(pointIndex) + "].LightColor", light->GetLightColor());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("Point[" + std::to_string(pointIndex) + "].DiffuseColor", light->GetLightDiffuse());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("Point[" + std::to_string(pointIndex) + "].SpecularColor", light->GetLightSpecular());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Point[" + std::to_string(pointIndex) + "].Shininess", light->GetLightShininess());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Point[" + std::to_string(pointIndex) + "].Constant", dynamic_cast<PointLight*>(light.get())->GetLightConstant());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Point[" + std::to_string(pointIndex) + "].Linear", dynamic_cast<PointLight*>(light.get())->GetLightLinear());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Point[" + std::to_string(pointIndex) + "].Quadratic", dynamic_cast<PointLight*>(light.get())->GetLightQuadratic());
+				pointIndex++;
+			}
+			else if (light->GetLightType() == LightType::Spot)
+			{
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec3("Spot[" + std::to_string(spotIndex) + "].Position", light->GetLightPosition());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec3("Spot[" + std::to_string(spotIndex) + "].Rotation", light->GetLightRotatetion());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("Spot[" + std::to_string(spotIndex) + "].LightColor", light->GetLightColor());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("Spot[" + std::to_string(spotIndex) + "].DiffuseColor", light->GetLightDiffuse());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("Spot[" + std::to_string(spotIndex) + "].SpecularColor", light->GetLightSpecular());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Spot[" + std::to_string(spotIndex) + "].Shininess", light->GetLightShininess());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Spot[" + std::to_string(spotIndex) + "].Constant", dynamic_cast<SpotLight*>(light.get())->GetLightConstant());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Spot[" + std::to_string(spotIndex) + "].Linear", dynamic_cast<SpotLight*>(light.get())->GetLightLinear());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Spot[" + std::to_string(spotIndex) + "].Quadratic", dynamic_cast<SpotLight*>(light.get())->GetLightQuadratic());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Spot[" + std::to_string(spotIndex) + "].CutOff", glm::cos(glm::radians(dynamic_cast<SpotLight*>(light.get())->GetLightCutOff())));
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Spot[" + std::to_string(spotIndex) + "].OuterCutOff", glm::cos(glm::radians(dynamic_cast<SpotLight*>(light.get())->GetLightOuterCutOff())));
+				spotIndex++;
+			}
+		}
+		//更新完后把flag重新置为0//
+		/*
+		* BUG:因为它是个全局变量，只要有一个更新，它就会关闭这个更新通道，从而无法进行下一次实体的更新
+		* 修改:让它无条件一直更新，或者修改标志值为对象局部
+		*/
+		//SceneLightController::ChangeFlag = 0;
+	}
+
+	void MeshRenderer::UpDatePhysicalBaseRenderUniformPropertices()
+	{
+		s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("DefaultColor", s_Mesh->MatrialData.GetMeshColor());
+		s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateMat4("u_LightProjection", Shadow::GetInstance()->GetLightSpaceMatrix());
+		s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("u_Metallic", s_Mesh->MatrialData.GetMetallic());
+		s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("u_Roughness", s_Mesh->MatrialData.GetRoughness());
+		//更新属性值[只考虑Light情况]
+		auto lights = SceneLightController::GetSceneLights();
+		//记录 点和聚 光源的数组下标
+		uint32_t pointIndex = 0;
+		uint32_t spotIndex = 0;
+		for (auto light : lights)
+		{
+			//根据光源类型更新不同的属性值
+			if (light->GetLightType() == LightType::Direction)
+			{
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec3("Direction.Rotatiion", light->GetLightRotatetion());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec3("Direction.Position", light->GetLightPosition());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("Direction.LightColor", light->GetLightColor());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("Direction.Ambient", light->GetLightAmbient());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("Direction.Diffuse", light->GetLightDiffuse());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Direction.Intensity", SceneLightController::GetEnvironmentLightIntensity());
+			}
+			else if (light->GetLightType() == LightType::Point)
+			{
+				//同样可以进行强转
+				//但怎么保证集合中的光源顺序和Shader中的光源顺序是对应的？[设置临时下标变量去保证和集合中的下标顺序一致]
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec3("Point[" + std::to_string(pointIndex) + "].Position", light->GetLightPosition());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("Point[" + std::to_string(pointIndex) + "].LightColor", light->GetLightColor());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("Point[" + std::to_string(pointIndex) + "].DiffuseColor", light->GetLightDiffuse());
+				pointIndex++;
+			}
+			else if (light->GetLightType() == LightType::Spot)
+			{
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec3("Spot[" + std::to_string(spotIndex) + "].Position", light->GetLightPosition());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec3("Spot[" + std::to_string(spotIndex) + "].Rotation", light->GetLightRotatetion());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("Spot[" + std::to_string(spotIndex) + "].LightColor", light->GetLightColor());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateVec4("Spot[" + std::to_string(spotIndex) + "].DiffuseColor", light->GetLightDiffuse());
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Spot[" + std::to_string(spotIndex) + "].CutOff", glm::cos(glm::radians(dynamic_cast<SpotLight*>(light.get())->GetLightCutOff())));
+				s_Mesh->MatrialData.GetUniformProperties(s_Mesh->ShaderName).UpdateFloat("Spot[" + std::to_string(spotIndex) + "].OuterCutOff", glm::cos(glm::radians(dynamic_cast<SpotLight*>(light.get())->GetLightOuterCutOff())));
+				spotIndex++;
+			}
+		}
 	}
 }

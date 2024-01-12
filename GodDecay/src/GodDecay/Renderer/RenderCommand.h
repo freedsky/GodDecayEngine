@@ -31,6 +31,16 @@ namespace GodDecay
 			m_RendererAPI->Clear();
 		}
 
+		inline static void ClearDepth() 
+		{
+			m_RendererAPI->ClearDepth();
+		}
+
+		inline static void SetDepthTest(bool flag) 
+		{
+			m_RendererAPI->SetDepthTest(flag);
+		}
+
 		inline static void SetDepthMask(bool flag) 
 		{
 			m_RendererAPI->SetDepthMask(flag);
