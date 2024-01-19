@@ -18,12 +18,12 @@ namespace GodDecay
 		GD_ENGINE_ASSERT(false, "UnKonw this API"); 
 		return nullptr;
 	}
-	Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height)
+	Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height, bool depth)
 	{
 		switch (RendererAPI::GetAPI())
 		{
 		case RendererAPI::API::None: GD_ENGINE_ASSERT(false, "this API is None"); return nullptr;
-		case RendererAPI::API::OpenGL: return CreateRef<OpenGLTexture>(width, height);
+		case RendererAPI::API::OpenGL: return CreateRef<OpenGLTexture>(width, height, depth);
 		}
 
 		GD_ENGINE_ASSERT(false, "UnKonw this API");
@@ -54,12 +54,12 @@ namespace GodDecay
 		return nullptr;
 	}
 
-	Ref<TextureCube> TextureCube::Create(uint32_t width, uint32_t height, bool HDR)
+	Ref<TextureCube> TextureCube::Create(uint32_t width, uint32_t height, bool HDR, bool mipmap)
 	{
 		switch (RendererAPI::GetAPI())
 		{
 		case RendererAPI::API::None: GD_ENGINE_ASSERT(false, "this API is None"); return nullptr;
-		case RendererAPI::API::OpenGL: return CreateRef<OpenGLTextureCube>(width, height, HDR);
+		case RendererAPI::API::OpenGL: return CreateRef<OpenGLTextureCube>(width, height, HDR, mipmap);
 		}
 	}
 }

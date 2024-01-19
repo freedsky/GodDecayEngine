@@ -292,10 +292,42 @@ namespace GodDecay
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void OpenGLFramebuffer::AppendCubeTextureAttachment(uint32_t id, uint32_t index)
+	void OpenGLFramebuffer::AppendCubeTextureAttachment(uint32_t id, uint32_t index, uint32_t mip)
 	{
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-			GL_TEXTURE_CUBE_MAP_POSITIVE_X + index, id, 0);
+			GL_TEXTURE_CUBE_MAP_POSITIVE_X + index, id, mip);
+	}
+
+	void OpenGLFramebuffer::AppendRenderbufferAttachment(uint32_t width, uint32_t height, uint32_t id, FramebufferRenderbufferFormat type)
+	{
+		glBindRenderbuffer(GL_RENDERBUFFER, id);
+		switch (type) 
+		{
+		case FramebufferRenderbufferFormat::Depth :
+			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+			glViewport(0, 0, width, height);
+			break;
+		case FramebufferRenderbufferFormat::Depth16:
+			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, width, height);
+			glViewport(0, 0, width, height);
+			break;
+		case FramebufferRenderbufferFormat::Depth24:
+			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
+			glViewport(0, 0, width, height);
+			break;
+		case FramebufferRenderbufferFormat::Depth32:
+			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, width, height);
+			glViewport(0, 0, width, height);
+			break;
+		default:
+			GD_ENGINE_WARN("Not Find This Renderbuffer Type");
+			break;
+		}
+	}
+
+	void OpenGLFramebuffer::Append2DTextureAttachment(uint32_t id, uint32_t mip)
+	{
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, id, mip);
 	}
 
 	void OpenGLFramebuffer::Resize(uint32_t width, uint32_t height)

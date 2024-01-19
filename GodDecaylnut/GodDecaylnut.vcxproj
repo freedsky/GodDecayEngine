@@ -158,9 +158,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shader\BlinnPhongShader.glsl" />
+    <None Include="assets\shader\BRDFLookUpTableShader.glsl" />
     <None Include="assets\shader\EnvironmentIrradiance.glsl" />
     <None Include="assets\shader\FlectOrFractShader.glsl" />
     <None Include="assets\shader\PhysicalBaseRenderShader.glsl" />
+    <None Include="assets\shader\PrefilterTextureShader.glsl" />
     <None Include="assets\shader\ShadowShader.glsl" />
     <None Include="assets\shader\HDRMapCube.glsl" />
     <None Include="assets\shader\SkyBoxShader.glsl" />

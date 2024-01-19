@@ -17,7 +17,9 @@ namespace GodDecay
 		virtual void Bind() override;
 		virtual void UnBind() override;
 
-		virtual void AppendCubeTextureAttachment(uint32_t id, uint32_t index) override;
+		virtual void AppendCubeTextureAttachment(uint32_t id, uint32_t index, uint32_t mip) override;
+		virtual void AppendRenderbufferAttachment(uint32_t width, uint32_t height, uint32_t id, FramebufferRenderbufferFormat type) override;
+		virtual void Append2DTextureAttachment(uint32_t id, uint32_t mip = 0) override;
 
 		virtual void Resize(uint32_t width, uint32_t height) override;
 		virtual int ReadPixel(uint32_t attachmentIndex, int x, int y) override;

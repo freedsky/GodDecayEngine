@@ -6,6 +6,8 @@
 /// <summary>
 /// 这里好像只适配了天空盒的构造数据和方式
 /// 后面会进行修改为更加通用
+/// 
+/// warring： 在设置天空盒时好像并未使用到Cube的setdata函数，而是直接在构造函数中去绑定
 /// </summary>
 
 namespace GodDecay 
@@ -15,7 +17,7 @@ namespace GodDecay
 	public:
 		OpenGLTextureCube(std::vector<std::string> paths);
 		//设置纯色天空盒
-		OpenGLTextureCube(uint32_t width, uint32_t height, bool HDR);
+		OpenGLTextureCube(uint32_t width, uint32_t height, bool HDR, bool mipmap);
 		~OpenGLTextureCube();
 
 		virtual uint32_t GetWidth() const override { return m_Width; };
@@ -28,7 +30,7 @@ namespace GodDecay
 
 		virtual std::string GetTextureName() const override { return m_TextureName; };
 
-		virtual void SetData(void* data, uint32_t size) override;
+		virtual void SetData(void* data, uint32_t size, bool depth) override;
 
 		virtual void Bind(uint32_t slot = 0) const override;
 

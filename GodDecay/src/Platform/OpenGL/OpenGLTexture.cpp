@@ -100,23 +100,42 @@ namespace GodDecay
 		}
 	}
 
-	OpenGLTexture::OpenGLTexture(uint32_t width, uint32_t height)
+	OpenGLTexture::OpenGLTexture(uint32_t width, uint32_t height, bool depth)
 		:m_Width(width), m_Height(height), m_Channels(4)
 	{
 		//自己创建的Texture是没有文件名称的，这里置为空的标识符
 		m_TextureName = "";
 
-		m_InternalFormat = GL_RGBA8;
-		m_DataFormat = GL_RGBA;
+		if (depth) 
+		{
+			m_InternalFormat = GL_RG16F;
+			m_DataFormat = GL_RG;
+		}
+		else
+		{
+			m_InternalFormat = GL_RGBA8;
+			m_DataFormat = GL_RGBA;
+		}
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
 		glTextureStorage2D(m_RendererID, 1, m_InternalFormat, m_Width, m_Height);
+		
+		if (depth) 
+		{
+			glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+								
+			glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		}
+		else
+		{
+			glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		}
 	}
 
 	OpenGLTexture::OpenGLTexture(std::string name, uint32_t textureID, uint32_t width, uint32_t height)
@@ -138,11 +157,18 @@ namespace GodDecay
 		glDeleteTextures(1, &m_RendererID);
 	}
 
-	void OpenGLTexture::SetData(void* data, uint32_t size)
+	void OpenGLTexture::SetData(void* data, uint32_t size, bool depth)
 	{
-		uint32_t bpp = m_DataFormat == GL_RGBA ? 4 : 3;
-		GD_ENGINE_ASSERT(size == m_Width * m_Height * bpp, "ata must be entire texture!");
-		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, data);
+		if (!depth) 
+		{
+			uint32_t bpp = m_DataFormat == GL_RGBA ? 4 : 3;
+			GD_ENGINE_ASSERT(size == m_Width * m_Height * bpp, "ata must be entire texture!");
+		}
+		if (depth)//最后一位参数不能为空
+			glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_FLOAT, data);
+		else
+			glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, data);
+		//glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, data);
 	}
 
 	void OpenGLTexture::Bind(uint32_t slot) const

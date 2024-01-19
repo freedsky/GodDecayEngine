@@ -58,6 +58,9 @@ uniform sampler2D SpecularTexture;
 uniform sampler2D DepthShadowTexture;
 //添加环境光的漫反射辐照度图
 uniform samplerCube IrradianceTexture;
+//高光预计算纹理
+uniform samplerCube MipmapPrefilterTextureCube;
+uniform sampler2D BRDFLookUpTableTexture;
 
 uniform vec3 u_ViewPosition;
 uniform vec4 DefaultColor;
@@ -66,6 +69,7 @@ uniform float u_Roughness;
 uniform float u_Ao;
 
 const float PI = 3.14159265359;
+const float MAX_REFLECTION_LOD = 4.0;//mip等级
 
 //PBR内部的光照衰减是距离平方的反比，因此这里不需要衰减的参数[当然也可以沿用之前的衰减算法]
 //direction
@@ -107,7 +111,7 @@ uniform SpotLight Spot[4];
 vec3 fresnelSchlick(float cosTheta, vec3 F0)
 {
 	//使用Fresnel-Schlick近似法来计算菲涅尔项【反射率】
-	return F0 + (1.0f - F0) * pow(clamp(1.0f - cosTheta,0.0f,1.0f),5.0f);
+	return F0 + (1.0 - F0) * pow(clamp(1.0 - cosTheta,0.0,1.0),5.0);
 }
 //为了和直接光照的菲涅尔计算相吻合[因为环境光没有有效的半向量来计算其粗糙度]
 vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
@@ -154,7 +158,7 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
 
 //---------------------------------------------------
 
-vec3 DirectionLightColor(vec3 V, vec3 N, vec3 F0, float roughness, float shadowValue)
+vec3 DirectionLightColor(vec3 V, vec3 N, vec3 R, vec3 F0, float roughness, float shadowValue)
 {
 	vec3 finalDiffuse = vec3(0.0f);
 	//L是光源的反向向量，不同类型的光源计算方式也不一样
@@ -172,7 +176,7 @@ vec3 DirectionLightColor(vec3 V, vec3 N, vec3 F0, float roughness, float shadowV
 	//计算Cook-Torrance BRDF项
 	vec3 nominator = D * G * F;
 	//标准化项
-	float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001;
+	float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001;
 	vec3 specular = nominator / denominator;
 
 	//计算Ks 以及 Kd 各部分贡献值
@@ -184,27 +188,33 @@ vec3 DirectionLightColor(vec3 V, vec3 N, vec3 F0, float roughness, float shadowV
 	float NdotL = max(dot(N,L),0.0);
 	finalDiffuse = (Kd * DefaultColor.rgb / PI + specular) * radiance * NdotL;
 	
-	//再计算环境光项[后面这一项会被IBL取代]
+	//=====================================================================
+	//环境光照的F项
+	vec3 ambientF = fresnelSchlickRoughness(max(dot(N, V), 0.0), F0, roughness);
+	//计算KS以及KD项，同样环境光也分为漫反射部分和反射高光部分，所以要用菲涅尔方程来计算这两个部分的比值
+	vec3 aKs = ambientF;
+	vec3 aKd = 1.0 - aKs;
+	aKd *= 1.0f - u_Metallic;
+	//IBL的漫反射项
 	vec3 irradiance = texture(IrradianceTexture,vec3(N.x,-N.y,N.z)).rgb;
-	//同样环境光也分为漫反射部分和反射高光部分，所以要用菲涅尔方程来计算这两个部分的比值
-	//注意这里不是半程向量，而是从环境光出发的法线
-	vec3 aKs = fresnelSchlickRoughness(max(dot(N, V), 0.0), F0, roughness);
-	vec3 aKd = vec3(1.0f) - aKs;
-	aKd *= (1.0f - u_Metallic);
+	vec3 ambientDiffuse = DefaultColor.rgb * Direction.LightColor.rgb * irradiance;
+
+	//计算预滤波的环境光照立方体贴图
+	vec3 prefilteredColor = textureLod(MipmapPrefilterTextureCube, vec3(R.x,-R.y,R.z),  roughness * MAX_REFLECTION_LOD).rgb; 
+	//采样BRDF的积分查找图
+	vec2 envBRDF  = texture(BRDFLookUpTableTexture, vec2(max(dot(N, V), 0.0), roughness)).rg;
+	vec3 ambientSpecular = prefilteredColor * (ambientF * envBRDF.x + envBRDF.y);
+
 	//最后把环境光项加上[间接光照，全局光照][这里的环境强度起始可以舍去，因为环境光由贴图控制，因此这里可以不用写]
-	vec3 finalAmbient = DefaultColor.rgb * Direction.Intensity * u_Ao * Direction.LightColor.rgb * irradiance * aKd;
+	vec3 finalAmbient = (ambientDiffuse * aKd + ambientSpecular) * u_Ao;
 	//最终结果就是环境光加直接光照
 	vec3 finalColor = finalAmbient + finalDiffuse;//不能简单的直接相乘，这破坏能量守恒。
-
-	//把计算结果进行HDR和伽马校正
-	finalColor = finalColor / (finalColor + vec3(1.0));
-	finalColor = pow(finalColor, vec3(1.0/2.2));
 
 	return finalColor;
 }
 
 //环境光映射是在定向光源下具有的，因此其他光源不做计算
-vec3 PointLightColor(vec3 V, vec3 N, vec3 F0, float roughness, int index)
+vec3 PointLightColor(vec3 V, vec3 N, vec3 R, vec3 F0, float roughness, int index)
 {
 	vec3 finalDiffuse = vec3(0.0f);
 	//L是光源的反向向量，不同类型的光源计算方式也不一样
@@ -242,15 +252,10 @@ vec3 PointLightColor(vec3 V, vec3 N, vec3 F0, float roughness, int index)
 	//最终结果就是环境光加直接光照
 	vec3 finalColor = finalAmbient + finalDiffuse;
 
-	//物理上的准确性要求在线性空间中计算，但要显示在设备上就要进行GAMM校正
-	//同时线性计算值会超过1，因此要在Gamm校正之前先把结果从LDR映射为HDR[色调映射方法为Reinhard 操作]
-	finalColor = finalColor / (finalColor + vec3(1.0));
-	finalColor = pow(finalColor, vec3(1.0/2.2));
-
 	return finalColor;
 }
 
-vec3 SpotLightColor(vec3 V, vec3 N, vec3 F0, float roughness, int index)
+vec3 SpotLightColor(vec3 V, vec3 N, vec3 R, vec3 F0, float roughness, int index)
 {
 	vec3 finalDiffuse = vec3(0.0f);
 	//L是光源的反向向量，不同类型的光源计算方式也不一样
@@ -291,11 +296,6 @@ vec3 SpotLightColor(vec3 V, vec3 N, vec3 F0, float roughness, int index)
 	vec3 finalAmbient = vec3(0.0f,0.0f,0.0f);//vec3(0.03) * DefaultColor.rgb * u_Ao;
 	//最终结果就是环境光加直接光照
 	vec3 finalColor = finalAmbient + (finalDiffuse * intensity);
-
-	//物理上的准确性要求在线性空间中计算，但要显示在设备上就要进行GAMM校正
-	//同时线性计算值会超过1，因此要在Gamm校正之前先把结果从LDR映射为HDR[色调映射方法为Reinhard 操作]
-	finalColor = finalColor / (finalColor + vec3(1.0));
-	finalColor = pow(finalColor, vec3(1.0/2.2));
 
 	return finalColor;
 }
@@ -338,8 +338,9 @@ float ShadowCalculation(vec4 fragPosLightSpace, vec3 vdir, vec3 ndir)
 void main()
 {
 	//计算通量
-	vec3 N = normalize(v_Normal);
+	vec3 N = v_Normal;
 	vec3 V = normalize(u_ViewPosition - v_WorldPos);
+	vec3 R = reflect(-V,N);
 	vec3 FinalColor = vec3(0.0f);
 
 	//根据金属度去赋值F0
@@ -348,24 +349,32 @@ void main()
 
 	float shadow = ShadowCalculation(v_FragPosLightSpace,V,N);
 
+	//对粗超度进行限制(当粗超度为0时计算结果无效)
+	float roughness = clamp(u_Roughness,0.01f,1.0f);
+
 	if(DirectionNumber != 0)
 	{
-		FinalColor = DirectionLightColor(V,N,F0,u_Roughness,shadow);
+		FinalColor += DirectionLightColor(V,N,R,F0,roughness,shadow);
 	}
 	if(PointNumber != 0)
 	{
 		for(int i = 0;i < PointNumber;i++)
 		{
-			FinalColor += PointLightColor(V,N,F0,u_Roughness,i);
+			FinalColor += PointLightColor(V,N,R,F0,roughness,i);
 		}
 	}
 	if(SpotNumber != 0)
 	{
 			for(int i = 0;i < SpotNumber;i++)
 		{
-			FinalColor += SpotLightColor(V,N,F0,u_Roughness,i);
+			FinalColor += SpotLightColor(V,N,R,F0,roughness,i);
 		}
 	}
+
+	//物理上的准确性要求在线性空间中计算，但要显示在设备上就要进行GAMM校正
+	//同时线性计算值会超过1，因此要在Gamm校正之前先把结果从LDR映射为HDR[色调映射方法为Reinhard 操作]
+	FinalColor = FinalColor / (FinalColor + vec3(1.0));
+	FinalColor = pow(FinalColor, vec3(1.0/2.2));
 
 	//当前并未去计算带有贴图的物理PBR结果。
 	color = vec4(FinalColor,1.0f);

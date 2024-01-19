@@ -54,5 +54,7 @@
     <None Include="assets\shader\PhysicalBaseRenderShader.glsl" />
     <None Include="assets\shader\HDRMapCube.glsl" />
     <None Include="assets\shader\EnvironmentIrradiance.glsl" />
+    <None Include="assets\shader\PrefilterTextureShader.glsl" />
+    <None Include="assets\shader\BRDFLookUpTableShader.glsl" />
   </ItemGroup>
 </Project>

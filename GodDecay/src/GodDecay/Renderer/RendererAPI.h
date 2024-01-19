@@ -47,6 +47,7 @@ namespace GodDecay
 		virtual void SetDepthTest(bool flag) = 0;
 		virtual void SetDepthMask(bool flag) = 0;
 		virtual void SetDepthFunc(DepthFunType type) = 0;
+		virtual void SetCubeMapFiltration() = 0;
 
 		virtual void DrawIndexed(const Ref<VertexArrayBuffer>& vertexArray, DrawType type = DrawType::Normal, uint32_t indexCount = 0) = 0;
 

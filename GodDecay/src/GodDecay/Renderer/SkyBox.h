@@ -53,6 +53,8 @@ namespace GodDecay
 		inline std::string& GetHDRPath() { return m_HDRPath; }
 		inline bool GetCurrentIsHDR() { return m_CurrentIsHDR; }
 		inline Ref<TextureCube>& GetIrradianceTexture() { return m_IrradianceTextureCube; }
+		inline Ref<Texture2D>& GetBRDFLookUpTableTexture() { return m_BRDFLookUpTableTexture; }
+		inline Ref<TextureCube>& GetMipmapPrefilterTextureCube() { return m_MipmapPrefilterTextureCube; }
 
 	private:
 		SkyBox();
@@ -63,6 +65,8 @@ namespace GodDecay
 		Ref<Shader> m_SkyBoxShader;
 		Ref<Shader> m_HDRMapCubeShader;
 		Ref<Shader> m_IrradianceShader;
+		Ref<Shader> m_PrefilterTextureShader;
+		Ref<Shader> m_BRDFLookUpTableShader;
 		Ref<TextureCube> m_SkyBoxCubeTexture;
 		Ref<TextureCube> m_SkyBoxColorTexture;
 		Ref<TextureCube> m_CurrentSkyBoxTexture;
@@ -75,6 +79,8 @@ namespace GodDecay
 		glm::vec4 m_SkyBoxColor;
 		//顶点缓冲对象
 		Ref<VertexArrayBuffer> m_SkyBoxBuffer;
+		//渲染brdf积分纹理的VAO
+		Ref<VertexArrayBuffer> m_BRDFTextureBuffer;
 		//图像路径
 		std::vector<std::string> m_Paths;
 		std::string m_HDRPath;
@@ -92,6 +98,13 @@ namespace GodDecay
 		//处理辐照度图
 		Ref<TextureCube> m_IrradianceTextureCube;
 		Ref<Framebuffer> m_IrradianceFramebuffer;
+
+		//处理预滤波HDR环境贴图
+		Ref<TextureCube> m_MipmapPrefilterTextureCube;
+		Ref<Framebuffer> m_PrefilterFramebuffer;
+		//处理brdf积分贴图[2D]
+		Ref<Texture2D> m_BRDFLookUpTableTexture;
+		Ref<Framebuffer> m_BRDFLookUpTableFramebuffer;
 
 		static Ref<SkyBox> m_Instance;
 	};

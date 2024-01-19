@@ -23,7 +23,7 @@ namespace GodDecay
 
 		virtual std::string GetTextureName() const = 0;
 
-		virtual void SetData(void* data, uint32_t size) = 0;
+		virtual void SetData(void* data, uint32_t size, bool depth = false) = 0;
 
 		virtual void Bind(uint32_t slot = 0) const = 0;
 
@@ -38,7 +38,7 @@ namespace GodDecay
 	{
 	public:
 		static Ref<Texture2D> Create(const std::string& path, bool HDR = false);
-		static Ref<Texture2D> Create(uint32_t width, uint32_t height);
+		static Ref<Texture2D> Create(uint32_t width, uint32_t height, bool depth = false);
 		//创建一个空纹理，它为外部创建的纹理进行封装[此创建方式仅仅记录在外部创建好的纹理ID以及一些基本纹理属性值的记录]
 		static Ref<Texture2D> Create(std::string name, uint32_t textureID, uint32_t width, uint32_t height);
 	};
@@ -47,7 +47,7 @@ namespace GodDecay
 	{
 	public:
 		static Ref<TextureCube> Create(std::vector<std::string> faces);
-		static Ref<TextureCube> Create(uint32_t width, uint32_t height, bool HDR);
+		static Ref<TextureCube> Create(uint32_t width, uint32_t height, bool HDR = false, bool mipmap = false);
 	};
 }
 

@@ -93,8 +93,11 @@ namespace GodDecay
 		virtual void UnBind() = 0;
 
 		//为帧缓冲附加纹理
-		virtual void AppendCubeTextureAttachment(uint32_t id, uint32_t index) = 0;
-
+		virtual void AppendCubeTextureAttachment(uint32_t id, uint32_t index, uint32_t mip = 0) = 0;
+		//为缓冲附加缓冲对象
+		virtual void AppendRenderbufferAttachment(uint32_t width, uint32_t height, uint32_t id, FramebufferRenderbufferFormat type) = 0;
+		//绑定普通的2D纹理
+		virtual void Append2DTextureAttachment(uint32_t id, uint32_t mip = 0) = 0;
 		virtual void Resize(uint32_t width, uint32_t height) = 0;
 		//读取屏幕的像素所选中的entityID，并返回
 		virtual int ReadPixel(uint32_t attachmentIndex, int x, int y) = 0;

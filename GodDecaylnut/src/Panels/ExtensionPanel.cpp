@@ -154,7 +154,9 @@ namespace GodDecay
 		}
 		ImGui::NewLine();
 		//展示HDR图片
-		ImGui::ImageButton((void*)SkyBox::GetInstance()->GetDisplayHDRSkyTexture()->GetRendererID(), ImVec2(300.0f, 300.0f), {0,1}, {1,0});
+		ImGui::Text("HDR : ");
+		ImGui::SameLine();
+		ImGui::ImageButton((void*)SkyBox::GetInstance()->GetDisplayHDRSkyTexture()->GetRendererID(), ImVec2(200.0f, 200.0f), {0,1}, {1,0});
 		//创建一个目标拖拽区域
 		if (ImGui::BeginDragDropTarget())
 		{

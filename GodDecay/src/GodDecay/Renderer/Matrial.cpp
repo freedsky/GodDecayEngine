@@ -192,6 +192,8 @@ namespace GodDecay
 		blinnPhongT.AddTexture2D("DiffuseTexture", diffuseTexture);
 		blinnPhongT.AddTexture2D("SpecularTexture", specularTexture);
 		blinnPhongT.AddTexture2D("DepthShadowTexture", Shadow::GetInstance()->GetShadowTexture());
+		blinnPhongT.AddTexture2D("BRDFLookUpTableTexture", SkyBox::GetInstance()->GetBRDFLookUpTableTexture());
+		blinnPhongT.AddTextureCube("MipmapPrefilterTextureCube", SkyBox::GetInstance()->GetMipmapPrefilterTextureCube());
 		blinnPhongT.AddTextureCube("IrradianceTexture", SkyBox::GetInstance()->GetIrradianceTexture());
 		LoadTexture("PhysicalBaseRenderShader", blinnPhongT);
 
@@ -199,7 +201,9 @@ namespace GodDecay
 		m_ShaderList.Get("PhysicalBaseRenderShader")->SetInt("DiffuseTexture", 0);
 		m_ShaderList.Get("PhysicalBaseRenderShader")->SetInt("SpecularTexture", 1);
 		m_ShaderList.Get("PhysicalBaseRenderShader")->SetInt("DepthShadowTexture", 2);
-		m_ShaderList.Get("PhysicalBaseRenderShader")->SetInt("IrradianceTexture", 3);
+		m_ShaderList.Get("PhysicalBaseRenderShader")->SetInt("BRDFLookUpTableTexture", 3);
+		m_ShaderList.Get("PhysicalBaseRenderShader")->SetInt("IrradianceTexture", 4);
+		m_ShaderList.Get("PhysicalBaseRenderShader")->SetInt("MipmapPrefilterTextureCube", 5);
 		//初始化光源的数量
 		m_ShaderList.Get("PhysicalBaseRenderShader")->SetInt("DirectionNumber", 0);
 		m_ShaderList.Get("PhysicalBaseRenderShader")->SetInt("PointNumber", 0);

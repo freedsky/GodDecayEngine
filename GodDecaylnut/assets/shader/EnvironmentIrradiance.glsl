@@ -41,7 +41,7 @@ void main()
 	vec3 right = cross(up, normal);
 	up = cross(normal, right);
 	//开始离散计算积分[采样固定数量的采样样本去近似(逼近)积分值]
-	float sampleDelta = 0.025;//采样频率[决定最终结果的准确度(精度)]
+	float sampleDelta = 0.015;//采样频率[决定最终结果的准确度(精度)]
 	float nrSamples = 0.0; 
 	for(float phi = 0.0; phi < 2.0 * PI; phi += sampleDelta)
 	{

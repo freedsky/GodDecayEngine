@@ -16,8 +16,9 @@ namespace GodDecay
 		virtual void Clear() override;
 		virtual void ClearDepth() override;
 		virtual void SetDepthTest(bool flag) override;
-		virtual void SetDepthMask(bool flag);
-		virtual void SetDepthFunc(DepthFunType type);
+		virtual void SetDepthMask(bool flag) override;
+		virtual void SetDepthFunc(DepthFunType type) override;
+		virtual void SetCubeMapFiltration() override;
 
 		virtual void DrawIndexed(const Ref<VertexArrayBuffer>& vertexArray, DrawType type = DrawType::Normal, uint32_t indexCount = 0) override;
 	};

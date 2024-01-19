@@ -64,7 +64,7 @@ namespace GodDecay
 		//解绑
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
-	OpenGLTextureCube::OpenGLTextureCube(uint32_t width, uint32_t height, bool HDR)
+	OpenGLTextureCube::OpenGLTextureCube(uint32_t width, uint32_t height, bool HDR, bool mipmap)
 		:m_Width(width), m_Height(height), m_Channels(4)
 	{
 		if (HDR) 
@@ -93,8 +93,20 @@ namespace GodDecay
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		if (mipmap) 
+		{
+			//mipmap仅对纹理缩小起到作用
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		}
+		else
+		{
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		}
+
+		if (mipmap)
+			glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 
 		if (HDR)
 			m_TextureName = "HDRSkyBox";
@@ -107,7 +119,7 @@ namespace GodDecay
 		glDeleteTextures(1, &m_RendererID);
 	}
 
-	void OpenGLTextureCube::SetData(void* data, uint32_t size)
+	void OpenGLTextureCube::SetData(void* data, uint32_t size, bool depth)
 	{
 		//不确定行不行...待验证
 		uint32_t bpp = m_DataFormat == GL_RGBA ? 4 : 3;

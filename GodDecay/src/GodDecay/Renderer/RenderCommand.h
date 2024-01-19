@@ -51,6 +51,11 @@ namespace GodDecay
 			m_RendererAPI->SetDepthFunc(type);
 		}
 
+		inline static void SetCubeMapFiltration() 
+		{
+			m_RendererAPI->SetCubeMapFiltration();
+		}
+
 		inline static void DrawIndexed(const Ref<VertexArrayBuffer>& vertexArray, RendererAPI::DrawType type = RendererAPI::DrawType::Normal, uint32_t indexCount = 0)
 		{
 			m_RendererAPI->DrawIndexed(vertexArray, type, indexCount);

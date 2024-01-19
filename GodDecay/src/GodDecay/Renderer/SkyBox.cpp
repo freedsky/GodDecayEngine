@@ -13,9 +13,16 @@ namespace GodDecay
 		glm::vec3 Position;
 		int EntityID;
 	};
+	struct BrdfTextureVertex 
+	{
+		glm::vec3 Position;
+		glm::vec2 TexCoord;
+		int EntityID;
+	};
 
 
-	float skyboxVertices[] = {         
+	float skyboxVertices[] = 
+	{         
 		-1.0f,  1.0f, -1.0f,
 		-1.0f, -1.0f, -1.0f,
 		 1.0f, -1.0f, -1.0f,
@@ -59,6 +66,14 @@ namespace GodDecay
 		 1.0f, -1.0f,  1.0f
 	};
 
+	float brdfVertices[] = 
+	{
+		-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+		 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+		 1.0f, -1.0f, 0.0f, 1.0f, 0.0f
+	};
+
 	Ref<SkyBox> SkyBox::m_Instance = nullptr;
 
 	SkyBox::SkyBox()
@@ -67,6 +82,8 @@ namespace GodDecay
 		m_SkyBoxShader = Shader::Create("assets/shader/SkyBoxShader.glsl");
 		m_HDRMapCubeShader = Shader::Create("assets/shader/HDRMapCube.glsl");
 		m_IrradianceShader = Shader::Create("assets/shader/EnvironmentIrradiance.glsl");
+		m_PrefilterTextureShader = Shader::Create("assets/shader/PrefilterTextureShader.glsl");
+		m_BRDFLookUpTableShader = Shader::Create("assets/shader/BRDFLookUpTableShader.glsl");
 		m_SkyBoxCubeTexture = nullptr;
 		m_SkyBoxColorTexture = nullptr;
 		m_CurrentSkyBoxTexture = nullptr;
@@ -115,6 +132,49 @@ namespace GodDecay
 		Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(m_SkyBoxIndices.data(), m_SkyBoxIndices.size());
 		m_SkyBoxBuffer->SetIndexBuffer(indexBuffer);
 		m_SkyBoxIndices.clear();
+
+		//brdf积分纹理的顶点缓冲
+		m_BRDFTextureBuffer = VertexArrayBuffer::Create();
+
+		std::vector<BrdfTextureVertex> brdfProperties;
+		arr_k = 0;
+		for (int i = 0; i < 4; ++i)
+		{
+			BrdfTextureVertex sv;
+			sv.Position.x = brdfVertices[arr_k++];
+			sv.Position.y = brdfVertices[arr_k++];
+			sv.Position.z = brdfVertices[arr_k++];
+			sv.TexCoord.x = brdfVertices[arr_k++];
+			sv.TexCoord.y = brdfVertices[arr_k++];
+			sv.EntityID = -1;
+
+			brdfProperties.push_back(sv);
+		}
+
+		Ref<VertexBuffer> bedfvBuffer = VertexBuffer::Create(brdfProperties.data(), brdfProperties.size() * sizeof(BrdfTextureVertex));
+		bedfvBuffer->Setlayout({
+			{ShaderDataType::Float3, "a_Position" },
+			{ShaderDataType::Float2, "a_TexCoords"},
+			{ShaderDataType::Int,    "a_EntityID"}
+			});
+		m_BRDFTextureBuffer->AddVertexBuffer(bedfvBuffer);
+		brdfProperties.clear();
+
+		//设置顶点索引下标
+		std::vector<uint32_t> m_BrdfIndices;
+		m_BrdfIndices.push_back(0);
+		m_BrdfIndices.push_back(1);
+		m_BrdfIndices.push_back(2);
+		m_BrdfIndices.push_back(2);
+		m_BrdfIndices.push_back(3);
+		m_BrdfIndices.push_back(1);
+
+		Ref<IndexBuffer> brefiBuffer = IndexBuffer::Create(m_BrdfIndices.data(), m_BrdfIndices.size());
+		m_BRDFTextureBuffer->SetIndexBuffer(brefiBuffer);
+		m_BrdfIndices.clear();
+
+		//设置过滤[全局仅一次]//这个是设置在对mipmap低级层次间可以进行插值
+		RenderCommand::SetCubeMapFiltration();
 	}
 
 	SkyBox::~SkyBox()
@@ -164,11 +224,11 @@ namespace GodDecay
 		//创建一个HDR渲染缓冲帧对象
 		FramebufferSpecification hdrSkyBoxSpec;
 		hdrSkyBoxSpec.Attachments = { FramebufferRenderbufferFormat::Depth24 };
-		hdrSkyBoxSpec.Width = 1024.0f;
-		hdrSkyBoxSpec.Height = 1024.0f;
+		hdrSkyBoxSpec.Width = 512.0f;
+		hdrSkyBoxSpec.Height = 512.0f;
 		m_SkyBoxHDRFramebuffer = Framebuffer::Create(hdrSkyBoxSpec);	
 		//创建一个用于渲染一个立方体贴图
-		m_SkyBoxCubeHDRTexture = TextureCube::Create(1024.0f, 1024.0f, true);
+		m_SkyBoxCubeHDRTexture = TextureCube::Create(512.0f, 512.0f, true);
 
 		//然后从不同角度去渲染立方体纹理
 		glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
@@ -210,12 +270,12 @@ namespace GodDecay
 
 		//卷积部分
 		//辐照度立方体纹理图
-		m_IrradianceTextureCube = TextureCube::Create(32.0f, 32.0f, true);
+		m_IrradianceTextureCube = TextureCube::Create(64.0f, 64.0f, true);
 		//渲染辐照图的帧缓冲
 		FramebufferSpecification irradianceSpec;
 		irradianceSpec.Attachments = { FramebufferRenderbufferFormat::Depth24 };
-		irradianceSpec.Width = 32;
-		irradianceSpec.Height = 32;
+		irradianceSpec.Width = 64;
+		irradianceSpec.Height = 64;
 		m_IrradianceFramebuffer = Framebuffer::Create(irradianceSpec);
 
 		//开始渲染辐照度纹理图
@@ -237,9 +297,73 @@ namespace GodDecay
 		}
 		m_IrradianceFramebuffer->UnBind();
 
+		//开始处理镜面反射部分
+		//生成一个带有mipmap的立方体贴图的滤波图[卷积图]
+		//它基于不同粗糙度来采样不同层级的不同程度的卷积图
+		m_MipmapPrefilterTextureCube = TextureCube::Create(128.0f, 128.0f, true, true);
+		//生成一个渲染预处理的滤波纹理缓冲帧对象
+		FramebufferSpecification prefilterBoxSpec;
+		prefilterBoxSpec.Attachments = { FramebufferRenderbufferFormat::Depth24 };
+		prefilterBoxSpec.Width = 512.0f;
+		prefilterBoxSpec.Height = 512.0f;
+		m_PrefilterFramebuffer = Framebuffer::Create(prefilterBoxSpec);
 
-		m_SkyBoxShader->Bind();
-		m_SkyBoxShader->SetInt("skybox", 0);
+		//渲染预滤波纹理
+		m_PrefilterTextureShader->Bind();
+		m_PrefilterTextureShader->SetInt("environmentMap", 0);
+
+		m_PrefilterFramebuffer->Bind();
+		uint32_t maxMipLevels = 5;//最大生成的mipmap纹理层级
+		for (uint32_t mip = 0; mip < maxMipLevels; ++mip) 
+		{
+			uint32_t mipWidth = 128 * std::pow(0.5, mip);
+			uint32_t mipHeight = 128 * std::pow(0.5, mip);
+			//在此帧缓冲对象只有一个渲染缓冲，因此下标为0
+			m_PrefilterFramebuffer->AppendRenderbufferAttachment(mipWidth, mipHeight, m_PrefilterFramebuffer->GetDepthRenderbufferAttachmentRendererID(0), FramebufferRenderbufferFormat::Depth24);
+
+			//渲染不同层级的立方体贴图
+			float roughness = (float)mip / (float)(maxMipLevels - 1);
+			m_PrefilterTextureShader->SetFloat("roughness", roughness);
+			for (uint32_t i = 0; i < 6; ++i) 
+			{
+				glm::mat4 viewPro = captureProjection * captureViews[i];
+				m_PrefilterTextureShader->SetMat4("u_ViewProjection", viewPro);
+				m_PrefilterFramebuffer->AppendCubeTextureAttachment(m_MipmapPrefilterTextureCube->GetRendererID(), i, mip);
+				RenderCommand::Clear();
+
+				m_SkyBoxCubeHDRTexture->Bind(0);
+				m_SkyBoxBuffer->Bind();
+				RenderCommand::DrawIndexed(m_SkyBoxBuffer);
+				m_SkyBoxBuffer->UnBind();
+			}
+		}
+		m_PrefilterFramebuffer->UnBind();
+
+		//处理BRDF的积分查找纹理
+		//生成一张可以存储BRDF的查找纹理[2D]//也就是说它本身设置就是为空不需要特定设置为空
+		m_BRDFLookUpTableTexture = Texture2D::Create(512.0f, 512.0f, true);
+		//这里确实可以复用上一次使用的帧缓冲，不过出于学习目的，这里还是做了区分以便学习和查看
+		FramebufferSpecification brdfLookUpSpec;
+		brdfLookUpSpec.Attachments = { FramebufferRenderbufferFormat::Depth24 };
+		brdfLookUpSpec.Width = 512.0f;
+		brdfLookUpSpec.Height = 512.0f;
+		m_BRDFLookUpTableFramebuffer = Framebuffer::Create(brdfLookUpSpec);
+
+		//渲染BRDF积分查找纹理
+		m_BRDFLookUpTableFramebuffer->Bind();
+		m_BRDFLookUpTableFramebuffer->AppendRenderbufferAttachment(512.0f, 512.0f, m_BRDFLookUpTableFramebuffer->GetDepthRenderbufferAttachmentRendererID(0), FramebufferRenderbufferFormat::Depth24);
+		m_BRDFLookUpTableFramebuffer->Append2DTextureAttachment(m_BRDFLookUpTableTexture->GetRendererID());
+		m_BRDFLookUpTableShader->Bind();
+		RenderCommand::Clear();
+		//渲染正方形纹理
+		m_BRDFTextureBuffer->Bind();
+		RenderCommand::DrawIndexed(m_BRDFTextureBuffer);
+		m_BRDFTextureBuffer->UnBind();
+
+		m_BRDFLookUpTableFramebuffer->UnBind();
+
+		//m_SkyBoxShader->Bind();
+		//m_SkyBoxShader->SetInt("skybox", 0);
 	}
 
 	void SkyBox::LoadDisplayTexture2D()
@@ -272,7 +396,7 @@ namespace GodDecay
 			break;
 		case GodDecay::SkyBox::SkyType::HDR:
 			m_CurrentSkyType = type;
-			//m_CurrentSkyBoxTexture = m_IrradianceTextureCube;测试可以开启
+			//m_CurrentSkyBoxTexture = m_MipmapPrefilterTextureCube;//测试可以开启
 			m_CurrentSkyBoxTexture = m_SkyBoxCubeHDRTexture;
 			m_CurrentIsHDR = true;
 			break;

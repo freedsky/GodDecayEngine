@@ -58,7 +58,7 @@ namespace GodDecay
 		//先全部初始化一遍
 		SkyBox::GetInstance()->Init(skyPaths);
 		SkyBox::GetInstance()->Init(1,1);
-		SkyBox::GetInstance()->Init("assets/texture/SkyBox/HDR/thatch_chapel_1k.hdr");
+		SkyBox::GetInstance()->Init("assets/texture/SkyBox/HDR/thatch_chapel_4k.hdr");
 		//在去选择一个天空盒类型
 		SkyBox::GetInstance()->ChangeSkyBoxType(SkyBox::SkyType::Normal);
 

@@ -5,6 +5,8 @@
 #include <glad/glad.h>
 /// <summary>
 /// 在OpenGl平台实现纹理的加载
+/// 
+/// 对于不同类型的纹理加载应该编写相应的通用接口[而不是用bool来做区分]，比如framebuffer的通用帧缓冲接口
 /// </summary> 
 namespace GodDecay 
 {
@@ -12,7 +14,7 @@ namespace GodDecay
 	{
 	public:
 		OpenGLTexture(const std::string& path, bool HDR);
-		OpenGLTexture(uint32_t width, uint32_t height);
+		OpenGLTexture(uint32_t width, uint32_t height, bool depth);
 		OpenGLTexture(std::string name, uint32_t textureID, uint32_t width, uint32_t height);
 		virtual ~OpenGLTexture();
 
@@ -24,7 +26,7 @@ namespace GodDecay
 
 		virtual std::string GetTextureName() const override {return m_TextureName;}
 
-		virtual void SetData(void* data, uint32_t size) override;
+		virtual void SetData(void* data, uint32_t size, bool depth) override;
 
 		virtual void Bind(uint32_t slot = 0) const override;
 
